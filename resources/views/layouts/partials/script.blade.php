@@ -29,5 +29,7 @@
 
  <script src="{{ asset('Js/app.js') }}"></script>
 
+ <!-- bootstrap-select JS -->
+ <script src="{{ asset('app-assets/js/bootstrap-select.min.js') }}"></script>
 
  <script src="{{ asset('Js/article/article.js') }}"></script>

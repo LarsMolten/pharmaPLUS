@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Article;
 use App\Http\Controllers\Controller;
 
 use App\Models\Article\article;
+use App\Models\Unite\unite;
 use App\Http\Requests\StorearticleRequest;
 use App\Http\Requests\UpdatearticleRequest;
 
@@ -23,6 +24,7 @@ class ArticleController extends Controller
     // affichage de la liste des articles en json
     public function liste_article(){
         try {
+
             // Récupérer tous les articles
             $articles = article::all();
 
@@ -53,6 +55,7 @@ class ArticleController extends Controller
             }
             $th .="</tbody>";
 
+
         return response()->json([
             'success' => true,
             'data' => $th
@@ -62,6 +65,30 @@ class ArticleController extends Controller
         }
     }
 
+    // affichage de la liste des unités en json
+    public function charge_unite(){
+        try {
+
+            $unites = unite::all();
+            // var_dump($unites);
+
+            $un = "";
+
+            foreach($unites as $unite){
+                $un .= "<option value='{$unite->nom}'>{$unite->nom}</option>";
+            }
+
+            return response()->json([
+                'success' => true,
+                'data' => $un
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage()
+            ], 500);
+        }
+    }
     /**
      * Show the form for creating a new resource.
      */
