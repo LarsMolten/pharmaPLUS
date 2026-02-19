@@ -102,7 +102,25 @@ class ArticleController extends Controller
      */
     public function store(StorearticleRequest $request)
     {
-        //
+        try {
+            $article = article::create([
+                'designation' => $request->designation,
+                'presentation' => $request->presentation,
+                'unite' => $request->unite,
+                'stock' => 0, // Stock initial à 0
+                'statut' => 'Disponible', // Statut initial à "Disponible"
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'data' => $article
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage()
+            ], 500);
+        }
     }
 
     /**

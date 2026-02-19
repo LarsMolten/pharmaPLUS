@@ -26,6 +26,7 @@ Route::get('/dashboard', [Dashboard::class, 'index'])->name('dashboard.index');
 // Route::get('/article', [ArticleController::class, 'index'])->name('article.index'); // Affiche la vue
 Route::get('/liste_article', [ArticleController::class, 'liste_article'])->name('liste_article'); // Retourne JSON
 Route::get('/charge_unite', [ArticleController::class, 'charge_unite'])->name('charge_unite'); // Retourne JSON des unités
+Route::post('/ajout_article', [ArticleController::class, 'store'])->name('ajout_article'); // Ajoute un article
 Route::resource('article', ArticleController::class); // Routes RESTful pour les articles
 
 

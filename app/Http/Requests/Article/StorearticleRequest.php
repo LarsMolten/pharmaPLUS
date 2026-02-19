@@ -22,7 +22,8 @@ class StorearticleRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'designation' => 'required|string|max:255',
+            'presentation' => 'required|string|max:255'
         ];
     }
 }

@@ -1,4 +1,4 @@
- <div class="heading-elements mt-0">
+<div class="heading-elements mt-0">
         <div class="modal fade" id="AjoutArticleModal" style="z-index: 99999999" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel1" aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content" id="content_modal_article">
@@ -11,6 +11,8 @@
 
                             <br>
                             <form class="form" method="post" action="ajout_article" id="ajout_article">
+
+                                @csrf
                                 <div class="form-body">
 
                                     <div class="row">
