@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('articles', function (Blueprint $table) {
             $table->id();
             $table->string('designation');
-            $table->text('presentation')->nullable();
+            $table->integer('presentation');
             $table->foreignId('unite')->constrained('unite')->cascadeOnDelete();
             $table->integer('stock')->default(0);
             $table->enum('statut', ['disponible', 'indisponible'])->default('disponible');

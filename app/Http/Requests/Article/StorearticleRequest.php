@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Article;
 
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -11,7 +11,7 @@ class StorearticleRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,8 +22,8 @@ class StorearticleRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'designation' => 'required|string|max:255',
-            'presentation' => 'required|string|max:255'
+            'designation' => ['string', 'max:255'],
+            'presentation' => ['integer', 'max:3']
         ];
     }
 }

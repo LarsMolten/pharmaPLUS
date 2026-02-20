@@ -6,8 +6,8 @@ use App\Http\Controllers\Controller;
 
 use App\Models\Article\article;
 use App\Models\Unite\unite;
-use App\Http\Requests\StorearticleRequest;
-use App\Http\Requests\UpdatearticleRequest;
+use App\Http\Requests\Article\StorearticleRequest;
+use App\Http\Requests\Article\UpdatearticleRequest;
 
 class ArticleController extends Controller
 {
@@ -97,23 +97,60 @@ class ArticleController extends Controller
         //
     }
 
+    public function ajout_article(StorearticleRequest $request){
+        try {
+
+            // var_dump($request);
+
+            // $request->valiate($request->validated());
+
+
+            // article::create($request->all());
+            $article = article::create([
+                'designation' => $request->designation,
+                'presentation' => $request->presentation,
+                'unite' => $request->unite,
+                'stock' => 0, // Stock initial à 0
+                'statut' => 'Disponible', // Statut initial à "Disponible"   
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'data' => $article
+
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage()
+            ], 500);
+        }
+    }
+
     /**
      * Store a newly created resource in storage.
      */
     public function store(StorearticleRequest $request)
     {
         try {
-            $article = article::create([
-                'designation' => $request->designation,
-                'presentation' => $request->presentation,
-                'unite' => $request->unite,
-                'stock' => 0, // Stock initial à 0
-                'statut' => 'Disponible', // Statut initial à "Disponible"
-            ]);
+
+            var_dump($request);
+
+            $request->valiate($request->validated());
+
+
+            article::create($request->all());
+            // $article = article::create([
+            //     'designation' => $request->designation,
+            //     'presentation' => $request->presentation,
+            //     'unite' => $request->unite,
+            //     'stock' => 0, // Stock initial à 0
+            //     'statut' => 'Disponible', // Statut initial à "Disponible"
+            // ]);
 
             return response()->json([
                 'success' => true,
-                'data' => $article
+
             ]);
         } catch (\Exception $e) {
             return response()->json([

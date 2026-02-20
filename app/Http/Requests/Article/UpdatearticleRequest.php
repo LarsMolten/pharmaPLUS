@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Article;
 
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -22,7 +22,8 @@ class UpdatearticleRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'designation' => ['string', 'max:255'],
+            'presentation' => ['integer', 'max:3']
         ];
     }
 }

@@ -182,9 +182,9 @@ $("#ajout_article").off("submit").on("submit", function (e) {
         contentType: false,
         cache: false,
         dataType: "JSON",
-           headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        },
+        //    headers: {
+        //     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        // },
         data: data, complete: function () {
             enCours = false; // Remet la variable à false, que la requête ait réussi ou échoué
         },
@@ -208,7 +208,7 @@ $("#ajout_article").off("submit").on("submit", function (e) {
 
             } else {
 
-                $("#card_article_menuiserie").unblock();
+                // $("#card_liste_article").unblock();
                 if (res.status == "success") {
                     alertCustom("success", "ft-check", "Ajout effectué avec succée");
                     $('#ajout_article').find(':input:not([type="radio"])').each(function () {
@@ -224,7 +224,7 @@ $("#ajout_article").off("submit").on("submit", function (e) {
                     alertCustom("danger", "ft-x", "Ajout non effectué");
                 }
             }
-            $("#id_article_men_modif").val("");
+            // $("#id_article_men_modif").val("");
 
             liste_article();
 

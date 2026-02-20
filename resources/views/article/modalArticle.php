@@ -11,8 +11,9 @@
 
                             <br>
                             <form class="form" method="post" action="ajout_article" id="ajout_article">
-
+                                    
                                 @csrf
+                                
                                 <div class="form-body">
 
                                     <div class="row">
