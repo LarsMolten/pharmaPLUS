@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Article;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 
 use App\Models\Article\article;
 use App\Models\Unite\unite;
@@ -26,15 +27,15 @@ class ArticleController extends Controller
         try {
 
             // Récupérer tous les articles
-            $articles = article::all();
+            $articles = article::where('etat', 1)->get();
 
             $th = "
                 <thead>
                     <tr>
                         <th style='text-align: center;'>ID</th>
                         <th style='text-align: center;'>Designation</th>
-                        <th style='text-align: center;'>Présentation</th>
                         <th style='text-align: center;'>Unité</th>
+                        <th style='text-align: center;'>Présentation</th>
                         <th style='text-align: center;'>Stock</th>
                         <th style='text-align: center;'>Statut</th>
                         <th style='text-align: center;'>Actions</th>
@@ -43,11 +44,18 @@ class ArticleController extends Controller
 
             $th .="<tbody>";
             foreach($articles as $article){
+
+                $unite = unite::find($article->unite);
+
+                $presentationMedic = "{$unite->nomUnite}/{$article->presentation}";
+
+                $Medic_presentatio = $unite->nomUnite == "Unité" ? "Unité" : $presentationMedic;
+
                 $th .= "<tr>
-                            <td  style='width:5%'>{$article->id}</td>
+                            <td  style='width:5%'>REF-{$article->id}</td>
                             <td  style='width:20%'>{$article->designation}</td>
-                            <td  style='width:10%'>{$article->presentation}</td>
-                            <td style='width:10%'>{$article->unite}</td>
+                            <td  style='width:10%'>{$Medic_presentatio}</td>
+                            <td style='width:10%'>{$article->presentation}</td>
                             <td style='width:10%'>{$article->stock}</td>
                             <td style='width:10%'>{$article->statut}</td> ";
 
@@ -76,14 +84,13 @@ class ArticleController extends Controller
         try {
 
             $unites = unite::all();
-            // var_dump($unites);
+            // var_dump($unites);die();
 
             $un = "";
 
             foreach($unites as $unite){
-                $un .= "<option value='{$unite->id}'>{$unite->nom}</option>";
+                $un .= "<option value='{$unite->id}' data-supun='{$unite->supun}'>{$unite->nomComplet}</option>";
             }
-
             return response()->json([
                 'success' => true,
                 'data' => $un
@@ -100,10 +107,14 @@ class ArticleController extends Controller
     public function ajout_article(StorearticleRequest $request){
         try {
 
-
             $validated = $request->validated();
-            $article = article::create($validated);
 
+            if($request->id_article != ""){
+                // var_dump($validated);die();
+                $article = article::where('id', $request->id_article)->update($validated);
+            }else{
+            $article = article::create($validated);
+            }
             return response()->json([
                 'status' => "success",
                 'data' => $article
@@ -117,35 +128,21 @@ class ArticleController extends Controller
     }
 
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(article $article)
-    {
-        //
-    }
+    // suppression d'un article
+    public function delete_article(Request $request){
+        try {            
+             $article = article::where('id', $request->id_article)->update(['etat' => 0]);
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(article $article)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(UpdatearticleRequest $request, article $article)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(article $article)
-    {
-        //
-    }
+                return response()->json([
+                    'status' => "success",
+                    'data' => $article
+                ]);
+           
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => "error",
+                'message' => $e->getMessage()
+            ], 500);
+        }  
+    }     
 }

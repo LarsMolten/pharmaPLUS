@@ -5,6 +5,7 @@ $(document).ready(function () {
 
 var enCours = false;
 var id_article = "";
+var id_unite = "";
 
 function liste_article() {
     $.ajax({
@@ -111,6 +112,18 @@ function liste_article() {
 
 }
 
+function changeunite() {
+  var maxQuantity = $('#unite').find('option:selected').data('supun');
+  // Si maxQuantity est 0, vider le champ et sortir
+  if (maxQuantity === 1) {
+    $('#presentation').attr("readonly", true);
+    $('#presentation').val(1);
+  }
+  else {
+    $('#presentation').attr("readonly", false);
+  }
+}
+
 function charge_unite() {
     $.ajax({
 
@@ -145,18 +158,18 @@ function charge_unite() {
             $("#unite").empty();
             $("#unite").append(res.data);
             $("#unite").selectpicker('refresh');
-            // if (id_unite != "") {
-            //     $('#unite').val(id_unite).selectpicker('refresh');
-            //     changeunite();
+            if (id_unite != "") {
+                $('#unite').val(id_unite).selectpicker('refresh');
+                changeunite();
 
-            // }
+            }
 
-            // $('#unite').on('change', function () {
+            $('#unite').on('change', function () {
 
-            //     changeunite();
+                changeunite();
 
 
-            // });
+            });
 
             $("#AjoutArticleModal").unblock();
 
@@ -192,7 +205,8 @@ $("#ajout_article").off("submit").on("submit", function (e) {
         success: function (res) {
             if (id_article != "") {
                 if (res.status == "success") {
-                    // alertCustom("success", "ft-check", "Modification effectué avec succée");
+                    id_article = "";
+                    alertCustom("success", "ft-check", "Modification effectué avec succée");
                     $('#ajout_article').find(':input:not([type="radio"])').each(function () {
                         if ($(this).is('select.selectpicker')) {
                             // Réinitialiser le selectpicker en vidant les sélections
@@ -231,8 +245,137 @@ $("#ajout_article").off("submit").on("submit", function (e) {
 
             liste_article();
 
-
         },
     });
 });
 
+
+
+function edit_article(id) {
+  if (enCours) return; // Empêche un deuxième clic si une requête est en cours
+  enCours = true;
+  id_article = id;
+//   formatPrixImput();
+  $('.entete_modal').text("Modification");
+  $('#btn_add_article').text("Modifier");
+  $("#AjoutArticleModal").modal(
+    { backdrop: "static", keyboard: false },
+    "show"
+  );
+
+
+  var designation = $('#art_' + id).data('designation');
+  var presentation = $('#art_' + id).data('presentation');
+  id_unite = $('#art_' + id).data('unite');
+
+  charge_unite();
+
+
+  $('input[name="designation"]').val(designation);
+  $('input[name="presentation"]').val(presentation);
+  $('#unite').val(id_unite).selectpicker('refresh');
+
+}
+
+function delete_article(id) {
+
+
+  $("#card_liste_article").block({
+    message: `
+        
+        
+        <div class="card" style="max-width:400px ; ">
+        <div class="card-header" style="max-width:400px ;">
+                 <i class="ft-trash-2" style='color:rgb(233, 46, 46);font-size:50px'></i>
+        </div>
+        <div class="card-content">
+            <div class="card-body">
+                <p>Voulez-vous supprimer cet article ?</p>
+
+                    <button type="button" onclick="delete_article_from_dialog(`+ id + `)" class="mr-1 mb-1 btn btn-sm btn-warning btn-min-width"><i class="ft-check"></i> Oui</button>
+                    <button type="button" onclick="close_overlay_liste_article()" class="mr-1 mb-1 btn btn-sm btn-outline-light btn-min-width"><i class="ft-x"></i> Annuler</button>
+
+
+            </div>
+        </div>
+        </div>
+      
+
+
+        `,
+
+    overlayCSS: {
+      backgroundColor: 'black',
+      opacity: 0.1,
+      cursor: "wait",
+
+    },
+    css: {
+      border: 0,
+      padding: 0,
+      backgroundColor: "transparent"
+    }
+  });
+
+
+}
+
+
+function delete_article_from_dialog(id) {
+  if (enCours) return; // Empêche un deuxième clic si une requête est en cours
+  enCours = true;
+  $("#card_liste_article").unblock();
+
+  $.ajax({
+    beforeSend: function () {
+
+      $("#card_liste_article").block({
+        message: '<div class="ft-refresh-cw icon-spin font-medium-2" style="margin:auto"></div>',
+
+        overlayCSS: {
+          backgroundColor: "black",
+          opacity: 0.1,
+          cursor: "wait",
+
+        },
+        css: {
+          border: 0,
+          padding: 0,
+          backgroundColor: "transparent"
+        }
+      });
+
+    },
+    url: base + "delete_article",
+    type: "POST",
+     headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+    complete: function() {
+      enCours = false; // Remet la variable à false, que la requête ait réussi ou échoué
+  },
+    data: { id_article: id },
+    success: function (res) {
+      $("#card_liste_article").unblock();
+      id_article = "";
+
+      if (res.data > 0) {
+
+        alertCustom("success", 'ft-check', "Suppression effectué avec succée");
+
+      } else {
+
+        alertCustom("danger", 'ft-x', "Suppression non effectué");
+
+      }
+
+      liste_article();
+
+    },
+  });
+
+}
+
+function close_overlay_liste_article() {
+  $("#card_liste_article").unblock();
+}

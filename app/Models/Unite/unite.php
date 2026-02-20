@@ -10,6 +10,9 @@ class unite extends Model
     use HasFactory;
 
     protected $fillable = [
-        'nom',
+        'nomUnite',
+        'nomComplet',
+        'supun'
+
     ];
 }
