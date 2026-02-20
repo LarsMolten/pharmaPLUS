@@ -6,8 +6,8 @@ use App\Http\Controllers\Controller;
 
 use App\Models\Article\article;
 use App\Models\Unite\unite;
-use App\Http\Requests\StorearticleRequest;
-use App\Http\Requests\UpdatearticleRequest;
+use App\Http\Requests\Article\StorearticleRequest;
+use App\Http\Requests\Article\UpdatearticleRequest;
 
 class ArticleController extends Controller
 {
@@ -49,8 +49,14 @@ class ArticleController extends Controller
                             <td  style='width:10%'>{$article->presentation}</td>
                             <td style='width:10%'>{$article->unite}</td>
                             <td style='width:10%'>{$article->stock}</td>
-                            <td style='width:10%'>{$article->statut}</td>
-                            <td style='width:10%'>ACTION</td>
+                            <td style='width:10%'>{$article->statut}</td> ";
+
+                $th .= "<td style='width:10%'>
+                            <a class='primary edit mr-1' data-designation='{$article->designation}'
+                             data-presentation='{$article->presentation}'  data-unite='{$article->unite}'
+                             id='art_{$article->id}' onclick='edit_article({$article->id})'><i class='la la-pencil-square-o'></i></a>
+
+                             <a class='danger delete mr-1' onclick='delete_article({$article->id})' ><i class='la la-trash-o'></i></a>
                         </tr>";
             }
             $th .="</tbody>";
@@ -75,7 +81,7 @@ class ArticleController extends Controller
             $un = "";
 
             foreach($unites as $unite){
-                $un .= "<option value='{$unite->nom}'>{$unite->nom}</option>";
+                $un .= "<option value='{$unite->id}'>{$unite->nom}</option>";
             }
 
             return response()->json([
@@ -89,39 +95,27 @@ class ArticleController extends Controller
             ], 500);
         }
     }
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(StorearticleRequest $request)
-    {
+    // ajout d'un article
+    public function ajout_article(StorearticleRequest $request){
         try {
-            $article = article::create([
-                'designation' => $request->designation,
-                'presentation' => $request->presentation,
-                'unite' => $request->unite,
-                'stock' => 0, // Stock initial à 0
-                'statut' => 'Disponible', // Statut initial à "Disponible"
-            ]);
+
+
+            $validated = $request->validated();
+            $article = article::create($validated);
 
             return response()->json([
-                'success' => true,
+                'status' => "success",
                 'data' => $article
             ]);
         } catch (\Exception $e) {
             return response()->json([
-                'success' => false,
+                'status' => "error",
                 'message' => $e->getMessage()
             ], 500);
         }
     }
+
 
     /**
      * Display the specified resource.

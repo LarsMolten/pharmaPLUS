@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Article;
 
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -11,7 +11,7 @@ class StorearticleRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -23,7 +23,11 @@ class StorearticleRequest extends FormRequest
     {
         return [
             'designation' => 'required|string|max:255',
-            'presentation' => 'required|string|max:255'
+            'presentation' => 'required|string|max:255',
+            'unite' => 'required|exists:unites,id',
+            'stock' => 'integer|min:0',
+            'statut' => 'string|max:200',
+            'etat' => 'boolean',
         ];
     }
 }

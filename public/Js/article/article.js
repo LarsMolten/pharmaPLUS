@@ -166,6 +166,7 @@ function charge_unite() {
 }
 
 
+
 $("#ajout_article").off("submit").on("submit", function (e) {
     e.preventDefault();
     if (enCours) return; // Empêche un deuxième clic si une requête est en cours
@@ -182,7 +183,7 @@ $("#ajout_article").off("submit").on("submit", function (e) {
         contentType: false,
         cache: false,
         dataType: "JSON",
-           headers: {
+        headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         },
         data: data, complete: function () {
@@ -191,7 +192,7 @@ $("#ajout_article").off("submit").on("submit", function (e) {
         success: function (res) {
             if (id_article != "") {
                 if (res.status == "success") {
-                    alertCustom("success", "ft-check", "Modification effectué avec succée");
+                    // alertCustom("success", "ft-check", "Modification effectué avec succée");
                     $('#ajout_article').find(':input:not([type="radio"])').each(function () {
                         if ($(this).is('select.selectpicker')) {
                             // Réinitialiser le selectpicker en vidant les sélections
@@ -200,7 +201,7 @@ $("#ajout_article").off("submit").on("submit", function (e) {
                             // Réinitialiser les autres champs en vidant leur valeur
                             $(this).val('');
                         }
-                        $("#AddContactModal").modal("hide");
+                        $("#AjoutArticleModal").modal("hide");
                     });
                 } else {
                     alertCustom("danger", "ft-x", "Modification non effectué");
@@ -208,9 +209,10 @@ $("#ajout_article").off("submit").on("submit", function (e) {
 
             } else {
 
-                $("#card_article_menuiserie").unblock();
+                $("#card_liste_article").unblock();
                 if (res.status == "success") {
                     alertCustom("success", "ft-check", "Ajout effectué avec succée");
+
                     $('#ajout_article').find(':input:not([type="radio"])').each(function () {
                         if ($(this).is('select.selectpicker')) {
                             // Réinitialiser le selectpicker en vidant les sélections
@@ -223,8 +225,9 @@ $("#ajout_article").off("submit").on("submit", function (e) {
                 } else {
                     alertCustom("danger", "ft-x", "Ajout non effectué");
                 }
+                $('[data-dismiss="modal"]').focus();  // Déplacer le focus ailleurs (sur un élément visible)
+                $("#AjoutArticleModal").modal("hide");
             }
-            $("#id_article_men_modif").val("");
 
             liste_article();
 
@@ -232,3 +235,4 @@ $("#ajout_article").off("submit").on("submit", function (e) {
         },
     });
 });
+

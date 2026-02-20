@@ -11,7 +11,7 @@
                 {{-- card filtre --}}
                 <div class="card">
                     <div class="card-header">
-                        <a data-action="collapse">
+                        <a data-action="collapse ">
                             <h3 class="card-title">Filtre</h3>
                             <a class="heading-elements-toggle"><i class="la la-ellipsis-v font-medium-3"></i></a>
                             <div class="heading-elements">
@@ -55,6 +55,9 @@
 
         {{-- les modale article --}}
         @include('article.modalArticle')
+
+
+
 
     </section>
 
