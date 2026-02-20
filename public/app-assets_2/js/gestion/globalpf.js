@@ -1,0 +1,1 @@
+var idtypemenu = 2 ;

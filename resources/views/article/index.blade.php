@@ -4,7 +4,6 @@
 
 @section('app-content')
 
-    <!-- Base style table -->
     <section id="base-style">
         <div class="row">
             <div class="col-12">
@@ -37,10 +36,15 @@
                     <div class="card-content">
                         <div class="card-body" id="card_liste_article">
                             <center>
-                                <h6 class="text-center" style="font-size: 14px; margin-bottom: -25px;">Liste d'Articles</h6>
+                                <h6 class="text-center" style="font-size: 14px; margin-bottom: -25px;">Liste Articles</h6>
                             </center>
+
                             <table id="card_article" class="table table-white-space table-bordered  no-wrap  text-center"
                                 style="width: 100% !important; overflow: auto !important;">
+
+
+
+
                             </table>
 
                         </div>
@@ -48,9 +52,10 @@
                 </div>
             </div>
         </div>
+
+        {{-- les modale article --}}
+        @include('article.modalArticle')
+
     </section>
-    <!--/ Base style table -->
-
-
 
 @endsection

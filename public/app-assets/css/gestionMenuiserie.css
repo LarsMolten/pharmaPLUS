@@ -1,0 +1,19 @@
+
+div.dataTables_scrollBody table {
+  border-top: 1px solid #e3ebf3 !important;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+}
+
+label.labely{
+  padding: 0rem !important;
+}
+
+.input-group-text {
+  padding-bottom :  0rem !important;
+  padding-left: 1rem !important;
+  padding-right: 1rem !important;
+  padding-top: 0.4rem !important;
+  margin-top: 0.099rem !important;;
+
+ }

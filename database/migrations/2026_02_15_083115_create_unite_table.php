@@ -3,6 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\DB;
 
 return new class extends Migration
 {
@@ -11,11 +12,19 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('unite', function (Blueprint $table) {
+        Schema::create('unites', function (Blueprint $table) {
             $table->id();
             $table->string('nom')->unique();
             $table->timestamps();
         });
+
+        // Insérer des valeurs initiales pour la table `unites`
+        DB::table('unites')->insert([
+            ['nom' => 'Boîte', 'created_at' => now(), 'updated_at' => now()],
+            ['nom' => 'Flacon',  'created_at' => now(), 'updated_at' => now()],
+            ['nom' => 'Tube',  'created_at' => now(), 'updated_at' => now()],
+            ['nom' => 'unité', 'created_at' => now(), 'updated_at' => now()],
+        ]);
     }
 
     /**
@@ -23,6 +32,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('unite');
+        Schema::dropIfExists('unites');
     }
 };

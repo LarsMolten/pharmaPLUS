@@ -1,6 +1,10 @@
 $(document).ready(function () {
     liste_article();
+    charge_unite();
 });
+
+var enCours = false;
+var id_article = "";
 
 function liste_article() {
     $.ajax({
@@ -72,24 +76,22 @@ function liste_article() {
                         className: "btn btn-sm mr-1 btn-success btn-min-width ",
                         text: '<i class="ft-plus"> Ajouter</i>',
                         action: function () {
-                            alert("Ajouter un article");
-
                             // id_article = "";
-                            // $('.entete_modal').text("Ajout");
-                            // $('#btn_add_article').text("Ajouter");
-                            // $("#AddContactModal").modal(
-                            //     { backdrop: "static", keyboard: false },
-                            //     "show"
-                            // );
-                            // $('#ajout_article').find(':input:not([type="submit"], [type="hidden"]):not([type="radio"])').each(function () {
-                            //     if ($(this).is('select.selectpicker')) {
-                            //         // Réinitialiser le selectpicker en vidant les sélections
-                            //         $(this).selectpicker('val', []);
-                            //     } else {
-                            //         // Réinitialiser les autres champs en vidant leur valeur
-                            //         $(this).val('');
-                            //     }
-                            // });
+                            $('.entete_modal').text("Ajout");
+                            $('#btn_add_article').text("Ajouter");
+                            $("#AjoutArticleModal").modal(
+                                { backdrop: "static", keyboard: false },
+                                "show"
+                            );
+                            $('#ajout_article').find(':input:not([type="submit"], [type="hidden"]):not([type="radio"])').each(function () {
+                                if ($(this).is('select.selectpicker')) {
+                                    // Réinitialiser le selectpicker en vidant les sélections
+                                    $(this).selectpicker('val', []);
+                                } else {
+                                    // Réinitialiser les autres champs en vidant leur valeur
+                                    $(this).val('');
+                                }
+                            });
                             // formatPrixImput();
 
                         },
@@ -104,4 +106,129 @@ function liste_article() {
             $("#card_liste_article").unblock();
         }
     });
+
+
+
 }
+
+function charge_unite() {
+    $.ajax({
+
+        beforeSend: function () {
+
+            $("#AjoutArticleModal").block({
+                message: '<div class="ft-refresh-cw icon-spin font-medium-2" style="margin:auto , font-size : 80px !important"></div>',
+
+                overlayCSS: {
+                    backgroundColor: "black",
+                    opacity: 0.1,
+                    cursor: "wait",
+
+                },
+                css: {
+                    border: 0,
+                    padding: 0,
+                    backgroundColor: "transparent"
+                }
+            });
+
+        },
+        url: base + 'charge_unite',
+        type: "GET",
+        dataType: "json",
+        complete: function () {
+            enCours = false; // Remet la variable à false, que la requête ait réussi ou échoué
+        },
+        error: function (xhr, status, error) {
+            alertCustom("danger", 'ft-x', "Une erreur s'est produite");
+        }, success: function (res) {
+            $("#unite").empty();
+            $("#unite").append(res.data);
+            $("#unite").selectpicker('refresh');
+            // if (id_unite != "") {
+            //     $('#unite').val(id_unite).selectpicker('refresh');
+            //     changeunite();
+
+            // }
+
+            // $('#unite').on('change', function () {
+
+            //     changeunite();
+
+
+            // });
+
+            $("#AjoutArticleModal").unblock();
+
+        }
+    });
+
+}
+
+
+$("#ajout_article").off("submit").on("submit", function (e) {
+    e.preventDefault();
+    if (enCours) return; // Empêche un deuxième clic si une requête est en cours
+    enCours = true;
+    let data = new FormData(this);
+
+    data.append("id_article", id_article);
+
+    $.ajax({
+        beforeSend: function () { },
+        url: base + "ajout_article",
+        type: "POST",
+        processData: false,
+        contentType: false,
+        cache: false,
+        dataType: "JSON",
+           headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        data: data, complete: function () {
+            enCours = false; // Remet la variable à false, que la requête ait réussi ou échoué
+        },
+        success: function (res) {
+            if (id_article != "") {
+                if (res.status == "success") {
+                    alertCustom("success", "ft-check", "Modification effectué avec succée");
+                    $('#ajout_article').find(':input:not([type="radio"])').each(function () {
+                        if ($(this).is('select.selectpicker')) {
+                            // Réinitialiser le selectpicker en vidant les sélections
+                            $(this).selectpicker('val', []);
+                        } else {
+                            // Réinitialiser les autres champs en vidant leur valeur
+                            $(this).val('');
+                        }
+                        $("#AddContactModal").modal("hide");
+                    });
+                } else {
+                    alertCustom("danger", "ft-x", "Modification non effectué");
+                }
+
+            } else {
+
+                $("#card_article_menuiserie").unblock();
+                if (res.status == "success") {
+                    alertCustom("success", "ft-check", "Ajout effectué avec succée");
+                    $('#ajout_article').find(':input:not([type="radio"])').each(function () {
+                        if ($(this).is('select.selectpicker')) {
+                            // Réinitialiser le selectpicker en vidant les sélections
+                            $(this).selectpicker('val', []);
+                        } else {
+                            // Réinitialiser les autres champs en vidant leur valeur
+                            $(this).val('');
+                        }
+                    });
+                } else {
+                    alertCustom("danger", "ft-x", "Ajout non effectué");
+                }
+            }
+            $("#id_article_men_modif").val("");
+
+            liste_article();
+
+
+        },
+    });
+});
