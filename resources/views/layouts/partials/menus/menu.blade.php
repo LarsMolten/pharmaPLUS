@@ -4,7 +4,7 @@
      <div class="main-menu-content">
          <ul class="navigation navigation-main" id="main-menu-navigation" data-menu="menu-navigation">
 
-             <li class=" nav-item active"><a href="{{ route('dashboard.index') }}" ><i class="la la-shopping-cart"></i><span
+             <li class=" nav-item active"><a href="{{ route('dashboard') }}" ><i class="la la-shopping-cart"></i><span
                          class="menu-title" data-i18n="dashboard">Dashboard</span></a>
              </li>
 

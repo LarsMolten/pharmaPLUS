@@ -1,9 +1,9 @@
 <?php
 
+use App\Http\Controllers\ProfileController;
+use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Article\ArticleController;
 use App\Http\Controllers\Dashboard\Dashboard;
-use Illuminate\Support\Facades\Route;
-
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -16,11 +16,23 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('dashboard.index');
+    return view('auth.login');
 });
 
+Route::get('/dashboard', function () {
+    return view('dashboard.index');
+})->middleware(['auth', 'verified'])->name('dashboard');
+
+
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
+
+
 // Route pour le dashboard
-Route::get('/dashboard', [Dashboard::class, 'index'])->name('dashboard.index');
+// Route::get('/dashboard', [Dashboard::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard.index');
 
 //  ROUTES ARTICLE
 // Route::get('/article', [ArticleController::class, 'index'])->name('article.index'); // Affiche la vue
@@ -31,3 +43,12 @@ Route::post('/delete_article', [ArticleController::class, 'delete_article'])->na
 Route::resource('article', ArticleController::class); // Routes RESTful pour les articles
 
 
+
+
+
+
+
+
+
+
+require __DIR__.'/auth.php';
