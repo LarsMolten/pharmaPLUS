@@ -110,18 +110,7 @@
                     </li>
                 </ul>
                 <ul class="nav navbar-nav float-right">
-                    <li class="dropdown dropdown-language nav-item"><a class="dropdown-toggle nav-link"
-                            id="dropdown-flag" href="#" data-toggle="dropdown" aria-haspopup="true"
-                            aria-expanded="false"><i class="flag-icon flag-icon-gb"></i><span
-                                class="selected-language"></span></a>
-                        <div class="dropdown-menu" aria-labelledby="dropdown-flag"><a class="dropdown-item"
-                                href="#" data-language="en"><i class="flag-icon flag-icon-us"></i>
-                                English</a><a class="dropdown-item" href="#" data-language="fr"><i
-                                    class="flag-icon flag-icon-fr"></i> French</a><a class="dropdown-item"
-                                href="#" data-language="pt"><i class="flag-icon flag-icon-pt"></i>
-                                Portuguese</a><a class="dropdown-item" href="#" data-language="de"><i
-                                    class="flag-icon flag-icon-de"></i> German</a></div>
-                    </li>
+
                     <li class="dropdown dropdown-notification nav-item"><a class="nav-link nav-link-label"
                             href="#" data-toggle="dropdown"><i class="ficon ft-bell"></i><span
                                 class="badge badge-pill badge-danger badge-up badge-glow">5</span></a>
@@ -270,8 +259,13 @@
                                 href="user-profile.html"><i class="ft-user"></i> Edit Profile</a><a
                                 class="dropdown-item" href="app-kanban.html"><i class="ft-clipboard"></i> Todo</a><a
                                 class="dropdown-item" href="user-cards.html"><i class="ft-check-square"></i> Task</a>
-                            <div class="dropdown-divider"></div><a class="dropdown-item"
-                                href="login-with-bg-image.html"><i class="ft-power"></i> Logout</a>
+                            <div class="dropdown-divider"></div>
+                            <form method="POST" action="{{ route('logout') }}">
+                                @csrf
+                                <button type="submit" class="dropdown-item">
+                                    <i class="ft-power"></i> Se déconnecter
+                                </button>
+                            </form>
                         </div>
                     </li>
                 </ul>

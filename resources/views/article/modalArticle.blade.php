@@ -10,8 +10,8 @@
                                 Nouvel Article
                             </h3>
 
-                            <br>
-                            <form class="form" method="post" action="hafa_koa" id="ajout_article">
+                                <br>
+                                <form class="form" method="post" action="{{ route('ajout_article') }}" id="ajout_article">
 
                                 @csrf
 

@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 <html class="loading" lang="fr" data-textdirection="ltr">
 <!-- BEGIN: Head-->
@@ -61,7 +63,7 @@
 
    @include('layouts.partials.script')
 
-
+   {{-- @stack('scripts-page') --}}
 
 </body>
 <!-- END: Body-->

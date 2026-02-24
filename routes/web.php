@@ -1,8 +1,11 @@
 <?php
 
-use App\Http\Controllers\Article\ArticleController;
-use App\Http\Controllers\Dashboard\Dashboard;
+use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Article\ArticleController;
+use App\Http\Controllers\Utilisateur\UtilisateurController;
+use App\Http\Controllers\Dashboard\Dashboard;
+use Spatie\Permission\Models\Role;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,18 +19,36 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('dashboard.index');
+    return view('auth.login');
 });
 
+Route::get('/dashboard', function () {
+    return view('dashboard.index');
+})->middleware(['auth', 'verified'])->name('dashboard');
+
+
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
+
+require __DIR__.'/auth.php';
+
 // Route pour le dashboard
-Route::get('/dashboard', [Dashboard::class, 'index'])->name('dashboard.index');
+// Route::get('/dashboard', [Dashboard::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard.index');
 
 //  ROUTES ARTICLE
-// Route::get('/article', [ArticleController::class, 'index'])->name('article.index'); // Affiche la vue
+Route::get('/article', [ArticleController::class, 'index'])->name('article.index'); // Affiche la vue
 Route::get('/liste_article', [ArticleController::class, 'liste_article'])->name('liste_article'); // Retourne JSON
 Route::get('/charge_unite', [ArticleController::class, 'charge_unite'])->name('charge_unite'); // Retourne JSON des unités
 Route::post('/ajout_article', [ArticleController::class, 'ajout_article'])->name('ajout_article'); // Ajoute et modificatio un article
 Route::post('/delete_article', [ArticleController::class, 'delete_article'])->name('delete_article'); // Supprime un article
-Route::resource('article', ArticleController::class); // Routes RESTful pour les articles
+// Route::resource('article', ArticleController::class); // Routes RESTful pour les articles
 
+// ROUTES UTILISATEUR
+Route::get('/utilisateur', [UtilisateurController::class, 'index'])->name('utilisateur.index');
+Route::get('/liste_utilisateur', [UtilisateurController::class, 'liste_utilisateur'])->name('liste_utilisateur');
+Route::get('/charge_role', [UtilisateurController::class, 'charge_role'])->name('charge_role');
+Route::post('/ajout_utilisateur', [UtilisateurController::class, 'ajout_utilisateur'])->name('ajout_utilisateur');
 

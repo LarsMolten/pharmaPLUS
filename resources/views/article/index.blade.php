@@ -58,7 +58,11 @@
 
 
 
-
+        
     </section>
 
 @endsection
+{{-- 
+@push('scripts-page')
+        <script src="{{ asset('js/utilisateur.js') }}"></script>
+@endpush --}}

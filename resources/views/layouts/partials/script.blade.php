@@ -32,4 +32,10 @@
  <!-- bootstrap-select JS -->
  <script src="{{ asset('app-assets/js/bootstrap-select.min.js') }}"></script>
 
+ @stack('script-page')
+
  <script src="{{ asset('Js/article/article.js') }}"></script>
+ 
+ @if(auth()->user()->hasRole('superAdmin'))
+    <script src="{{ asset('js/utilisateur.js') }}"></script>
+@endif

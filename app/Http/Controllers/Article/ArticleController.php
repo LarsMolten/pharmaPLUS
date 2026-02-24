@@ -119,6 +119,7 @@ class ArticleController extends Controller
 
                 'status' => "success",
                 'data' => $article
+
             ]);
         } catch (\Exception $e) {
             return response()->json([
