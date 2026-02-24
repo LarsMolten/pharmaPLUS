@@ -113,15 +113,15 @@ function liste_article() {
 }
 
 function changeunite() {
-  var maxQuantity = $('#unite').find('option:selected').data('supun');
-  // Si maxQuantity est 0, vider le champ et sortir
-  if (maxQuantity === 1) {
-    $('#presentation').attr("readonly", true);
-    $('#presentation').val(1);
-  }
-  else {
-    $('#presentation').attr("readonly", false);
-  }
+    var maxQuantity = $('#unite').find('option:selected').data('supun');
+    // Si maxQuantity est 0, vider le champ et sortir
+    if (maxQuantity === 1) {
+        $('#presentation').attr("readonly", true);
+        $('#presentation').val(1);
+    }
+    else {
+        $('#presentation').attr("readonly", false);
+    }
 }
 
 function charge_unite() {
@@ -252,36 +252,36 @@ $("#ajout_article").off("submit").on("submit", function (e) {
 
 
 function edit_article(id) {
-  if (enCours) return; // Empêche un deuxième clic si une requête est en cours
-  enCours = true;
-  id_article = id;
-//   formatPrixImput();
-  $('.entete_modal').text("Modification");
-  $('#btn_add_article').text("Modifier");
-  $("#AjoutArticleModal").modal(
-    { backdrop: "static", keyboard: false },
-    "show"
-  );
+    if (enCours) return; // Empêche un deuxième clic si une requête est en cours
+    enCours = true;
+    id_article = id;
+    //   formatPrixImput();
+    $('.entete_modal').text("Modification");
+    $('#btn_add_article').text("Modifier");
+    $("#AjoutArticleModal").modal(
+        { backdrop: "static", keyboard: false },
+        "show"
+    );
 
 
-  var designation = $('#art_' + id).data('designation');
-  var presentation = $('#art_' + id).data('presentation');
-  id_unite = $('#art_' + id).data('unite');
+    var designation = $('#art_' + id).data('designation');
+    var presentation = $('#art_' + id).data('presentation');
+    id_unite = $('#art_' + id).data('unite');
 
-  charge_unite();
+    charge_unite();
 
 
-  $('input[name="designation"]').val(designation);
-  $('input[name="presentation"]').val(presentation);
-  $('#unite').val(id_unite).selectpicker('refresh');
+    $('input[name="designation"]').val(designation);
+    $('input[name="presentation"]').val(presentation);
+    $('#unite').val(id_unite).selectpicker('refresh');
 
 }
 
 function delete_article(id) {
 
 
-  $("#card_liste_article").block({
-    message: `
+    $("#card_liste_article").block({
+        message: `
         
         
         <div class="card" style="max-width:400px ; ">
@@ -304,78 +304,78 @@ function delete_article(id) {
 
         `,
 
-    overlayCSS: {
-      backgroundColor: 'black',
-      opacity: 0.1,
-      cursor: "wait",
+        overlayCSS: {
+            backgroundColor: 'black',
+            opacity: 0.1,
+            cursor: "wait",
 
-    },
-    css: {
-      border: 0,
-      padding: 0,
-      backgroundColor: "transparent"
-    }
-  });
+        },
+        css: {
+            border: 0,
+            padding: 0,
+            backgroundColor: "transparent"
+        }
+    });
 
 
 }
 
 
 function delete_article_from_dialog(id) {
-  if (enCours) return; // Empêche un deuxième clic si une requête est en cours
-  enCours = true;
-  $("#card_liste_article").unblock();
+    if (enCours) return; // Empêche un deuxième clic si une requête est en cours
+    enCours = true;
+    $("#card_liste_article").unblock();
 
-  $.ajax({
-    beforeSend: function () {
+    $.ajax({
+        beforeSend: function () {
 
-      $("#card_liste_article").block({
-        message: '<div class="ft-refresh-cw icon-spin font-medium-2" style="margin:auto"></div>',
+            $("#card_liste_article").block({
+                message: '<div class="ft-refresh-cw icon-spin font-medium-2" style="margin:auto"></div>',
 
-        overlayCSS: {
-          backgroundColor: "black",
-          opacity: 0.1,
-          cursor: "wait",
+                overlayCSS: {
+                    backgroundColor: "black",
+                    opacity: 0.1,
+                    cursor: "wait",
+
+                },
+                css: {
+                    border: 0,
+                    padding: 0,
+                    backgroundColor: "transparent"
+                }
+            });
 
         },
-        css: {
-          border: 0,
-          padding: 0,
-          backgroundColor: "transparent"
-        }
-      });
-
-    },
-    url: base + "delete_article",
-    type: "POST",
-     headers: {
+        url: base + "delete_article",
+        type: "POST",
+        headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         },
-    complete: function() {
-      enCours = false; // Remet la variable à false, que la requête ait réussi ou échoué
-  },
-    data: { id_article: id },
-    success: function (res) {
-      $("#card_liste_article").unblock();
-      id_article = "";
+        complete: function () {
+            enCours = false; // Remet la variable à false, que la requête ait réussi ou échoué
+        },
+        data: { id_article: id },
+        success: function (res) {
+            $("#card_liste_article").unblock();
+            id_article = "";
 
-      if (res.data > 0) {
+            if (res.data > 0) {
 
-        alertCustom("success", 'ft-check', "Suppression effectué avec succée");
+                alertCustom("success", 'ft-check', "Suppression effectué avec succée");
 
-      } else {
+            } else {
 
-        alertCustom("danger", 'ft-x', "Suppression non effectué");
+                alertCustom("danger", 'ft-x', "Suppression non effectué");
 
-      }
+            }
 
-      liste_article();
+            liste_article();
 
-    },
-  });
+        },
+    });
 
 }
 
 function close_overlay_liste_article() {
-  $("#card_liste_article").unblock();
+    $("#card_liste_article").unblock();
 }

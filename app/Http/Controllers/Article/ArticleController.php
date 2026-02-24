@@ -116,8 +116,8 @@ class ArticleController extends Controller
             $article = article::create($validated);
             }
             return response()->json([
-                'status' => "success",
-                'data' => $article
+                'status' => "success"
+              
             ]);
         } catch (\Exception $e) {
             return response()->json([
