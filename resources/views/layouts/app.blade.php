@@ -18,7 +18,6 @@
     {{-- END: Style --}}
 
 
-   @include('layouts.partials.script')
 
 </head>
 <!-- END: Head-->
@@ -58,6 +57,9 @@
     <!-- BEGIN: Footer-->
     @include('layouts.partials.footer.footer')
     <!-- END: Footer-->
+
+
+   @include('layouts.partials.script')
 
 
 

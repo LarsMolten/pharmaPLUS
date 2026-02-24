@@ -1,4 +1,5 @@
-<div class="heading-elements mt-0">
+
+        <div class="heading-elements mt-0">
         <div class="modal fade" id="AjoutArticleModal" style="z-index: 99999999" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel1" aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content" id="content_modal_article">
@@ -10,10 +11,10 @@
                             </h3>
 
                             <br>
-                            <form class="form" method="post" action="ajout_article" id="ajout_article">
-                                    
+                            <form class="form" method="post" action="hafa_koa" id="ajout_article">
+
                                 @csrf
-                                
+
                                 <div class="form-body">
 
                                     <div class="row">
@@ -40,27 +41,9 @@
                                         <div class="col-md-12">
                                             <div class="form-group">
                                                 <label for="userinput1" class="">Presentation</label>
-                                                <input class="form-control input-sm" name="presentation" required type="text" placeholder="Presentation" id="presentation">
+                                                <input class="form-control input-sm" name="presentation" required type="number" placeholder="Presentation" id="presentation">
                                             </div>
                                         </div>
-
-                                    <!-- <div class="row">
-                                        <div class="col-md-12">
-                                            <div class="form-group">
-                                                <label for="userinput1" class="">Date peremption</label>
-                                                <div class="input-group">
-                                                    <input type="text" id="dateperemption" name="dateperemption" class="form-control input-sm" placeholder="mm-yyyy">
-                                                    <div class="input-group-append">
-                                                        <span class="input-group-text input-group-addon" id="dateperemption-icon" style="padding-bottom: 0rem !important; padding-top: 0.0rem !important; margin-top: 0px !important">
-                                                            <i class="la la-calendar"></i>
-                                                        </span>
-                                                    </div>
-                                                </div>
-
-                                            </div>
-                                        </div>
-
-                                    </div> -->
 
                                 </div>
 

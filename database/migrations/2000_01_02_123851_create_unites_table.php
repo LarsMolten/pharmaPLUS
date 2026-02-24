@@ -5,6 +5,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\DB;
 
+
 return new class extends Migration
 {
     /**
@@ -14,16 +15,18 @@ return new class extends Migration
     {
         Schema::create('unites', function (Blueprint $table) {
             $table->id();
-            $table->string('nom')->unique();
+            $table->string('nomUnite')->unique();
+            $table->string('nomComplet');
+            $table->boolean('supun')->default(false);
             $table->timestamps();
         });
 
         // Insérer des valeurs initiales pour la table `unites`
         DB::table('unites')->insert([
-            ['nom' => 'Boîte', 'created_at' => now(), 'updated_at' => now()],
-            ['nom' => 'Flacon',  'created_at' => now(), 'updated_at' => now()],
-            ['nom' => 'Tube',  'created_at' => now(), 'updated_at' => now()],
-            ['nom' => 'unité', 'created_at' => now(), 'updated_at' => now()],
+            ['nomUnite' => 'BT', 'nomComplet' => 'Boîte', 'supun' => false, 'created_at' => now(), 'updated_at' => now()],
+            ['nomUnite' => 'Flacon',  'nomComplet' => 'Flacon',  'supun' => true, 'created_at' => now(), 'updated_at' => now()],
+            ['nomUnite' => 'Tube',  'nomComplet' => 'Tube',  'supun' => true, 'created_at' => now(), 'updated_at' => now()],
+            ['nomUnite' => 'Unité', 'nomComplet' => 'Unité',  'supun' => false, 'created_at' => now(), 'updated_at' => now()],
         ]);
     }
 

@@ -22,8 +22,13 @@ class StorearticleRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'designation' => ['string', 'max:255'],
-            'presentation' => ['integer', 'max:3']
+            // 'id_article' => 'nullable|integer',
+            'designation' => 'required|string|max:255',
+            'presentation' => 'required|string|max:255',
+            'unite' => 'required|exists:unites,id',
+            'stock' => 'integer|min:0',
+            'statut' => 'string|max:200',
+            'etat' => 'boolean',
         ];
     }
 }

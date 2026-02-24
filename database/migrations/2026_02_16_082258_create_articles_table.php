@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('designation');
             $table->integer('presentation');
-            $table->foreignId('unite')->constrained('unite')->cascadeOnDelete();
+            $table->foreignId('unite')->constrained('unites')->cascadeOnDelete();
             $table->integer('stock')->default(0);
             $table->enum('statut', ['disponible', 'indisponible'])->default('disponible');
             $table->boolean('etat')->default(true); // true = actif, false = supprimé
