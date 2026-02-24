@@ -19,15 +19,16 @@
                              <form class="form-horizontal form-simple" action="{{ route('login') }}" method="POST">
                                  @csrf
                                  <fieldset class="form-group position-relative has-icon-left mb-0">
-                                     <input type="text" class="form-control" id="user-email" placeholder="Your Email" value="{{ old('email') }}"
-                                         name="email" required>
+                                     <input type="text" class="form-control" id="user-name" placeholder="Your Email" value="{{ old('username') }}"
+                                         name="username" required>
                                      <div class="form-control-position">
                                          <i class="la la-user"></i>
                                      </div>
-                                     @error('email')
+                                     @error('username')
                                          <p class="text-danger">{{ $message }}</p>
                                      @enderror
                                  </fieldset>
+                                 <br>
                                  <fieldset class="form-group position-relative has-icon-left">
                                      <input type="password" class="form-control" id="user-password"
                                          placeholder="Enter Password" name="password" required>

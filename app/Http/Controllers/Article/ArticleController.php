@@ -116,8 +116,9 @@ class ArticleController extends Controller
             $article = article::create($validated);
             }
             return response()->json([
-                'status' => "success"
-              
+                'status' => "success",
+                'data' => $article
+
             ]);
         } catch (\Exception $e) {
             return response()->json([
@@ -130,19 +131,19 @@ class ArticleController extends Controller
 
     // suppression d'un article
     public function delete_article(Request $request){
-        try {            
+        try {
              $article = article::where('id', $request->id_article)->update(['etat' => 0]);
 
                 return response()->json([
                     'status' => "success",
                     'data' => $article
                 ]);
-           
+
         } catch (\Exception $e) {
             return response()->json([
                 'status' => "error",
                 'message' => $e->getMessage()
             ], 500);
-        }  
-    }     
+        }
+    }
 }

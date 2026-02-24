@@ -33,3 +33,4 @@
  <script src="{{ asset('app-assets/js/bootstrap-select.min.js') }}"></script>
 
  <script src="{{ asset('Js/article/article.js') }}"></script>
+ <script src="{{ asset('Js/utilisateur.js') }}"></script>

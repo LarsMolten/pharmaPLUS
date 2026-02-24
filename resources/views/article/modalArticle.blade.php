@@ -11,7 +11,7 @@
                                 </h3>
 
                                 <br>
-                                <form class="form" method="post" action="ajout_article" id="ajout_article">
+                                <form class="form" method="post" action="{{ route('ajout_article') }}" id="ajout_article">
 
                                     @csrf
                                     <div class="form-body">

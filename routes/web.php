@@ -3,7 +3,10 @@
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Article\ArticleController;
+use App\Http\Controllers\Utilisateur\UtilisateurController;
 use App\Http\Controllers\Dashboard\Dashboard;
+use Spatie\Permission\Models\Role;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -30,6 +33,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+require __DIR__.'/auth.php';
 
 // Route pour le dashboard
 // Route::get('/dashboard', [Dashboard::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard.index');
@@ -42,6 +46,9 @@ Route::post('/ajout_article', [ArticleController::class, 'ajout_article'])->name
 Route::post('/delete_article', [ArticleController::class, 'delete_article'])->name('delete_article'); // Supprime un article
 // Route::resource('article', ArticleController::class); // Routes RESTful pour les articles
 
+// ROUTES UTILISATEUR
+Route::get('/utilisateur', [UtilisateurController::class, 'index'])->name('utilisateur.index');
+Route::get('/liste_utilisateur', [UtilisateurController::class, 'liste_utilisateur'])->name('liste_utilisateur'); // Retourne JSON
 
 
 
@@ -50,5 +57,3 @@ Route::post('/delete_article', [ArticleController::class, 'delete_article'])->na
 
 
 
-
-require __DIR__.'/auth.php';

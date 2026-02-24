@@ -180,7 +180,7 @@ function charge_unite() {
 
 
 
-$("#ajout_article").off("submit").on("submit", function (e) {
+$(document).on("submit", "#ajout_article", function (e) {
     e.preventDefault();
     if (enCours) return; // Empêche un deuxième clic si une requête est en cours
     enCours = true;
@@ -282,8 +282,8 @@ function delete_article(id) {
 
     $("#card_liste_article").block({
         message: `
-        
-        
+
+
         <div class="card" style="max-width:400px ; ">
         <div class="card-header" style="max-width:400px ;">
                  <i class="ft-trash-2" style='color:rgb(233, 46, 46);font-size:50px'></i>
@@ -299,7 +299,7 @@ function delete_article(id) {
             </div>
         </div>
         </div>
-      
+
 
 
         `,
