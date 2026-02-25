@@ -5,8 +5,8 @@
 @section('app-content')
 
 
-    <section id="main-content">
-        <div class="row">
+    <section id="main-content" data-page="utilisateur">
+        <div class="row" id="utilisateur-content">
             <div class="col-12">
 
 

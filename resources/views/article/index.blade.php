@@ -5,7 +5,7 @@
 @section('app-content')
 
     <section id="main-content">
-        <div class="row">
+        <div class="row" id="article-content">
             <div class="col-12">
 
                 {{-- card filtre --}}
@@ -63,3 +63,6 @@
 
 @endsection
 
+@push('script-page')
+ <script src="{{ asset('Js/article/article.js') }}"></script>
+@endpush

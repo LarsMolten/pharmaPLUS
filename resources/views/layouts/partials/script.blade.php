@@ -15,9 +15,9 @@
 
 
  <!-- BEGIN: Theme JS-->
- <script src="{{ asset('Js/app.js') }}"></script>
- <script src="{{ asset('app-assets/js/core/app-menu.js') }}"></script>
- <script src="{{ asset('app-assets/js/core/app.js') }}"></script>
+ <script src="{{ asset('app-assets/js/core/app-menu.min.js') }}"></script>
+ <script src="{{ asset('app-assets/js/app.js') }}"></script>
+ {{-- <script src="{{ asset('Js/app.js') }}"></script> --}}
  <!-- END: Theme JS-->
 
  <!-- BEGIN: Page JS-->
@@ -36,7 +36,7 @@
  </script>
 
 
- {{-- @stack('script-page') --}}
+ @stack('script-page')
 
  <script src="{{ asset('Js/article/article.js') }}"></script>
 

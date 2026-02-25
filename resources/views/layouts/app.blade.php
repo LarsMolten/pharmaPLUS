@@ -45,7 +45,7 @@
         <div class="content-overlay"></div>
         <div class="content-wrapper">
 
-            <div class="main-content">
+            <div id="main-content">
 
                 @yield('app-content')
 
@@ -70,7 +70,7 @@
     @include('layouts.partials.script')
 
 
-    {{-- @stack('scripts-page') --}}
+    {{-- @stack('scripts-page')  --}}
 
 </body>
 <!-- END: Body-->
