@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html>
 <html class="loading" lang="fr" data-textdirection="ltr">
 <!-- BEGIN: Head-->
@@ -8,9 +6,11 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
-    <meta name="description" content="Modern admin is super flexible, powerful, clean &amp; modern responsive bootstrap 4 admin template with unlimited possibilities with bitcoin dashboard.">
-    <meta name="keywords" content="admin template, modern admin template, dashboard template, flat admin template, responsive admin template, web app, crypto dashboard, bitcoin dashboard">
-    <meta name="author" content="PIXINVENT">
+    {{-- <meta name="description"
+        content="Modern admin is super flexible, powerful, clean &amp; modern responsive bootstrap 4 admin template with unlimited possibilities with bitcoin dashboard."> --}}
+    {{-- <meta name="keywords"
+        content="admin template, modern admin template, dashboard template, flat admin template, responsive admin template, web app, crypto dashboard, bitcoin dashboard"> --}}
+    {{-- <meta name="author" content="PIXINVENT"> --}}
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title')</title>
 
@@ -26,7 +26,8 @@
 
 <!-- BEGIN: Body-->
 
-<body class="vertical-layout vertical-menu-modern 2-columns   fixed-navbar" data-open="click" data-menu="vertical-menu-modern" data-col="2-columns">
+<body class="vertical-layout vertical-menu-modern 2-columns   fixed-navbar" data-open="click"
+    data-menu="vertical-menu-modern" data-col="2-columns">
 
     <!-- BEGIN: Header-->
     @include('layouts.partials.header.header')
@@ -44,7 +45,12 @@
         <div class="content-overlay"></div>
         <div class="content-wrapper">
 
-           @yield('app-content')
+            <div class="main-content">
+
+                @yield('app-content')
+
+            </div>
+
 
         </div>
     </div>
@@ -61,9 +67,10 @@
     <!-- END: Footer-->
 
 
-   @include('layouts.partials.script')
+    @include('layouts.partials.script')
 
-   {{-- @stack('scripts-page') --}}
+
+    {{-- @stack('scripts-page') --}}
 
 </body>
 <!-- END: Body-->

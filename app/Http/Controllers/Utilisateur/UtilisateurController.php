@@ -30,7 +30,7 @@ class UtilisateurController extends Controller
         try {
 
             // Récupérer tous les utilisateurs
-           
+
         $utilisateurs = User::with('roles')->get();
 
         $th = "
@@ -52,9 +52,9 @@ class UtilisateurController extends Controller
 
             $imagePath = $utilisateur->image ? asset('storage/' . $utilisateur->image) : asset('images/avatar-s-14.png');
 
-           $image = "<img src='{$imagePath}' 
-            width='40' 
-            height='40' 
+           $image = "<img src='{$imagePath}'
+            width='40'
+            height='40'
             style='border-radius:50%; object-fit:cover; border:1px solid #ddd;'>";
 
             $th .= "<tr>
@@ -65,6 +65,7 @@ class UtilisateurController extends Controller
 
             $th .= "<td style='width:10%'>
                         <a class='primary edit mr-1'
+                            id='user_{$utilisateur->id}'
                             data-name='{$utilisateur->name}'
                             data-username='{$utilisateur->username}'
                             data-role='{$role}'
@@ -73,10 +74,7 @@ class UtilisateurController extends Controller
                             <i class='la la-pencil-square-o'></i>
                         </a>
 
-                        <a class='danger delete mr-1'
-                            onclick='delete_utilisateur({$utilisateur->id})'>
-                            <i class='la la-trash-o'></i>
-                        </a>
+
                     </td>
                   </tr>";
         }
@@ -102,7 +100,7 @@ class UtilisateurController extends Controller
             $opt = "";
 
             foreach($roles as $role){
-                $opt .= "<option value='{$role->name}' '>{$role->name}</option>";
+                $opt .= "<option value='{$role->name}' >{$role->name}</option>";
             }
             return response()->json([
                 'success' => true,
@@ -116,7 +114,7 @@ class UtilisateurController extends Controller
         }
     }
 
-    public function ajout_utilisateur(StoreUserRequest $request)
+public function ajout_utilisateur(StoreUserRequest $request)
 {
     try {
 
@@ -132,16 +130,46 @@ class UtilisateurController extends Controller
                 ->store('users', 'public');
         }
 
-        // Création utilisateur
-        $user = User::create([
-            'name' => $request->name,
-            'username' => $request->username,
-            'password' => Hash::make($request->password),
-            'image' => $imagePath,
-        ]);
+        if($request->id_utilisateur !== ""){
 
-        // Attribution rôle
-        $user->assignRole($request->role);
+            $user = User::findOrFail($request->id_utilisateur);
+
+            // Supprimer l'ancienne image si une nouvelle est téléchargée
+            if ($imagePath && $user->image) {
+                Storage::disk('public')->delete($user->image);
+            }
+
+            // Mise à jour utilisateur
+            $user->update([
+                'name' => $request->name,
+                'username' => $request->username,
+                'image' => $imagePath ?? $user->image,
+            ]);
+
+             if ($request->filled('password')) {
+                $user->password = Hash::make($request->password);
+                $user->save();
+            }
+
+            // Synchronisation rôle
+            $user->syncRoles($request->role);
+
+
+        }else{
+
+            // Création utilisateur
+            $user = User::create([
+                'name' => $request->name,
+                'username' => $request->username,
+                'password' => Hash::make($request->password),
+                'image' => $imagePath,
+            ]);
+
+            // Attribution rôle
+            $user->assignRole($request->role);
+        }
+
+
 
         return response()->json([
             'status' => 'success' ,

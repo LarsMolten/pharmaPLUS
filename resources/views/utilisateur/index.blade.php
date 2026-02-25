@@ -4,8 +4,8 @@
 
 @section('app-content')
 
-    
-    <section id="base-style">
+
+    <section id="main-content">
         <div class="row">
             <div class="col-12">
 

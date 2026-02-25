@@ -5,7 +5,7 @@ $(document).ready(function () {
 
 var enCours = false;
 var id_utilisateur = "";
-// var id_user = "";
+var role = "";
 
 function liste_utilisateur() {
     $.ajax({
@@ -147,7 +147,11 @@ function charge_role() {
             $("#role").empty();
             $("#role").append(res.data);
             $("#role").selectpicker('refresh');
-          
+
+            if(role != ""){
+                $('#role').val(role).selectpicker('refresh');
+            }
+
             $("#AjoutUtilisateurModal").unblock();
 
         }
@@ -183,6 +187,7 @@ $(document).on("submit", "#ajout_utilisateur", function (e) {
             if (id_utilisateur != "") {
                 if (res.status == "success") {
                     id_utilisateur = "";
+                    role = "";
                     alertCustom("success", "ft-check", "Modification effectué avec succée");
                     $('#ajout_utilisateur').find(':input:not([type="radio"])').each(function () {
                         if ($(this).is('select.selectpicker')) {
@@ -225,3 +230,38 @@ $(document).on("submit", "#ajout_utilisateur", function (e) {
         },
     });
 });
+
+
+
+function edit_utilisateur(id) {
+    if (enCours) return; // Empêche un deuxième clic si une requête est en cours
+    enCours = true;
+    id_utilisateur = id;
+    //   formatPrixImput();
+    $('.entete_modal').text("Modification");
+    $('#btn_add_utilisateur').text("Modifier");
+    $("#AjoutUtilisateurModal").modal(
+        { backdrop: "static", keyboard: false },
+        "show"
+    );
+
+
+    // var image = $('#user' + id).data('image');
+    var name = $('#user_' + id).data('name');
+    var username = $('#user_' + id).data('username');
+    role = $('#user_' + id).data('role');
+
+    console.log(id);
+    console.log(role);
+    console.log(name);
+    console.log(username);
+
+    charge_role();
+
+
+    $('input[name="name"]').val(name);
+    $('input[name="username"]').val(username);
+    $('#role').val(role).selectpicker('refresh');
+
+
+}

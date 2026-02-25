@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class StoreUserRequest extends FormRequest
 {
@@ -21,11 +22,26 @@ class StoreUserRequest extends FormRequest
      */
     public function rules(): array
     {
+       $userId = $this->input('id'); // récupéré depuis le formulaire
+
         return [
             'name' => ['required', 'string', 'max:255'],
-            'username' => ['required', 'string', 'max:255', 'unique:users,username'],
-            'password' => ['required', 'string', 'min:6'],
+
+            'username' => [
+                'required',
+                'string',
+                'max:255',
+                Rule::unique('users', 'username')->ignore( $userId),
+            ],
+
+            'password' => [
+                $userId ? 'nullable' : 'required', // obligatoire en création
+                'string',
+                'min:6'
+            ],
+
             'role' => ['required', 'string', 'exists:roles,name'],
+
             'image' => ['nullable', 'image', 'mimes:jpg,jpeg,png', 'max:2048'],
         ];
     }
