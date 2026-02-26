@@ -44,6 +44,12 @@
             </li>
 
             <li class="nav-item">
+                <a href="{{ route('gestion.index') }}" class="menu-item">
+                    <i class="la la-user"></i>
+                    <span class="menu-title">Gestion</span>
+                </a>
+            </li>
+            <li class="nav-item">
                 <a href="{{ route('utilisateur.index') }}" class="menu-item">
                     <i class="la la-user"></i>
                     <span class="menu-title">Utilisateurs</span>

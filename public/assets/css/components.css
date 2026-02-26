@@ -403,7 +403,7 @@ footer .ft-heart:before {
           font-weight: 500;
           text-transform: uppercase; }
       .main-menu.menu-dark .navigation li a {
-        color: #dcdcdc;
+        color: #c7c4c4;
         transition: all 0.2s ease; }
         .main-menu.menu-dark .navigation li a i,
         .main-menu.menu-dark .navigation li a span {
@@ -448,7 +448,7 @@ footer .ft-heart:before {
         .main-menu.menu-dark .navigation > li .active {
           background: #424e58; }
           .main-menu.menu-dark .navigation > li .active > a {
-            color: #f6f6f6;
+            color: hsl(0, 0%, 100%);
             font-weight: 700;
             background: #424e58;
             margin: 0 1rem 0 1rem;
@@ -484,7 +484,7 @@ footer .ft-heart:before {
           .main-menu.menu-dark .navigation > li ul .active {
             background: transparent; }
             .main-menu.menu-dark .navigation > li ul .active > a {
-              color: #f6f6f6;
+              color: #fdfbfb;
               font-weight: 700; }
             .main-menu.menu-dark .navigation > li ul .active .hover > a {
               background-color: transparent; }

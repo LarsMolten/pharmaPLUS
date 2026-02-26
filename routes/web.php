@@ -4,6 +4,7 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Article\ArticleController;
 use App\Http\Controllers\Utilisateur\UtilisateurController;
+use App\Http\Controllers\Analyse\AnalyseController;
 use App\Http\Controllers\Dashboard\Dashboard;
 use Spatie\Permission\Models\Role;
 
@@ -52,3 +53,5 @@ Route::get('/liste_utilisateur', [UtilisateurController::class, 'liste_utilisate
 Route::get('/charge_role', [UtilisateurController::class, 'charge_role'])->name('charge_role');
 Route::post('/ajout_utilisateur', [UtilisateurController::class, 'ajout_utilisateur'])->name('ajout_utilisateur');
 
+// Route pour les Gestions
+Route::get('/gestion', [AnalyseController::class, 'index'])->name('gestion.index');
