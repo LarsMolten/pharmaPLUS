@@ -2,11 +2,12 @@ window.pageInitializers = window.pageInitializers || {};
 
 window.pageInitializers.utilisateur = function () {
 
-        
-    $(document).ready(function () {
-        liste_utilisateur();
-        charge_role();
-    });
+    console.log("Utilisateur initialisé");
+    liste_utilisateur();
+    charge_role();
+
+    // $(document).ready(function () {
+    // });
 
     var enCours = false;
     var id_utilisateur = "";

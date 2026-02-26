@@ -4,8 +4,8 @@
 
 @section('app-content')
 
-    <section id="main-content">
-        <div class="row" id="article-content">
+    <section class="page-wrapper" data-page="article">
+        <div class="row" >
             <div class="col-12">
 
                 {{-- card filtre --}}
@@ -56,13 +56,7 @@
         {{-- les modale article --}}
         @include('article.modalArticle')
 
-
-
-
     </section>
 
 @endsection
 
-@push('script-page')
- <script src="{{ asset('Js/article/article.js') }}"></script>
-@endpush

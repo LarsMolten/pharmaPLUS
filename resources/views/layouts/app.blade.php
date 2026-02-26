@@ -70,7 +70,6 @@
     @include('layouts.partials.script')
 
 
-    {{-- @stack('scripts-page')  --}}
 
 </body>
 <!-- END: Body-->
