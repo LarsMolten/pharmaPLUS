@@ -208,7 +208,7 @@ $("#ajout_article").off("submit").on("submit", function (e) {
 
             } else {
 
-                $("#card_article_menuiserie").unblock();
+                $("#card_liste_article").unblock();
                 if (res.status == "success") {
                     alertCustom("success", "ft-check", "Ajout effectué avec succée");
                     $('#ajout_article').find(':input:not([type="radio"])').each(function () {
