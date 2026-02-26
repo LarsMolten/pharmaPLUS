@@ -1,114 +1,26 @@
 var enCoursparent = false;
 
-// $(document).ready(function () {
-
-//      $.ajaxSetup({
-//         headers: {
-//             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-//         }
-//     });
-
-
-//     // 🔹 Fonction pour activer le menu selon l'URL
-//     function activerMenuEnFonctionDeRoute() {
-//         var currentPath = window.location.pathname.replace(/\/$/, '');
-
-//         // Nettoyer tous les active/open
-//         $('#main-menu-navigation li.nav-item').removeClass('active open');
-
-//         $('#main-menu-navigation a.menu-item').each(function () {
-//             var href = $(this).attr('href');
-
-//             // Ignorer #
-//             if (!href || href === '#') return;
-
-//             var linkPath = $('<a>', { href: href })[0].pathname.replace(/\/$/, '');
-
-//             if (currentPath === linkPath) {
-//                 var li = $(this).closest('li.nav-item');
-//                 li.addClass('active');
-
-//                 // Active les parents (pour sous-menus)
-//                 li.parents('li.nav-item').addClass('active open');
-//             }
-//         });
-//     }
-
-//     // 🔹 Initialiser la page sur refresh
-//     function initCurrentPage() {
-//         var pageName = $('#main-content').find('[data-page]').data('page');
-//         if (pageName && window.pageInitializers[pageName]) {
-//             window.pageInitializers[pageName]();
-//         }
-//     }
-
-//     initCurrentPage();
-//      window.initCurrentPage = initCurrentPage;
-
-//     activerMenuEnFonctionDeRoute();
-
-//     // 🔹 Gestion du menu click
-//     $('#main-menu-navigation a.menu-item').on('click', function (e) {
-//         var url = $(this).attr('href');
-
-//         if (!url || url === '#') return; // parent seulement
-//         e.preventDefault();
-
-//         if (enCoursparent) return;
-//         enCoursparent = true;
-
-//         // loader
-//         $('#main-content').html('<div style="padding:20px;text-align:center;">Chargement...</div>');
-
-//         $.ajax({
-//             url: url,
-//             type: "GET",
-//             success: function (response) {
-//                 // injecter le contenu
-//                 var newContent = $(response).find('#main-content').html();
-//                 if (newContent) {
-//                     $('#main-content').html(newContent);
-//                     initCurrentPage();
-//                     activerMenuEnFonctionDeRoute();
-//                     history.pushState(null, '', url);
-//                 } else {
-//                     window.location.href = url;
-//                 }
-//                 enCoursparent = false;
-//             },
-//             error: function () {
-//                 window.location.href = url;
-//             }
-//         });
-//     });
-
-//     // 🔹 Boutons back/forward
-//     $(window).on('popstate', function () {
-//         var url = window.location.href;
-//         $.get(url, function (response) {
-//             var newContent = $(response).find('#main-content').html();
-//             $('#main-content').html(newContent);
-//             initCurrentPage();
-//             activerMenuEnFonctionDeRoute();
-//         });
-//     });
-
-// });
-
-
-
-
-
-
-
-
-
 
 $(document).ready(function () {
 
     $.ajaxSetup({
         headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
+
+    // Gestionnaire global pour toutes les actions dynamiques
+    $(document).on('click', '[data-action]', function (e) {
+
+        e.preventDefault();
+
+        var action = $(this).data('action');
+        var id = $(this).data('id');
+
+        if (action && typeof window[action] === 'function') {
+            window[action](id, $(this));
+        } else {
+            console.warn('Fonction non trouvée:', action);
         }
     });
 
@@ -128,7 +40,7 @@ $(document).ready(function () {
     activerMenuEnFonctionDeRoute();
 
 
-     function initCurrentPage() {
+    function initCurrentPage() {
 
         var pageName = $('#main-content').find('[data-page]').data('page');
 
@@ -147,7 +59,7 @@ $(document).ready(function () {
 
     $('.menu-item').on('click', function (e) {
 
-        console.log("Menu item clicked: " + $(this).attr('href'));
+        // console.log("Menu item clicked: " + $(this).attr('href'));
 
         var url = $(this).attr('href');
 
@@ -167,7 +79,7 @@ $(document).ready(function () {
             type: "GET",
             success: function (response) {
 
-                console.log("Contenu chargé avec succès depuis : " + url);
+                // console.log("Contenu chargé avec succès depuis : " + url);
 
                 var newContent = $(response).find('#main-content');
 
@@ -176,7 +88,7 @@ $(document).ready(function () {
                     $('#main-content').html(newContent.html());
 
                     // Détection automatique de la page
-                      initCurrentPage();
+                    initCurrentPage();
 
                     history.pushState(null, '', url);
                     activerMenuEnFonctionDeRoute();
@@ -200,7 +112,7 @@ $(document).ready(function () {
 
 function activerMenuEnFonctionDeRoute() {
 
-   var currentPath = window.location.pathname.replace(/\/$/, '');
+    var currentPath = window.location.pathname.replace(/\/$/, '');
 
     // Nettoyage COMPLET
     $('#main-menu-navigation li').removeClass('active open');
@@ -227,28 +139,6 @@ function activerMenuEnFonctionDeRoute() {
 
     });
 }
-
-// function activerMenuEnFonctionDeRoute() {
-//     var cheminURL = window.location.pathname;
-
-//     // Retirer la classe 'active' de tous les éléments du menu
-//     // Parcourir tous les liens du menu
-//     $('.menu-item').each(function () {
-//         var lienMenu = $(this).attr('href'); // Retirer le préfixe 'lien'
-
-//         if (base + cheminURL.replace('/', '') == lienMenu) {
-//             var clickedMenuItem = $(this);
-//             $('.menu-item').parent().removeClass('menu-collapsed-open');
-//             // Retirer la classe 'active' de tous les éléments du menu
-//             $('.menu-item').parent().removeClass('active');
-//             $('.navigation .nav-item').removeClass('active');
-
-//             clickedMenuItem.parent().addClass('active');
-//             return false; // Sortir de la boucle each après avoir trouvé le correspondant
-//         }
-//     });
-// }
-
 
 
 

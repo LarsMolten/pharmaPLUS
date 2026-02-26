@@ -450,12 +450,12 @@ footer .ft-heart:before {
           .main-menu.menu-dark .navigation > li .active > a {
             color: #f6f6f6;
             font-weight: 700;
-            background: #424e58;
+            background: #424e5857;
             margin: 0 1rem 0 1rem;
             border-radius: 0.3rem;
             padding-left: 40px; }
           .main-menu.menu-dark .navigation > li .active .hover > a {
-            background: #232a2f; }
+            background: #5e6c77; }
         .main-menu.menu-dark .navigation > li ul {
           padding: 0;
           margin: 0;

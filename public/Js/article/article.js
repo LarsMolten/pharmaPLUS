@@ -3,13 +3,12 @@ window.pageInitializers = window.pageInitializers || {};
 window.pageInitializers.article = function () {
 
 
-    console.log("Article initialisé");
+    // ***************************Initialisation de la page article************************
     liste_article();
     charge_unite();
 
+    // ************************************************************************************
 
-    // $(document).ready(function () {
-    // });
 
     var enCours = false;
     var id_article = "";
@@ -259,7 +258,12 @@ window.pageInitializers.article = function () {
 
 
 
-    function edit_article(id) {
+    // $(document).on('click', '.edit_article', function () {
+    //     var id = $(this).data('id');
+    //     edit_article(id);
+    // });
+
+     window.edit_article = function(id) {
         if (enCours) return; // Empêche un deuxième clic si une requête est en cours
         enCours = true;
         id_article = id;
@@ -285,7 +289,9 @@ window.pageInitializers.article = function () {
 
     }
 
-    function delete_article(id) {
+
+
+     window.delete_article = function(id) {
 
 
         $("#card_liste_article").block({
@@ -300,8 +306,8 @@ window.pageInitializers.article = function () {
             <div class="card-body">
                 <p>Voulez-vous supprimer cet article ?</p>
 
-                    <button type="button" onclick="delete_article_from_dialog(`+ id + `)" class="mr-1 mb-1 btn btn-sm btn-warning btn-min-width"><i class="ft-check"></i> Oui</button>
-                    <button type="button" onclick="close_overlay_liste_article()" class="mr-1 mb-1 btn btn-sm btn-outline-light btn-min-width"><i class="ft-x"></i> Annuler</button>
+                    <button type="button" data-id="`+ id + `"  data-action="delete_article_from_dialog" class="mr-1 mb-1 btn btn-sm btn-warning btn-min-width"><i class="ft-check"></i> Oui</button>
+                    <button type="button" data-action="close_overlay_liste_article" class="mr-1 mb-1 btn btn-sm btn-outline-light btn-min-width"><i class="ft-x"></i> Annuler</button>
 
 
             </div>
@@ -329,7 +335,9 @@ window.pageInitializers.article = function () {
     }
 
 
-    function delete_article_from_dialog(id) {
+
+
+    window.delete_article_from_dialog = function(id) {
         if (enCours) return; // Empêche un deuxième clic si une requête est en cours
         enCours = true;
         $("#card_liste_article").unblock();
@@ -384,7 +392,7 @@ window.pageInitializers.article = function () {
 
     }
 
-    function close_overlay_liste_article() {
+     window.close_overlay_liste_article = function() {
         $("#card_liste_article").unblock();
     }
 

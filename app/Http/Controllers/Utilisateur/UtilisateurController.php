@@ -70,7 +70,9 @@ class UtilisateurController extends Controller
                             data-username='{$utilisateur->username}'
                             data-role='{$role}'
                             data-image='{$utilisateur->image}'
-                            onclick='edit_utilisateur({$utilisateur->id})'>
+                            onclick='edit_utilisateur({$utilisateur->id})'
+                            data-action='edit_utilisateur'
+                            data-id='{$utilisateur->id}'>
                             <i class='la la-pencil-square-o'></i>
                         </a>
 

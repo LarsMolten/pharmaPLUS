@@ -2,12 +2,12 @@ window.pageInitializers = window.pageInitializers || {};
 
 window.pageInitializers.utilisateur = function () {
 
-    console.log("Utilisateur initialisé");
+    // ****************************Initialisation de la page utilisateur************************
     liste_utilisateur();
     charge_role();
 
-    // $(document).ready(function () {
-    // });
+    // *****************************************************************************************
+
 
     var enCours = false;
     var id_utilisateur = "";
@@ -239,7 +239,7 @@ window.pageInitializers.utilisateur = function () {
 
 
 
-    function edit_utilisateur(id) {
+    window.edit_utilisateur = function(id) {
         if (enCours) return; // Empêche un deuxième clic si une requête est en cours
         enCours = true;
         id_utilisateur = id;

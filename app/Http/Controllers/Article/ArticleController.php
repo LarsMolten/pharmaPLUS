@@ -58,16 +58,17 @@ class ArticleController extends Controller
                             <td style='width:10%'>{$article->presentation}</td>
                             <td style='width:10% ; background-color: red;'>{$article->stock}</td>
                             <td style='width:10%'>{$article->statut}</td> ";
-
+                // on a utilisé SPA pour éviter de recharger la page à chaque action, donc on a besoin de l'id passer en 'data-id' de l'article pour faire les actions d'édition et de suppression en ajax par data-action
                 $th .= "<td style='width:10%'>
                             <a class='primary edit mr-1' data-designation='{$article->designation}'
                              data-presentation='{$article->presentation}'  data-unite='{$article->unite}'
-                             id='art_{$article->id}' onclick='edit_article({$article->id})'><i class='la la-pencil-square-o'></i></a>
+                             id='art_{$article->id}' data-action='edit_article' data-id='{$article->id}'><i class='la la-pencil-square-o'></i></a>
 
-                             <a class='danger delete mr-1' onclick='delete_article({$article->id})' ><i class='la la-trash-o'></i></a>
+                             <a class='danger delete mr-1' data-action='delete_article' data-id='{$article->id}' onclick='delete_article({$article->id})' ><i class='la la-trash-o'></i></a>
                         </tr>";
             }
             $th .="</tbody>";
+
 
 
         return response()->json([
