@@ -3,7 +3,7 @@
 @section('app-content')
     <div class="content-header row">
     </div>
-    <div class="content-body">
+    <div class="content-body" id="main-content">
         <!-- Revenue, Hit Rate & Deals -->
         <div class="row">
             <div class="col-xl-6 col-12">
@@ -266,18 +266,7 @@
                                                         src="../../../app-assets/images/portrait/small/avatar-s-4.png"
                                                         alt="Avatar">
                                                 </li>
-                                                <li data-toggle="tooltip" data-popup="tooltip-custom"
-                                                    data-original-title="Willie Torres" class="avatar avatar-sm pull-up">
-                                                    <img class="media-object rounded-circle"
-                                                        src="../../../app-assets/images/portrait/small/avatar-s-5.png"
-                                                        alt="Avatar">
-                                                </li>
-                                                <li data-toggle="tooltip" data-popup="tooltip-custom"
-                                                    data-original-title="Rebecca Jones" class="avatar avatar-sm pull-up">
-                                                    <img class="media-object rounded-circle"
-                                                        src="../../../app-assets/images/portrait/small/avatar-s-6.png"
-                                                        alt="Avatar">
-                                                </li>
+
                                                 <li class="avatar avatar-sm">
                                                     <span class="badge badge-info">+8 more</span>
                                                 </li>
@@ -307,12 +296,7 @@
                                                         src="../../../app-assets/images/portrait/small/avatar-s-7.png"
                                                         alt="Avatar">
                                                 </li>
-                                                <li data-toggle="tooltip" data-popup="tooltip-custom"
-                                                    data-original-title="Willie Torres" class="avatar avatar-sm pull-up">
-                                                    <img class="media-object rounded-circle"
-                                                        src="../../../app-assets/images/portrait/small/avatar-s-8.png"
-                                                        alt="Avatar">
-                                                </li>
+
                                                 <li class="avatar avatar-sm">
                                                     <span class="badge badge-info">+5 more</span>
                                                 </li>
@@ -342,18 +326,7 @@
                                                         src="../../../app-assets/images/portrait/small/avatar-s-1.png"
                                                         alt="Avatar">
                                                 </li>
-                                                <li data-toggle="tooltip" data-popup="tooltip-custom"
-                                                    data-original-title="Willie Torres" class="avatar avatar-sm pull-up">
-                                                    <img class="media-object rounded-circle"
-                                                        src="../../../app-assets/images/portrait/small/avatar-s-2.png"
-                                                        alt="Avatar">
-                                                </li>
-                                                <li data-toggle="tooltip" data-popup="tooltip-custom"
-                                                    data-original-title="Rebecca Jones" class="avatar avatar-sm pull-up">
-                                                    <img class="media-object rounded-circle"
-                                                        src="../../../app-assets/images/portrait/small/avatar-s-3.png"
-                                                        alt="Avatar">
-                                                </li>
+
                                                 <li class="avatar avatar-sm">
                                                     <span class="badge badge-info">+3 more</span>
                                                 </li>
@@ -383,12 +356,7 @@
                                                         src="../../../app-assets/images/portrait/small/avatar-s-11.png"
                                                         alt="Avatar">
                                                 </li>
-                                                <li data-toggle="tooltip" data-popup="tooltip-custom"
-                                                    data-original-title="Willie Torres" class="avatar avatar-sm pull-up">
-                                                    <img class="media-object rounded-circle"
-                                                        src="../../../app-assets/images/portrait/small/avatar-s-12.png"
-                                                        alt="Avatar">
-                                                </li>
+
                                             </ul>
                                         </td>
                                         <td>
@@ -415,12 +383,7 @@
                                                         src="../../../app-assets/images/portrait/small/avatar-s-6.png"
                                                         alt="Avatar">
                                                 </li>
-                                                <li data-toggle="tooltip" data-popup="tooltip-custom"
-                                                    data-original-title="Willie Torres" class="avatar avatar-sm pull-up">
-                                                    <img class="media-object rounded-circle"
-                                                        src="../../../app-assets/images/portrait/small/avatar-s-4.png"
-                                                        alt="Avatar">
-                                                </li>
+
                                             </ul>
                                         </td>
                                         <td>

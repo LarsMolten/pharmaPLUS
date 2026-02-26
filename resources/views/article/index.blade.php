@@ -4,14 +4,14 @@
 
 @section('app-content')
 
-    <section id="base-style">
-        <div class="row">
+    <section id="main-content">
+        <div class="row" id="article-content">
             <div class="col-12">
 
                 {{-- card filtre --}}
                 <div class="card">
                     <div class="card-header">
-                        <a data-action="collapse">
+                        <a data-action="collapse ">
                             <h3 class="card-title">Filtre</h3>
                             <a class="heading-elements-toggle"><i class="la la-ellipsis-v font-medium-3"></i></a>
                             <div class="heading-elements">
@@ -56,6 +56,13 @@
         {{-- les modale article --}}
         @include('article.modalArticle')
 
+
+
+
     </section>
 
 @endsection
+
+@push('script-page')
+ <script src="{{ asset('Js/article/article.js') }}"></script>
+@endpush
