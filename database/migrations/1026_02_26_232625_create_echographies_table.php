@@ -11,10 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('analyses', function (Blueprint $table) {
+       Schema::create('echographies', function (Blueprint $table) {
             $table->id();
             $table->string('nom')->unique();
-            $table->decimal('prix', 8, 2);
+            $table->decimal('prix', 12, 2);
             $table->boolean('etat')->default(true);
             $table->timestamps();
         });
@@ -25,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('analyses');
+        Schema::dropIfExists('echographies');
     }
 };

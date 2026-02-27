@@ -258,11 +258,6 @@ window.pageInitializers.article = function () {
 
 
 
-    // $(document).on('click', '.edit_article', function () {
-    //     var id = $(this).data('id');
-    //     edit_article(id);
-    // });
-
      window.edit_article = function(id) {
         if (enCours) return; // Empêche un deuxième clic si une requête est en cours
         enCours = true;

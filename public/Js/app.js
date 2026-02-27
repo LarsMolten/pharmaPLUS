@@ -1,4 +1,5 @@
 var enCoursparent = false;
+var enCours = false;
 
 
 $(document).ready(function () {
@@ -179,75 +180,126 @@ function alertCustom(type_message, ft_icon, message) {
 }
 
 
-function formatPrixImput() {
-    // Appliquer la validation à chaque champ de saisie spécifié
-    $(' #qte , #poids, #taille , #presentation , #prix_boite, #poidstaille , #nbrrepos, #sf , #ageextraction , #agesoin ,#ageCpn').on('input', function () {
-        validateNumber($(this));
+// function formatPrixImput() {
+//     // Appliquer la validation à chaque champ de saisie spécifié
+//     $(' #qte , #presentation , #prix_boite, #prix_unitaire').on('input', function () {
+//         validateNumber($(this));
+//     });
+//     $('#durreJours, #poids, #taille , #presentation , #prix_boite, #prix_unitaire').on('keydown', function (e) {
+
+//         var valer = $(this).val()
+//         if (valer != '') {
+//             var value = parseFloat($(this).val());
+
+//             if (e.key === 'ArrowUp') {
+//                 e.preventDefault(); // Empêcher le comportement par défaut
+//                 $(this).val(value + 1); // Incrémenter la valeur
+//                 validateNumber($(this)); // Valider la nouvelle valeur
+//             } else if (e.key === 'ArrowDown') {
+//                 e.preventDefault(); // Empêcher le comportement par défaut
+//                 $(this).val(value - 1); // Décrémenter la valeur
+//                 validateNumber($(this)); // Valider la nouvelle valeur
+//             }
+//         }
+//     });
+// }
+
+// function formatPrix(data) {
+
+
+//     var nombre = data.replace(/[^\d.-]/g, '');
+
+//     // Divise la partie entière et la partie décimale
+//     var parties = nombre.split('.');
+//     var partieEntiere = parties[0];
+
+//     // Ajoute un point tous les trois chiffres dans la partie entière
+//     partieEntiere = partieEntiere.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+
+//     // Tronque la partie décimale à deux chiffres
+//     var partieDecimale = parties[1] ? ',' + parties[1].slice(0, 2) : '';
+
+//     // Recrée le nombre en concaténant la partie entière et la partie décimale
+//     var formattedValue = partieEntiere + partieDecimale;
+
+
+//     // Ajoute le symbole de la devise, par exemple
+//     return formattedValue;
+// }
+
+// function formatPrixChart(data) {
+
+
+//     var nombre = data.toString().replace(/[^\d.-]/g, '');
+
+//     // Divise la partie entière et la partie décimale
+//     var parties = nombre.split('.');
+//     var partieEntiere = parties[0];
+
+//     // Ajoute un point tous les trois chiffres dans la partie entière
+//     partieEntiere = partieEntiere.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+
+//     // Tronque la partie décimale à deux chiffres
+//     var partieDecimale = parties[1] ? ',' + parties[1].slice(0, 2) : '';
+
+//     // Recrée le nombre en concaténant la partie entière et la partie décimale
+//     var formattedValue = partieEntiere + partieDecimale;
+
+
+//     // Ajoute le symbole de la devise, par exemple
+//     return formattedValue;
+// }
+
+
+
+
+// formatage automatique des prix dans les inputs
+$(document).on("input", ".format-number", function () {
+
+    let value = $(this).val();
+
+    // Autoriser chiffres + un point
+    value = value.replace(/[^\d.]/g, "");
+
+    // Empêcher plusieurs points
+    let parts = value.split(".");
+    if (parts.length > 2) {
+        value = parts[0] + "." + parts[1];
+    }
+
+    parts = value.split(".");
+    parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+
+    value = parts.join(".");
+
+    $(this).val(value);
+});
+
+// Nettoyer les espaces avant la soumission du formulaire
+$(document).on("submit", "form", function () {
+
+    $(this).find(".format-number").each(function () {
+
+        let cleanValue = $(this).val().replace(/\s/g, "");
+
+        $(this).val(cleanValue);
     });
-    $('#durreJours, #poids, #taille , #presentation , #prix_boite, #poidstaille , #nbrrepos').on('keydown', function (e) {
+});
 
-        var valer = $(this).val()
-        if (valer != '') {
-            var value = parseFloat($(this).val());
+// Formate un nombre avec espaces comme séparateurs de milliers dans l'affichage
+function formatNumberDisplay(value) {
+    if (value == null) return "";
 
-            if (e.key === 'ArrowUp') {
-                e.preventDefault(); // Empêcher le comportement par défaut
-                $(this).val(value + 1); // Incrémenter la valeur
-                validateNumber($(this)); // Valider la nouvelle valeur
-            } else if (e.key === 'ArrowDown') {
-                e.preventDefault(); // Empêcher le comportement par défaut
-                $(this).val(value - 1); // Décrémenter la valeur
-                validateNumber($(this)); // Valider la nouvelle valeur
-            }
-        }
-    });
+    // Convertit en string si nécessaire
+    value = value.toString();
+
+    // Sépare partie entière et décimale
+    let parts = value.split(".");
+    parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+
+    return parts.join(".");
 }
 
-function formatPrix(data) {
-
-
-    var nombre = data.replace(/[^\d.-]/g, '');
-
-    // Divise la partie entière et la partie décimale
-    var parties = nombre.split('.');
-    var partieEntiere = parties[0];
-
-    // Ajoute un point tous les trois chiffres dans la partie entière
-    partieEntiere = partieEntiere.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-
-    // Tronque la partie décimale à deux chiffres
-    var partieDecimale = parties[1] ? ',' + parties[1].slice(0, 2) : '';
-
-    // Recrée le nombre en concaténant la partie entière et la partie décimale
-    var formattedValue = partieEntiere + partieDecimale;
-
-
-    // Ajoute le symbole de la devise, par exemple
-    return formattedValue;
-}
-
-function formatPrixChart(data) {
-
-
-    var nombre = data.toString().replace(/[^\d.-]/g, '');
-
-    // Divise la partie entière et la partie décimale
-    var parties = nombre.split('.');
-    var partieEntiere = parties[0];
-
-    // Ajoute un point tous les trois chiffres dans la partie entière
-    partieEntiere = partieEntiere.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-
-    // Tronque la partie décimale à deux chiffres
-    var partieDecimale = parties[1] ? ',' + parties[1].slice(0, 2) : '';
-
-    // Recrée le nombre en concaténant la partie entière et la partie décimale
-    var formattedValue = partieEntiere + partieDecimale;
-
-
-    // Ajoute le symbole de la devise, par exemple
-    return formattedValue;
-}
 
 
 (function (window, document, $) {

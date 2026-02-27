@@ -5,19 +5,19 @@
             <div class="bug-list-sidebar-content">
                 <div class="card border-6 border-secondary">
                     <div class="card-header">
-                        <h4 class="card-title" id="entete_form">Ajout</h4>
+                        <h4 class="card-title" id="entete_form_echographie">Ajout</h4>
                     </div>
 
                     <div class="card-body">
-                        <form id="ajout_analyse" class="form" method="post" action="ajout_analyse">
+                        <form id="ajout_echographie" class="form" method="post" action="ajout_echographie">
 
                             @csrf
 
                             <fieldset class="form-group">
-                                <label for="nom_analyse">Analyse</label>
-                                <input type="text" id="nom_analyse" name="nom" class="form-control input-sm"
+                                <label for="nom_echographie">Nom d'Echographie</label>
+                                <input type="text" id="nom_echographie" name="nom" class="form-control input-sm"
                                     data-toggle="tooltip" data-trigger="hover" data-placement="top"
-                                    placeholder="Nom d'analyse" data-title="Nom d'analyse" required>
+                                    placeholder="Nom d'echographie" data-title="Nom d'echographie" required>
                             </fieldset>
 
                             <fieldset class="form-group">
@@ -29,8 +29,8 @@
 
                             <div class="form-actions">
                                 <button type="submit"
-                                    class="btn btn-sm btn-warning btn-min-width mr-1 mb-1 ajouter_analyse">Ajouter</button>
-                                <button type="button" id="annuler" data-action="annuler_form_analyse" data-type="analyse"
+                                    class="btn btn-sm btn-warning btn-min-width mr-1 mb-1 ajouter_echographie">Ajouter</button>
+                                <button type="button" id="annuler" data-action="annuler_form_echographie" data-type="echographie"
                                     class="btn btn-sm btn-outline-light btn-min-width mr-1 mb-1">Annuler</button>
                             </div>
                         </form>
@@ -45,9 +45,9 @@
                 <div class="col-12">
                     <div class="card border-10 border-secondary">
                         <div class="card-content collapse show">
-                            <div class="card-body card-dashboard" id="card_liste_analyse">
+                            <div class="card-body card-dashboard" id="card_liste_echographie">
 
-                                <table id="table_analyse"
+                                <table id="table_echographie"
                                     class="table table-white-space table-bordered  no-wrap  text-center"
                                     style="width: 100% ">
 
