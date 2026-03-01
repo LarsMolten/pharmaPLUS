@@ -17,8 +17,8 @@ return new class extends Migration
             $table->integer('presentation');
             $table->foreignId('unite')->constrained('unites')->cascadeOnDelete();
             $table->integer('stock')->default(0);
-            $table->enum('statut', ['disponible', 'indisponible'])->default('disponible');
-            $table->boolean('etat')->default(true); // true = actif, false = supprimé
+            $table->integer('statut')->default(1); // 1 = disponible, 0 = indisponible
+            $table->integer('etat')->default(1); // 1 = actif, 0 = supprimé
             $table->timestamps();
         });
     }

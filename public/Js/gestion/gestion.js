@@ -380,7 +380,7 @@ window.pageInitializers.gestion = function () {
         let data = new FormData(this);
 
         // récupérer la valeur brute en enlevant les espaces
-        let prixBrut = $('input[name="prix"]').val().replace(/\s/g, '');
+        let prixBrut = $('input[name="prix-echo"]').val().replace(/\s/g, '');
         data.set('prix', prixBrut);
 
         data.append("id_echographie", id_echographie);

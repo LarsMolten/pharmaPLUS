@@ -36,7 +36,7 @@ class EchographieController extends Controller
                 $th .= "<tr>
                             <td  style='width:5%'>{$echographie->id}</td>
                             <td  style='width:20%'>{$echographie->nom}</td>
-                            <td class='format-prix-echo' style='width:20%' date-value='{$echographie->prix}'>{$echographie->prix}</td>
+                            <td class='format-pri x-echo' style='width:20%' date-value='{$echographie->prix}'>{$echographie->prix}</td>
                             <td style='width:10%'>{$echographie->updated_at}</td> ";
                 // on a utilisé SPA pour éviter de recharger la page à chaque action, donc on a besoin de l'id passer en 'data-id' de l'article pour faire les actions d'édition et de suppression en ajax par data-action
                 $th .= "<td style='width:10%'>
