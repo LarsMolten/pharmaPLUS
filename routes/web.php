@@ -6,6 +6,7 @@ use App\Http\Controllers\Article\ArticleController;
 use App\Http\Controllers\Utilisateur\UtilisateurController;
 use App\Http\Controllers\Analyse\AnalyseController;
 use App\Http\Controllers\Gestion\GestionController;
+use App\Http\Controllers\Categorie\CategorieController;
 use App\Http\Controllers\Echographie\EchographieController;
 use App\Http\Controllers\Dashboard\Dashboard;
 use Spatie\Permission\Models\Role;
@@ -60,5 +61,7 @@ Route::get('/gestion', [GestionController::class, 'index'])->name('gestion.index
 Route::get('/liste_analyse', [AnalyseController::class, 'liste_analyse'])->name('liste_analyse');
 Route::post('/ajout_analyse', [AnalyseController::class, 'ajout_analyse'])->name('ajout_analyse');
 Route::post('/delete_analyse', [AnalyseController::class, 'delete_analyse'])->name('delete_analyse');
+Route::get('/liste_categorie', [CategorieController::class, 'liste_categorie'])->name('liste_categorie');
 Route::get('/liste_echographie', [EchographieController::class, 'liste_echographie'])->name('liste_echographie');
 Route::post('/ajout_echographie', [EchographieController::class, 'ajout_echographie'])->name('ajout_echographie');
+

@@ -142,7 +142,49 @@ function activerMenuEnFonctionDeRoute() {
 }
 
 
+function show_delete_dialog_modal(id, warning, id_table, data_action_delete, data_action_close) {
 
+
+    $(id_table).block({
+
+        message: `
+
+
+            <div class="card" style="max-width:400px ; ">
+            <div class="card-header" style="max-width:400px ;">
+                    <i class="ft-trash-2" style='color:rgb(233, 46, 46);font-size:50px'></i>
+            </div>
+            <div class="card-content">
+                <div class="card-body">
+                    <p>`+ warning + `</p>
+
+                        <button type="button" data-id="`+ id + `"  data-action="` + data_action_delete + `" class="mr-1 mb-1 btn btn-sm btn-warning btn-min-width"><i class="ft-check"></i> Oui</button>
+                        <button type="button" data-action="`+ data_action_close + `" class="mr-1 mb-1 btn btn-sm btn-outline-light btn-min-width"><i class="ft-x"></i> Annuler</button>
+
+
+                </div>
+            </div>
+            </div>
+
+
+
+            `,
+
+        overlayCSS: {
+            backgroundColor: 'black',
+            opacity: 0.1,
+            cursor: "wait",
+
+        },
+        css: {
+            border: 0,
+            padding: 0,
+            backgroundColor: "transparent"
+        }
+    });
+
+
+}
 
 function alertCustom(type_message, ft_icon, message) {
     var id = "alertdialog";

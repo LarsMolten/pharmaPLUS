@@ -68,6 +68,7 @@ class ArticleController extends Controller
                         </tr>";
             }
             $th .="</tbody>";
+            // var_dump($th);
 
 
 

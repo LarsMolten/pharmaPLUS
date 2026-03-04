@@ -14,8 +14,8 @@ window.pageInitializers.gestion = function () {
 
     /* #############################################################  ANALYSE ################################################################# */
 
-    var enCours = false; // Variable pour suivre l'état de la requête
-    var id_analyse = "";
+
+    let id_analyse = "";
     // var id_unite = "";
 
     function liste_analyse() {
@@ -110,7 +110,7 @@ window.pageInitializers.gestion = function () {
 
     // Action d'ajouter ou modifier une analyse
 
-    $(document).on("submit", "#ajout_analyse", function (e) {
+    $(document).off("submit", "#ajout_analyse").on("submit", "#ajout_analyse", function (e) {
         e.preventDefault();
         if (enCours) return; // Empêche un deuxième clic si une requête est en cours
         enCours = true;
@@ -176,17 +176,16 @@ window.pageInitializers.gestion = function () {
 
         $('#ajout_analyse').data('id', id);
         // formatPrixImput();
-        $('#entete_form').text("Modification");
+        $('#entete_form_analyse').text("Modification");
         $('.ajouter_analyse').text("Modifier");
 
         var nom = $('#an_' + id).data('nom');
         var prix = $('#an_' + id).data('prix');
 
-        $('input[name="nom"]').val(nom);
-        // $('input[name="prix"]').val(prix);
+        $('#nom_analyse').val(nom);
 
         // Formater le prix pour l'affichage dans le champ input
-        $('input[name="prix"]').val(formatNumberDisplay(prix));
+        $('#pu_analyse').val(formatNumberDisplay(prix));
 
     }
 
@@ -194,18 +193,18 @@ window.pageInitializers.gestion = function () {
         if (enCours) return; // Empêche un deuxième clic si une requête est en cours
         id_analyse = "";
         // formatPrixImput();
-        $('#entete_form').text("Ajout");
+        $('#entete_form_analyse').text("Ajout");
         $('.ajouter_analyse').text("Ajouter");
 
-        $('input[name="nom"]').val('');
-        $('input[name="prix"]').val('');
+        $('#nom_analyse').val('');
+        $('#pu_analyse').val('');
 
     }
 
     window.delete_analyse = function (id) {
         if (enCours) return; // Empêche un deuxième clic si une requête est en cours
         id_analyse = id;
-        show_delete_dialog_modal(id_analyse, "Êtes-vous sûr de vouloir supprimer cette analyse ?", "#card_tab_gestion", "confirmer_delete_analyse", "annuler_delete_analyse");
+        show_delete_dialog_modal(id_analyse, "Êtes-vous sûr de vouloir supprimer cette analyse ?", "#card_gestion_echo", "confirmer_delete_analyse", "annuler_delete_analyse");
 
 
     }
@@ -215,7 +214,7 @@ window.pageInitializers.gestion = function () {
         if (enCours) return; // Empêche un deuxième clic si une requête est en cours
         enCours = true;
 
-        $("#card_tab_gestion").unblock();
+        $("#card_gestion_echo").unblock();
 
         $.ajax({
             beforeSend: function () {
@@ -269,9 +268,133 @@ window.pageInitializers.gestion = function () {
     }
 
     window.annuler_delete_analyse = function () {
-        $("#card_liste_analyse").unblock();
+        $("#card_gestion_echo").unblock();
         id_analyse = "";
     }
+
+
+    /* ########################################################## CATEGORIE ################################################################# */
+
+      function liste_categorie() {
+        $.ajax({
+            beforeSend: function () {
+                $("#card_liste_categorie").block({
+                    message: '<div class="ft-refresh-cw icon-spin font-medium-2" style="margin:auto , font-size : 80px !important"></div>',
+                    overlayCSS: {
+                        backgroundColor: "black",
+                        opacity: 0.1,
+                        cursor: "wait",
+                    },
+                    css: {
+                        border: 0,
+                        padding: 0,
+                        backgroundColor: "transparent"
+                    }
+                });
+            },
+            url: base + "liste_categorie",
+            type: "GET", // on utilise GET pour récupérer les données sans csrf
+            dataType: "json",
+            //   headers: {
+            //     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            // },
+            complete: function () {
+                enCours = false;
+            },
+            success: function (res) {
+
+                //Detruire la table avant de la reconstruire
+                if ($.fn.DataTable.isDataTable("#table_categorie")) {
+                    $("#table_categorie").DataTable().destroy();
+                }
+
+                // Vider le contenu de la table avant de la remplir avec les nouvelles données
+                $("#table_categorie").empty();
+                $("#table_categorie").append(res.data);
+
+                // formatage des nombres
+                $("#table_categorie td.format-prix").each(function () {
+                    let val = $(this).text().trim();
+                    if (val !== "" && !isNaN(parseFloat(val))) {
+                        $(this).text(formatNumberDisplay(val));
+                    }
+                });
+
+                $("#table_categorie").DataTable({
+                    destroy: true,
+                    ordering: true,
+                    order: [[0, "desc"]],
+                    responsive: true,
+                    info: false,
+                    paging: true,
+                    deferRender: true,
+                    pageLength: 10,
+                    "initComplete": function (settings, json) {
+                        $('div.dataTables_wrapper div.dataTables_filter input').attr('placeholder', 'Recherche').css("font-size", "11px");
+                    },
+                    language: {
+                        "search": "",
+                        "zeroRecords": "Aucun analyse",
+                        paginate: {
+                            previous: "Précédent",
+                            next: "Suivant",
+                        },
+                    },
+                    dom: 'Bfrtip',
+                    buttons: [
+                        {
+                            className: "btn btn-sm mr-1 btn-secondary",
+                            text: '<i class="ft-rotate-cw"> </i>',
+                            action: function () {
+                                liste_analyse();
+                            },
+                        },
+                    ],
+                });
+
+                $("#card_liste_categorie").unblock();
+            },
+            error: function (xhr) {
+                console.error('Erreur:', xhr);
+                $("#card_liste_categorie").unblock();
+            }
+        });
+
+
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -470,48 +593,6 @@ window.pageInitializers.gestion = function () {
 
 }
 
-function show_delete_dialog_modal(id, warning, id_table, data_action_delete, data_action_close) {
 
-
-    $(id_table).block({
-
-        message: `
-
-
-            <div class="card" style="max-width:400px ; ">
-            <div class="card-header" style="max-width:400px ;">
-                    <i class="ft-trash-2" style='color:rgb(233, 46, 46);font-size:50px'></i>
-            </div>
-            <div class="card-content">
-                <div class="card-body">
-                    <p>`+ warning + `</p>
-
-                        <button type="button" data-id="`+ id + `"  data-action="` + data_action_delete + `" class="mr-1 mb-1 btn btn-sm btn-warning btn-min-width"><i class="ft-check"></i> Oui</button>
-                        <button type="button" data-action="`+ data_action_close + `" class="mr-1 mb-1 btn btn-sm btn-outline-light btn-min-width"><i class="ft-x"></i> Annuler</button>
-
-
-                </div>
-            </div>
-            </div>
-
-
-
-            `,
-
-        overlayCSS: {
-            backgroundColor: 'black',
-            opacity: 0.1,
-            cursor: "wait",
-
-        },
-        css: {
-            border: 0,
-            padding: 0,
-            backgroundColor: "transparent"
-        }
-    });
-
-
-}
 
 

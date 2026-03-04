@@ -1,36 +1,30 @@
-<div class="content-wrapper" style="padding: 0 !important;" id="card_gestion_echo">
+<div class="content-wrapper" style="padding: 0 !important;">
 
     <div class="sidebar-detached sidebar-right" id="hide_categ_form">
         <div class="sidebar" style="min-width: 405px">
             <div class="bug-list-sidebar-content">
                 <div class="card">
                     <div class="card-header">
-                        <h4 class="card-title" id="entete_form_analyse">Ajout</h4>
+                        <h4 class="card-title" id="entete_form_categorie">Ajout</h4>
                     </div>
 
                     <div class="card-body">
-                        <form id="ajout_analyse" class="form" method="post" action="ajout_analyse">
+                        <form id="ajout_categorie" class="form" method="post" action="ajout_categorie">
 
                             @csrf
 
                             <fieldset class="form-group">
-                                <label for="nom_analyse">Analyse</label>
-                                <input type="text" id="nom_analyse" name="nom" class="form-control input-sm"
+                                <label for="nom_categorie">Nom categorie</label>
+                                <input type="text" id="nom_categorie" name="nom" class="form-control input-sm"
                                     data-toggle="tooltip" data-trigger="hover" data-placement="top"
-                                    placeholder="Nom d'analyse" data-title="Nom d'analyse" required>
+                                    placeholder="Nom categorie" data-title="Nom categorie" required>
                             </fieldset>
 
-                            <fieldset class="form-group">
-                                <label for="prix_unitaire">Prix Unitaire</label>
-                                <input type="text" id="pu_analyse" name="prix" class="form-control format-number input-sm"
-                                    data-toggle="tooltip" data-trigger="hover" data-placement="top"
-                                    placeholder="Prix Unitaire" data-title="Prix Unitaire" required>
-                            </fieldset>
 
                             <div class="form-actions">
                                 <button type="submit"
-                                    class="btn btn-sm btn-warning btn-min-width mr-1 mb-1 ajouter_analyse">Ajouter</button>
-                                <button type="button" id="annuler" data-action="annuler_form_analyse" data-type="analyse"
+                                    class="btn btn-sm btn-warning btn-min-width mr-1 mb-1 ajouter_categorie">Ajouter</button>
+                                <button type="button" id="annuler" data-action="annuler_form_categorie" data-type="categorie"
                                     class="btn btn-sm btn-outline-light btn-min-width mr-1 mb-1">Annuler</button>
                             </div>
                         </form>
@@ -45,9 +39,9 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="card-content collapse show">
-                            <div class="card-body card-dashboard" id="card_liste_analyse">
+                            <div class="card-body card-dashboard" id="card_liste_categorie">
 
-                                <table id="table_analyse"
+                                <table id="table_categorie"
                                     class="table table-white-space table-bordered  no-wrap  text-center"
                                     style="width: 100% ">
 

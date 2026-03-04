@@ -13,7 +13,7 @@
                         <h4 class="card-title">Gestion de catalogues</h4>
                     </div>
                     <div class="card-content">
-                        <div class="card-body" >
+                        <div class="card-body">
 
                             <ul class="nav nav-tabs nav-top-border no-hover-bg nav-justified">
                                 <li class="nav-item">
@@ -33,37 +33,37 @@
                                         aria-controls="linkOpt1">Kit Medicament</a>
                                 </li>
                             </ul>
-                            <div class="tab-content px-1 pt-1">
-                                <div role="tabpanel" class="tab-pane active" id="active1" aria-labelledby="active-tab1"
-                                    aria-expanded="true">
-                                    @include('gestion.ongletAnalyse')
-                                </div>
-                                <div class="tab-pane" id="link1" role="tabpanel" aria-labelledby="link-tab1"
-                                    aria-expanded="false">
-                                    @include('gestion.ongletEchographie')
-                                </div>
-                                <div class="tab-pane" id="link2" role="tabpanel" aria-labelledby="link-tab2"
-                                    aria-expanded="false">
-                                    <p>Chocolate bar gummies sesame snaps. Liquorice cake sesame snaps cotton candy cake
-                                        sweet
-                                        brownie.
-                                       </p>
-                                </div>
-                                <div class="tab-pane" id="linkOpt1" role="tabpanel" aria-labelledby="linkOpt-tab1"
-                                    aria-expanded="false">
-                                    <p>Cookie icing tootsie roll cupcake jelly-o sesame snaps. Gummies cookie dragée cake
-                                        jelly
-                                        marzipan
-                                        donut pie macaroon. Gingerbread powder chocolate cake icing. Cheesecake gummi bears
-                                        ice
-                                        cream
-                                        marzipan.</p>
-                                </div>
-                            </div>
+
                         </div>
                     </div>
                 </div>
+                <div class="tab-content px-1 pt-1">
+                    <div role="tabpanel" class="tab-pane active" id="active1" aria-labelledby="active-tab1"
+                        aria-expanded="true">
+                        @include('gestion.ongletAnalyse')
+                    </div>
+                    <div class="tab-pane" id="link1" role="tabpanel" aria-labelledby="link-tab1" aria-expanded="false">
+                        @include('gestion.ongletEchographie')
+                    </div>
+                    <div class="tab-pane" id="link2" role="tabpanel" aria-labelledby="link-tab2" aria-expanded="false">
+                        <p>Chocolate bar gummies sesame snaps. Liquorice cake sesame snaps cotton candy cake
+                            sweet
+                            brownie.
+                        </p>
+                    </div>
+                    <div class="tab-pane" id="linkOpt1" role="tabpanel" aria-labelledby="linkOpt-tab1"
+                        aria-expanded="false">
+                        <p>Cookie icing tootsie roll cupcake jelly-o sesame snaps. Gummies cookie dragée cake
+                            jelly
+                            marzipan
+                            donut pie macaroon. Gingerbread powder chocolate cake icing. Cheesecake gummi bears
+                            ice
+                            cream
+                            marzipan.</p>
+                    </div>
+                </div>
             </div>
+
 
     </section>
 

@@ -39,7 +39,7 @@ class AnalyseController extends Controller
                 $th .= "<tr>
                             <td  style='width:5%'>{$analyse->id}</td>
                             <td  style='width:20%'>{$analyse->nom}</td>
-                            <td class='format-prix' style='width:20%' date-value='{$analyse->prix}'>{$analyse->prix}</td>
+                            <td class='format-prix' style='width:20%' >{$analyse->prix}</td>
                             <td style='width:10%'>{$analyse->updated_at}</td> ";
                 // on a utilisé SPA pour éviter de recharger la page à chaque action, donc on a besoin de l'id passer en 'data-id' de l'article pour faire les actions d'édition et de suppression en ajax par data-action
                 $th .= "<td style='width:10%'>

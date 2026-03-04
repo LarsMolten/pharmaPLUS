@@ -27,8 +27,8 @@ class StorearticleRequest extends FormRequest
             'presentation' => 'required|string|max:255',
             'unite' => 'required|exists:unites,id',
             'stock' => 'integer|min:0',
-            'statut' => 'string|max:200',
-            'etat' => 'boolean',
+            'statut' => 'integer|max:1',
+            'etat' => 'integer|max:1',
         ];
     }
 }

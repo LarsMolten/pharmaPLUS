@@ -3,7 +3,7 @@
     <div class="sidebar-detached sidebar-right" id="hide_categ_form">
         <div class="sidebar" style="min-width: 405px">
             <div class="bug-list-sidebar-content">
-                <div class="card border-6 border-secondary">
+                <div class="card">
                     <div class="card-header">
                         <h4 class="card-title" id="entete_form_echographie">Ajout</h4>
                     </div>
@@ -22,7 +22,7 @@
 
                             <fieldset class="form-group">
                                 <label for="prix_unitaire">Prix Unitaire</label>
-                                <input type="text" id="prix_unitaire" name="prix" class="form-control format-number input-sm"
+                                <input type="text" id="pu_echo" name="prix" class="form-control format-number input-sm"
                                     data-toggle="tooltip" data-trigger="hover" data-placement="top"
                                     placeholder="Prix Unitaire" data-title="Prix Unitaire" required>
                             </fieldset>
@@ -43,7 +43,7 @@
         <div class="content-body">
             <section class="row ">
                 <div class="col-12">
-                    <div class="card border-10 border-secondary">
+                    <div class="card">
                         <div class="card-content collapse show">
                             <div class="card-body card-dashboard" id="card_liste_echographie">
 

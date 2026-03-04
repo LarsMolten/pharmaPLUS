@@ -187,7 +187,7 @@ window.pageInitializers.article = function () {
 
 
 
-    $(document).on("submit", "#ajout_article", function (e) {
+    $(document).off("submit", "#ajout_article").on("submit", "#ajout_article", function (e) {
         e.preventDefault();
         if (enCours) return; // Empêche un deuxième clic si une requête est en cours
         enCours = true;
