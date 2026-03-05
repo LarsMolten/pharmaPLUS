@@ -1,4 +1,4 @@
-<div class="content-wrapper" style="padding: 0 !important;">
+<div class="content-wrapper" style="padding: 0 !important;" id="card_gestio_cat">
 
     <div class="sidebar-detached sidebar-right" id="hide_categ_form">
         <div class="sidebar" style="min-width: 405px">
@@ -15,7 +15,7 @@
 
                             <fieldset class="form-group">
                                 <label for="nom_categorie">Nom categorie</label>
-                                <input type="text" id="nom_categorie" name="nom" class="form-control input-sm"
+                                <input type="text" id="nom_categorie" name="nom_cat" class="form-control input-sm"
                                     data-toggle="tooltip" data-trigger="hover" data-placement="top"
                                     placeholder="Nom categorie" data-title="Nom categorie" required>
                             </fieldset>
