@@ -7,6 +7,7 @@ use App\Http\Controllers\Utilisateur\UtilisateurController;
 use App\Http\Controllers\Analyse\AnalyseController;
 use App\Http\Controllers\Gestion\GestionController;
 use App\Http\Controllers\Categorie\CategorieController;
+use App\Http\Controllers\Service\ServiceController;
 use App\Http\Controllers\Echographie\EchographieController;
 use App\Http\Controllers\Dashboard\Dashboard;
 use Spatie\Permission\Models\Role;
@@ -58,10 +59,18 @@ Route::post('/ajout_utilisateur', [UtilisateurController::class, 'ajout_utilisat
 
 // Route pour les Gestions
 Route::get('/gestion', [GestionController::class, 'index'])->name('gestion.index');
+
 Route::get('/liste_analyse', [AnalyseController::class, 'liste_analyse'])->name('liste_analyse');
 Route::post('/ajout_analyse', [AnalyseController::class, 'ajout_analyse'])->name('ajout_analyse');
 Route::post('/delete_analyse', [AnalyseController::class, 'delete_analyse'])->name('delete_analyse');
+
 Route::get('/liste_categorie', [CategorieController::class, 'liste_categorie'])->name('liste_categorie');
-Route::get('/liste_echographie', [EchographieController::class, 'liste_echographie'])->name('liste_echographie');
-Route::post('/ajout_echographie', [EchographieController::class, 'ajout_echographie'])->name('ajout_echographie');
+Route::post('/ajout_categorie', [CategorieController::class, 'ajout_categorie'])->name('ajout_categorie');
+Route::post('/delete_categorie', [CategorieController::class, 'delete_categorie'])->name('delete_categorie');
+
+Route::get('/liste_service', [ServiceController::class, 'liste_service'])->name('liste_service');
+Route::get('/charge_categorie', [ServiceController::class, 'charge_categorie'])->name('charge_categorie');
+Route::post('/ajout_service', [ServiceController::class, 'ajout_service'])->name('ajout_service');
+Route::post('/delete_service', [ServiceController::class, 'delete_service'])->name('delete_service');
+
 

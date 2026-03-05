@@ -22,15 +22,15 @@
                                 </li>
                                 <li class="nav-item">
                                     <a class="nav-link" id="link-tab1" data-toggle="tab" href="#link1"
-                                        aria-controls="link1" aria-expanded="false">Echographie</a>
+                                        aria-controls="link1" aria-expanded="false">Catégorie</a>
                                 </li>
                                 <li class="nav-item">
                                     <a class="nav-link" id="link-tab2" data-toggle="tab" href="#link2"
-                                        aria-controls="link2" aria-expanded="false">Radiographie</a>
+                                        aria-controls="link2" aria-expanded="false">Services médicaux</a>
                                 </li>
                                 <li class="nav-item">
                                     <a class="nav-link" id="linkOpt-tab1" data-toggle="tab" href="#linkOpt1"
-                                        aria-controls="linkOpt1">Kit Medicament</a>
+                                        aria-controls="linkOpt1">Kit de Medicament</a>
                                 </li>
                             </ul>
 
@@ -43,13 +43,10 @@
                         @include('gestion.ongletAnalyse')
                     </div>
                     <div class="tab-pane" id="link1" role="tabpanel" aria-labelledby="link-tab1" aria-expanded="false">
-                        @include('gestion.ongletEchographie')
+                        @include('gestion.ongletCategorie')
                     </div>
                     <div class="tab-pane" id="link2" role="tabpanel" aria-labelledby="link-tab2" aria-expanded="false">
-                        <p>Chocolate bar gummies sesame snaps. Liquorice cake sesame snaps cotton candy cake
-                            sweet
-                            brownie.
-                        </p>
+                        @include('gestion.ongletService')
                     </div>
                     <div class="tab-pane" id="linkOpt1" role="tabpanel" aria-labelledby="linkOpt-tab1"
                         aria-expanded="false">
