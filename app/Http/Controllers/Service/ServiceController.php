@@ -34,16 +34,20 @@ class ServiceController extends Controller
             foreach($services as $service){
 
                 $categorie = categorie::find($service->categorie_id);
+                if($categorie){
+                    $cat_id = $categorie->id;
+                    $cat_nom = $categorie->nom_cat;
+                }
 
 
                 $th .= "<tr>
                             <td  style='width:5%'>{$service->id}</td>
-                            <td  style='width:20%'>{$categorie->nom_cat}</td>
+                            <td  style='width:20%'>{$cat_nom}</td>
                             <td  style='width:20%'>{$service->nom_service}</td>
                             <td calss='format-prix' style='width:10%'>{$service->prix_service}</td> ";
                 // on a utilisé SPA pour éviter de recharger la page à chaque action, donc on a besoin de l'id passer en 'data-id' de l'article pour faire les actions d'édition et de suppression en ajax par data-action
                 $th .= "<td style='width:10%'>
-                            <a class='primary edit mr-1' data-categorie='{$categorie->id}'
+                            <a class='primary edit mr-1' data-categorie='{$cat_id}'
                              data-service='{$service->nom_service}'  data-prix='{$service->prix_service}'
                              id='ser_{$service->id}' data-action='edit_service' data-id='{$service->id}'><i class='la la-pencil-square-o'></i></a>
 

@@ -118,7 +118,8 @@ class UtilisateurController extends Controller
 
 public function ajout_utilisateur(StoreUserRequest $request)
 {
-    try {
+    try { 
+        var_dump($request);die();
 
         if ($request->role === 'superAdmin' && !auth()->user()->hasRole('superAdmin')) {
             abort(403);

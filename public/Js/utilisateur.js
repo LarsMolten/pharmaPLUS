@@ -10,8 +10,8 @@ window.pageInitializers.utilisateur = function () {
 
 
     var enCours = false;
-    var id_utilisateur = "";
-    var role = "";
+    let id_utilisateur = "";
+    let role = "";
 
     function liste_utilisateur() {
         $.ajax({
@@ -167,7 +167,7 @@ window.pageInitializers.utilisateur = function () {
 
 
 
-    $(document).on("submit", "#ajout_utilisateur", function (e) {
+    $(document).off("submit", "#ajout_utilisateur").on("submit", "#ajout_utilisateur", function (e) {
         e.preventDefault();
         if (enCours) return; // Empêche un deuxième clic si une requête est en cours
         enCours = true;
