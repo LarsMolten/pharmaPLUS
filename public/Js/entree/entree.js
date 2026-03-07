@@ -188,6 +188,31 @@ window.pageInitializers.entree = function () {
 
 
 
+        
+     window.edit_entree_index = function(id) {
+        if (enCours) return; // Empêche un deuxième clic si une requête est en cours
+        enCours = true;
+        id_index = id;
+        //   formatPrixImput();
+        $('.entete_modal').text("Modification");
+        $('#btn_add_entreeIndex').text("Modifier");
+        $("#AjoutEntreeIndexModal").modal(
+            { backdrop: "static", keyboard: false },
+            "show"
+        );
+
+
+        let ref_entree = $('#en_' + id).data('ref_entree');
+        let motif = $('#en_' + id).data('motif');
+
+
+        $('input[name="ref_entree"]').val(ref_entree);
+        $('input[name="motif"]').val(motif);
+
+    }
+
+
+
 
 
 
