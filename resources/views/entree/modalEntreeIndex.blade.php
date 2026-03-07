@@ -20,7 +20,7 @@
                                 <div class="row">
                                     <div class="col-md-12">
                                         <div class="form-group">
-                                            <label for="userinput3" class="">Référence entré</label>
+                                            <label for="ref_entree" class="">Référence entré</label>
                                             <input type="text" id="ref_entree" required name="ref_entree"
                                                 class="form-control input-sm" placeholder="Référence">
                                         </div>
@@ -29,7 +29,7 @@
                                 <div class="row">
                                     <div class="col-md-12">
                                         <div class="form-group">
-                                            <label for="userinput3" class="">Motif</label>
+                                            <label for="motif" class="">Motif</label>
                                             <textarea type="text" id="motif" name="motif" class="form-control input-sm" placeholder="Motif"></textarea>
                                         </div>
                                     </div>

@@ -129,15 +129,15 @@ window.pageInitializers.entree = function () {
             enCours = true;
 
             let form = $(this);
-            id_index = form.data("id") || "";
+            // id_index = form.data("id") || "";
             let data = new FormData(this);
 
             // récupérer la valeur brute en enlevant les espaces
-         
+
             data.append("id_entreeIndex", id_index);
 
             $.ajax({
-                beforeSend: function () {},
+                beforeSend: function () { },
                 url: base + "ajout_entreeIndex",
                 type: "POST",
                 processData: false,
@@ -171,8 +171,11 @@ window.pageInitializers.entree = function () {
                         );
 
                         // Rafraîchir DataTable proprement
-                        liste_entreeIndex();
+
+                        $('[data-dismiss="modal"]').focus();  // Déplacer le focus ailleurs (sur un élément visible)
                         $("#AjoutEntreeIndexModal").modal("hide");
+
+                        liste_entreeIndex();
 
                     } else {
                         alertCustom(
@@ -188,10 +191,9 @@ window.pageInitializers.entree = function () {
 
 
 
-        
-     window.edit_entree_index = function(id) {
-        if (enCours) return; // Empêche un deuxième clic si une requête est en cours
-        enCours = true;
+
+    window.edit_entree_index = function (id) {
+
         id_index = id;
         //   formatPrixImput();
         $('.entete_modal').text("Modification");
@@ -201,16 +203,84 @@ window.pageInitializers.entree = function () {
             "show"
         );
 
-
         let ref_entree = $('#en_' + id).data('ref_entree');
         let motif = $('#en_' + id).data('motif');
 
 
         $('input[name="ref_entree"]').val(ref_entree);
-        $('input[name="motif"]').val(motif);
+        $('#motif').val(motif);
 
     }
 
+    window.delete_entree_index = function (id) {
+        if (enCours) return; // Empêche un deuxième clic si une requête est en cours
+        id_index = id;
+        show_delete_dialog_modal(
+            id_index,
+            "Êtes-vous sûr de vouloir supprimer cette entrée ?",
+            "#card_liste_entreeIndex",
+            "confirmer_delete_entree_index",
+            "annuler_delete_entree_index",
+        );
+    };
+
+    window.confirmer_delete_entree_index = function (id) {
+        if (enCours) return; // Empêche un deuxième clic si une requête est en cours
+        enCours = true;
+
+        $("#card_liste_entreeIndex").unblock();
+
+        $.ajax({
+            beforeSend: function () {
+                $("#table_entreeIndex").block({
+                    message:
+                        '<div class="ft-refresh-cw icon-spin font-medium-2" style="margin:auto"></div>',
+
+                    overlayCSS: {
+                        backgroundColor: "black",
+                        opacity: 0.1,
+                        cursor: "wait",
+                    },
+                    css: {
+                        border: 0,
+                        padding: 0,
+                        backgroundColor: "transparent",
+                    },
+                });
+            },
+            url: base + "delete_entree_index",
+            type: "POST",
+            headers: {
+                "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+            },
+            complete: function () {
+                enCours = false; // Remet la variable à false, que la requête ait réussi ou échoué
+            },
+            data: { id_service: id },
+            success: function (res) {
+                $("#table_entreeIndex").unblock();
+
+                id_index = "";
+
+                if (res.data > 0) {
+                    alertCustom(
+                        "success",
+                        "ft-check",
+                        "Suppression effectué avec succée",
+                    );
+                } else {
+                    alertCustom("danger", "ft-x", "Suppression non effectué");
+                }
+
+                liste_entreeIndex();
+            },
+        });
+    };
+
+    window.annuler_delete_entree_index = function () {
+        $("#card_liste_entreeIndex").unblock();
+        id_index = "";
+    };
 
 
 

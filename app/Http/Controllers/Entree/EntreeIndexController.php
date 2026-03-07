@@ -43,7 +43,7 @@ class EntreeIndexController extends Controller
             $th .="<tbody>";
             foreach($entrees as $entree){
 
-               
+
 
                 $th .= "<tr>
                             <td  style='width:5%'>{$entree->id}</td>
@@ -52,8 +52,8 @@ class EntreeIndexController extends Controller
                             <td style='width:10%'>{$entree->motif}</td>";
                 // on a utilisé SPA pour éviter de recharger la page à chaque action, donc on a besoin de l'id passer en 'data-id' de l'article pour faire les actions d'édition et de suppression en ajax par data-action
                 $th .= "<td style='width:10%'>
-                            <a class='primary edit mr-1' data-rer_entree='{$entree->ref_entree}'
-                             data-motif='{$entree->motif}' 
+                            <a class='primary edit mr-1' data-ref_entree='{$entree->ref_entree}'
+                             data-motif='{$entree->motif}'
                              id='en_{$entree->id}' data-action='edit_entree_index' data-id='{$entree->id}'><i class='la la-pencil-square-o'></i></a>
 
                              <a class='danger delete mr-1' data-action='delete_entree_index' data-id='{$entree->id}'  ><i class='la la-trash-o'></i></a>
@@ -73,7 +73,7 @@ class EntreeIndexController extends Controller
     }
 
 
-      
+
     public function ajout_entreeIndex(StoreEntreeIndexRequest $request){
         try {
 
