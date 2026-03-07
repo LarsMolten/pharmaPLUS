@@ -88,6 +88,7 @@ Route::post('/ajout_detailkit', [DetailKitController::class, 'ajout_detailkit'])
 // Entré article
 Route::get('/entreeIndex', [EntreeIndexController::class, 'index'])->name('entreeIndex');
 Route::get('/liste_entreeIndex', [EntreeIndexController::class, 'liste_entreeIndex'])->name('liste_entreeIndex');
+Route::post('/ajout_entreeIndex', [EntreeIndexController::class, 'ajout_entreeIndex'])->name('ajout_entreeIndex');
 
 
 

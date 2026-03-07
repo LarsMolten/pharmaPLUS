@@ -1,29 +1,16 @@
 window.pageInitializers = window.pageInitializers || {};
 
 window.pageInitializers.entree = function () {
-
     // ************************************************ initialisation de la page ******************************
     liste_entreeIndex();
 
-    
-
-
-
-
-
     // ************************************************** declaration *******************************************
 
-
-
-
-
-
-
+    let id_index = "";
 
     /* ############################################### ENTREE INDEX #################################################################*/
-    
 
-  function liste_entreeIndex() {
+    function liste_entreeIndex() {
         $.ajax({
             beforeSend: function () {
                 $("#card_liste_entreeIndex").block({
@@ -84,7 +71,7 @@ window.pageInitializers.entree = function () {
                     },
                     language: {
                         search: "",
-                        zeroRecords: "Aucun analyse",
+                        zeroRecords: "Aucun entré",
                         paginate: {
                             previous: "Précédent",
                             next: "Suivant",
@@ -100,27 +87,25 @@ window.pageInitializers.entree = function () {
                             },
                         },
                         {
-                            className: "btn btn-sm mr-1 btn-success btn-min-width ",
+                            className:
+                                "btn btn-sm mr-1 btn-success btn-min-width ",
                             text: '<i class="ft-plus"> Ajouter</i>',
                             action: function () {
                                 // id_article = "";
-                                // $('.entete_modal').text("Ajout");
-                                // $('#btn_add_article').text("Ajouter");
-                                // $("#AjoutArticleModal").modal(
-                                //     { backdrop: "static", keyboard: false },
-                                //     "show"
-                                // );
-                                // $('#ajout_article').find(':input:not([type="submit"], [type="hidden"]):not([type="radio"])').each(function () {
-                                //     if ($(this).is('select.selectpicker')) {
-                                //         // Réinitialiser le selectpicker en vidant les sélections
-                                //         $(this).selectpicker('val', []);
-                                //     } else {
-                                //         // Réinitialiser les autres champs en vidant leur valeur
-                                //         $(this).val('');
-                                //     }
-                                // });
-                                // formatPrixImput();
-
+                                $(".entete_modal").text("Nouvel entré");
+                                $("#btn_add_entreeIndex").text("Ajouter");
+                                $("#AjoutEntreeIndexModal").modal(
+                                    { backdrop: "static", keyboard: false },
+                                    "show",
+                                );
+                                $("#ajout_entreeIndex")
+                                    .find(
+                                        ':input:not([type="submit"], [type="hidden"]):not([type="radio"])',
+                                    )
+                                    .each(function () {
+                                        // Réinitialiser les autres champs en vidant leur valeur
+                                        $(this).val("");
+                                    });
                             },
                         },
                     ],
@@ -136,6 +121,70 @@ window.pageInitializers.entree = function () {
     }
 
 
+    $(document)
+        .off("submit", "#ajout_entreeIndex")
+        .on("submit", "#ajout_entreeIndex", function (e) {
+            e.preventDefault();
+            if (enCours) return; // Empêche un deuxième clic si une requête est en cours
+            enCours = true;
+
+            let form = $(this);
+            id_index = form.data("id") || "";
+            let data = new FormData(this);
+
+            // récupérer la valeur brute en enlevant les espaces
+         
+            data.append("id_entreeIndex", id_index);
+
+            $.ajax({
+                beforeSend: function () {},
+                url: base + "ajout_entreeIndex",
+                type: "POST",
+                processData: false,
+                contentType: false,
+                cache: false,
+                dataType: "JSON",
+                headers: {
+                    "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr(
+                        "content",
+                    ),
+                },
+                data: data,
+                complete: function () {
+                    enCours = false; // Remet la variable à false, que la requête ait réussi ou échoué
+                },
+                success: function (res) {
+                    if (res.status == "success") {
+                        // Reset formulaire
+                        form[0].reset();
+                        form.removeData("id"); // supprime mode modification
+
+                        $("#entete_modal").text("Nouvel entré");
+                        $("#btn_add_entreeIndex").text("Ajouter");
+
+                        alertCustom(
+                            "success",
+                            "ft-check",
+                            id_index
+                                ? "Modification effectuée avec succès"
+                                : "Ajout effectué avec succès",
+                        );
+
+                        // Rafraîchir DataTable proprement
+                        liste_entreeIndex();
+                        $("#AjoutEntreeIndexModal").modal("hide");
+
+                    } else {
+                        alertCustom(
+                            "danger",
+                            "ft-x",
+                            "Opération non effectuée",
+                        );
+                    }
+
+                },
+            });
+        });
 
 
 
@@ -145,6 +194,4 @@ window.pageInitializers.entree = function () {
 
 
 
-
-
-}
+};

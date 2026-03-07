@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Entree;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\EntreeIndex\StoreEntreeIndexRequest;
 use App\Models\EntreeIndex\entree_index;
 use Illuminate\Http\Request;
 
@@ -15,6 +16,12 @@ class EntreeIndexController extends Controller
     {
         return view('entree.index');
     }
+
+
+    // generation auto de lot
+    // $lotSystem = strtoupper(substr($medicament->designation,0,4))
+    //         ."-".date('Ymd')
+    //         ."-".rand(10,99);
 
 
     public function liste_entreeIndex(){
@@ -53,7 +60,6 @@ class EntreeIndexController extends Controller
                         </tr>";
             }
             $th .="</tbody>";
-            var_dump($th);die();
 
 
 
@@ -63,6 +69,32 @@ class EntreeIndexController extends Controller
         ]);
         } catch (\Exception $e) {
             return response()->json($th, 500);
+        }
+    }
+
+
+      
+    public function ajout_entreeIndex(StoreEntreeIndexRequest $request){
+        try {
+
+            $validated = $request->validated();
+
+            if($request->id_entreeIndex != ""){
+                $entree = entree_index::where('id', $request->id_entreeIndex)->update($validated);
+            }else{
+            $entree = entree_index::create($validated);
+            }
+            return response()->json([
+
+                'status' => "success",
+                'data' => $entree
+
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => "error",
+                'message' => $e->getMessage()
+            ], 500);
         }
     }
 

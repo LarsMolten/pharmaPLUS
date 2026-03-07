@@ -32,7 +32,7 @@
         </div>
 
         {{-- les modale article --}}
-        {{-- @include('article.modalArticle') --}}
+        @include('entree.modalEntreeIndex')
 
     </section>
 
