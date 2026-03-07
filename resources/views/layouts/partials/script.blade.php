@@ -35,5 +35,6 @@
 
 
 <script src="{{ asset('Js/article/article.js') }}"></script>
+<script src="{{ asset('Js/entree/entree.js') }}"></script>
 <script src="{{ asset('Js/utilisateur.js') }}"></script>
 <script src="{{ asset('Js/gestion/gestion.js') }}"></script>

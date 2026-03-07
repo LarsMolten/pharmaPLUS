@@ -30,7 +30,11 @@
                                 </li>
                                 <li class="nav-item">
                                     <a class="nav-link" id="linkOpt-tab1" data-toggle="tab" href="#linkOpt1"
-                                        aria-controls="linkOpt1">Kit de Medicament</a>
+                                        aria-controls="linkOpt1">Kit médicaux</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="linkOpt-tab2" data-toggle="tab" href="#linkOpt2" data-action="charge_options"
+                                        aria-controls="linkOpt2">Details Kit</a>
                                 </li>
                             </ul>
 
@@ -50,13 +54,11 @@
                     </div>
                     <div class="tab-pane" id="linkOpt1" role="tabpanel" aria-labelledby="linkOpt-tab1"
                         aria-expanded="false">
-                        <p>Cookie icing tootsie roll cupcake jelly-o sesame snaps. Gummies cookie dragée cake
-                            jelly
-                            marzipan
-                            donut pie macaroon. Gingerbread powder chocolate cake icing. Cheesecake gummi bears
-                            ice
-                            cream
-                            marzipan.</p>
+                        @include('gestion.ongletKit')
+                    </div>
+                    <div class="tab-pane" id="linkOpt2" role="tabpanel" aria-labelledby="linkOpt-tab2"
+                        aria-expanded="false">
+                        @include('gestion.ongletDetailKit')
                     </div>
                 </div>
             </div>

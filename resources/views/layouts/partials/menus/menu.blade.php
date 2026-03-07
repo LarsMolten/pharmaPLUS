@@ -29,7 +29,7 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="#" class="menu-item">
+                        <a href="{{ route('entreeIndex') }}" class="menu-item">
                             <i class="la la-shopping-cart"></i>
                             <span class="menu-title">Entrées</span>
                         </a>
