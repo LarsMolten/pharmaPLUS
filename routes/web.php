@@ -8,8 +8,12 @@ use App\Http\Controllers\Analyse\AnalyseController;
 use App\Http\Controllers\Gestion\GestionController;
 use App\Http\Controllers\Categorie\CategorieController;
 use App\Http\Controllers\Service\ServiceController;
-use App\Http\Controllers\Echographie\EchographieController;
 use App\Http\Controllers\Dashboard\Dashboard;
+use App\Http\Controllers\DetailKit\DetailKitController;
+use App\Http\Controllers\Kit\KitController;
+use App\Http\Controllers\Entree\EntreeIndexController;
+use App\Http\Controllers\EntreeDetail\EntreeDetailController;
+use App\Models\Kit\kit;
 use Spatie\Permission\Models\Role;
 
 /*
@@ -73,6 +77,23 @@ Route::get('/charge_categorie', [ServiceController::class, 'charge_categorie'])-
 Route::post('/ajout_service', [ServiceController::class, 'ajout_service'])->name('ajout_service');
 Route::post('/delete_service', [ServiceController::class, 'delete_service'])->name('delete_service');
 
-Route::post('/delete_service', [ServiceController::class, 'delete_service'])->name('delete_service');
+Route::get('/liste_kit', [KitController::class, 'liste_kit'])->name('liste_kit');
+Route::post('/ajout_kit', [KitController::class, 'ajout_kit'])->name('ajout_kit');
+Route::post('/delete_kit', [KitController::class, 'delete_kit'])->name('delete_kit');
+
+Route::get('/liste_detailkit', [DetailKitController::class, 'liste_detailkit'])->name('liste_detailkit');
+Route::get('/charge_kit', [DetailKitController::class, 'charge_kit'])->name('charge_kit');
+Route::get('/charge_article', [DetailKitController::class, 'charge_article'])->name('charge_article');
+Route::post('/ajout_detailkit', [DetailKitController::class, 'ajout_detailkit'])->name('ajout_detailkit');
+
+// Entré article
+Route::get('/entreeIndex', [EntreeIndexController::class, 'index'])->name('entreeIndex');
+Route::get('/liste_entreeIndex', [EntreeIndexController::class, 'liste_entreeIndex'])->name('liste_entreeIndex');
+Route::post('/ajout_entreeIndex', [EntreeIndexController::class, 'ajout_entreeIndex'])->name('ajout_entreeIndex');
+Route::post('/delete_entree_index', [EntreeIndexController::class, 'delete_entree_index'])->name('delete_entree_index');
+
+// entrée detail
+Route::get('/liste_entreeDetail', [EntreeDetailController::class, 'liste_entreeDetail'])->name('liste_entreeDetail');
+
 
 

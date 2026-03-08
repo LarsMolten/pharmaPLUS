@@ -33,6 +33,7 @@
 
         {{-- les modale article --}}
         @include('entree.modalEntreeIndex')
+        @include('entreeDetail.modalEntreeDetail')
 
     </section>
 

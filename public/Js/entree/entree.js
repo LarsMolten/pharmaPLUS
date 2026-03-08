@@ -256,7 +256,7 @@ window.pageInitializers.entree = function () {
             complete: function () {
                 enCours = false; // Remet la variable à false, que la requête ait réussi ou échoué
             },
-            data: { id_service: id },
+            data: { id_index: id },
             success: function (res) {
                 $("#table_entreeIndex").unblock();
 
@@ -282,8 +282,120 @@ window.pageInitializers.entree = function () {
         id_index = "";
     };
 
+    /* ############################################### ENTREE DETAILS #################################################################*/
 
 
+    window.afficher_entree_detail = function (id) {
+
+        $("#listeEntreeDetailModal").modal(
+            { backdrop: "static", keyboard: false },
+            "show"
+        );
+
+        $.ajax({
+            beforeSend: function () {
+                $("#card_liste_entreeDetail").block({
+                    message:
+                        '<div class="ft-refresh-cw icon-spin font-medium-2" style="margin:auto , font-size : 80px !important"></div>',
+
+                    overlayCSS: {
+                        backgroundColor: "black",
+                        opacity: 0.1,
+                        cursor: "wait",
+                    },
+                    css: {
+                        border: 0,
+                        padding: 0,
+                        backgroundColor: "transparent",
+                    },
+                });
+            },
+
+
+            url: base + "liste_entreeDetail",
+            type: "GET", // on utilise GET pour récupérer les données sans csrf
+            dataType: "json",
+            //   headers: {
+            //     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            // },
+            // complete: function () {
+            //     enCours = false;
+            // },
+            success: function (res) {
+
+                if ($.fn.DataTable.isDataTable("#table_entreedetail")) {
+                    $("#table_entreedetail").DataTable().destroy();
+                }
+
+                $("#table_entreedetail").empty();
+                $("#table_entreedetail").append(res.data);
+
+                // formatage des nombres
+                // $("#table_entreeIndex td.format-prix").each(function () {
+                //     let val = $(this).text().trim();
+                //     if (val !== "" && !isNaN(parseFloat(val))) {
+                //         $(this).text(formatNumberDisplay(val));
+                //     }
+                // });
+
+                $("#table_entreedetail").DataTable({
+                    destroy: true,
+                    ordering: true,
+                    order: [[0, "desc"]],
+                    responsive: true,
+                    info: false,
+                    paging: true,
+                    deferRender: true,
+                    pageLength: 10,
+                    initComplete: function (settings, json) {
+                        $("div.dataTables_wrapper div.dataTables_filter input")
+                            .attr("placeholder", "Recherche")
+                            .css("font-size", "11px");
+                    },
+                    language: {
+                        search: "",
+                        zeroRecords: "Aucun entré",
+                        paginate: {
+                            previous: "Précédent",
+                            next: "Suivant",
+                        },
+                    },
+                    dom: "Bfrtip",
+                    buttons: [
+
+                        {
+                            className:
+                                "btn btn-sm mr-1 btn-success btn-min-width ",
+                            text: '<i class="ft-plus"> Ajouter</i>',
+                            action: function () {
+                                // id_article = "";
+                                // $(".entete_modal").text("Nouvel entré");
+                                // $("#btn_add_entreeIndex").text("Ajouter");
+                                // $("#AjoutEntreeIndexModal").modal(
+                                //     { backdrop: "static", keyboard: false },
+                                //     "show",
+                                // );
+                                // $("#ajout_entreeIndex")
+                                //     .find(
+                                //         ':input:not([type="submit"], [type="hidden"]):not([type="radio"])',
+                                //     )
+                                //     .each(function () {
+                                //         // Réinitialiser les autres champs en vidant leur valeur
+                                //         $(this).val("");
+                                //     });
+                            },
+                        },
+                    ],
+                });
+
+                $("#card_liste_entreeDetail").unblock();
+            },
+            error: function (xhr) {
+                console.error("Erreur:", xhr);
+                $("#card_liste_entreeDetail").unblock();
+            },
+        });
+    }
 
 
 

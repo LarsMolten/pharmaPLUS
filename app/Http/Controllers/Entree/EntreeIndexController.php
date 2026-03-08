@@ -44,6 +44,8 @@ class EntreeIndexController extends Controller
             foreach($entrees as $entree){
 
 
+                $btn_delete = (($entree->nb_article) == 0) ? "<a class='danger delete mr-1' data-action='delete_entree_index' data-id='{$entree->id}'  ><i class='la la-trash-o'></i></a>" : "";
+
 
                 $th .= "<tr>
                             <td  style='width:5%'>{$entree->id}</td>
@@ -52,11 +54,14 @@ class EntreeIndexController extends Controller
                             <td style='width:10%'>{$entree->motif}</td>";
                 // on a utilisé SPA pour éviter de recharger la page à chaque action, donc on a besoin de l'id passer en 'data-id' de l'article pour faire les actions d'édition et de suppression en ajax par data-action
                 $th .= "<td style='width:10%'>
-                            <a class='primary edit mr-1' data-ref_entree='{$entree->ref_entree}'
+
+                        <a class='success mr-1' data-action='afficher_entree_detail' data-id='{$entree->id}'  ><i class='la la-list'></i></a>
+
+                        <a class='primary edit mr-1' data-ref_entree='{$entree->ref_entree}'
                              data-motif='{$entree->motif}'
                              id='en_{$entree->id}' data-action='edit_entree_index' data-id='{$entree->id}'><i class='la la-pencil-square-o'></i></a>
 
-                             <a class='danger delete mr-1' data-action='delete_entree_index' data-id='{$entree->id}'  ><i class='la la-trash-o'></i></a>
+                            $btn_delete
                         </tr>";
             }
             $th .="</tbody>";
@@ -90,6 +95,24 @@ class EntreeIndexController extends Controller
                 'data' => $entree
 
             ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => "error",
+                'message' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+
+      public function delete_entree_index(Request $request){
+        try {
+             $entree = entree_index::where('id', $request->id_index)->update(['etat' => 0]);
+
+                return response()->json([
+                    'status' => "success",
+                    'data' => $entree
+                ]);
+
         } catch (\Exception $e) {
             return response()->json([
                 'status' => "error",
