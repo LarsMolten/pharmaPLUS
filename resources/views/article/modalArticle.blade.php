@@ -20,7 +20,7 @@
                                     <div class="row">
                                         <div class="col-md-12">
                                             <div class="form-group">
-                                                <label for="userinput3" class="">Désignation</label>
+                                                <label for="userinput1" class="">Désignation</label>
                                                 <input type="text" id="designation" required name="designation" class="form-control input-sm" placeholder="Désignation">
                                             </div>
                                         </div>
@@ -29,7 +29,7 @@
                                     <div class="row">
                                         <div class="col-md-12">
                                             <div class="form-group">
-                                                <label for="userinput1" class="">Type</label>
+                                                <label for="userinput2" class="">Type</label>
                                                 <select class="selectpicker  form-control btn-sm" name="unite" required id="unite" data-live-search='true' data-size='5' title='Unité'>
 
                                                 </select>
@@ -40,10 +40,19 @@
                                     <div class="row">
                                         <div class="col-md-12">
                                             <div class="form-group">
-                                                <label for="userinput1" class="">Presentation</label>
+                                                <label for="userinput3" class="">Presentation</label>
                                                 <input class="form-control input-sm" name="presentation" required type="number" placeholder="Presentation" id="presentation">
                                             </div>
                                         </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <label for="userinput4" class=""> Seuil de stock</label>
+                                                <input class="form-control input-sm" name="seuil" required type="number" placeholder="Ne doit pas être inférieur à la présentation" id="seuil">
+                                            </div>
+                                        </div>
+                                    </div>
 
                                 </div>
 

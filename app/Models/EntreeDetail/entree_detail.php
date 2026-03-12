@@ -15,6 +15,7 @@ class entree_detail extends Model
         'lot',
         'qte_initial',
         'qte_entree',
+        'stock_restant_lot',
         'stock_dispo',
         'prix_achat_boite',
         'prix_unitaire',
@@ -22,6 +23,7 @@ class entree_detail extends Model
         'nb_lot_dispo',
         'date_peremption',
         'isValide',
+        'isVandus',
         'etat'
 
     ];

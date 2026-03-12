@@ -50,6 +50,7 @@ require __DIR__.'/auth.php';
 //  ROUTES ARTICLE
 Route::get('/article', [ArticleController::class, 'index'])->name('article.index'); // Affiche la vue
 Route::get('/liste_article', [ArticleController::class, 'liste_article'])->name('liste_article'); // Retourne JSON
+Route::post('/liste_stock_detail', [ArticleController::class, 'liste_stock_detail'])->name('liste_stock_detail'); // Retourne JSON
 Route::get('/charge_unite', [ArticleController::class, 'charge_unite'])->name('charge_unite'); // Retourne JSON des unités
 Route::post('/ajout_article', [ArticleController::class, 'ajout_article'])->name('ajout_article'); // Ajoute et modificatio un article
 Route::post('/delete_article', [ArticleController::class, 'delete_article'])->name('delete_article'); // Supprime un article
@@ -93,7 +94,10 @@ Route::post('/ajout_entreeIndex', [EntreeIndexController::class, 'ajout_entreeIn
 Route::post('/delete_entree_index', [EntreeIndexController::class, 'delete_entree_index'])->name('delete_entree_index');
 
 // entrée detail
-Route::get('/liste_entreeDetail', [EntreeDetailController::class, 'liste_entreeDetail'])->name('liste_entreeDetail');
+Route::post('/liste_entreeDetail', [EntreeDetailController::class, 'liste_entreeDetail'])->name('liste_entreeDetail');
+Route::post('/import_excel', [EntreeDetailController::class, 'import_excel'])->name('import_excel');
+Route::post('/valider_entree_detail', [EntreeDetailController::class, 'valider_entree_detail'])->name('valider_entree_detail');
+Route::post('/annuler_validation_entree_detail', [EntreeDetailController::class, 'annuler_validation_entree_detail'])->name('annuler_validation_entree_detail');
 
 
 

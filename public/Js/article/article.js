@@ -1,14 +1,11 @@
 window.pageInitializers = window.pageInitializers || {};
 
 window.pageInitializers.article = function () {
-
-
     // ***************************Initialisation de la page article************************
     liste_article();
     charge_unite();
 
     // ************************************************************************************
-
 
     var enCours = false;
     var id_article = "";
@@ -18,7 +15,8 @@ window.pageInitializers.article = function () {
         $.ajax({
             beforeSend: function () {
                 $("#card_liste_article").block({
-                    message: '<div class="ft-refresh-cw icon-spin font-medium-2" style="margin:auto , font-size : 80px !important"></div>',
+                    message:
+                        '<div class="ft-refresh-cw icon-spin font-medium-2" style="margin:auto , font-size : 80px !important"></div>',
                     overlayCSS: {
                         backgroundColor: "black",
                         opacity: 0.1,
@@ -27,8 +25,8 @@ window.pageInitializers.article = function () {
                     css: {
                         border: 0,
                         padding: 0,
-                        backgroundColor: "transparent"
-                    }
+                        backgroundColor: "transparent",
+                    },
                 });
             },
             url: base + "liste_article",
@@ -41,7 +39,6 @@ window.pageInitializers.article = function () {
                 enCours = false;
             },
             success: function (res) {
-
                 //Detruire la table avant de la reconstruire
                 if ($.fn.DataTable.isDataTable("#card_article")) {
                     $("#card_article").DataTable().destroy();
@@ -60,18 +57,20 @@ window.pageInitializers.article = function () {
                     paging: true,
                     deferRender: true,
                     pageLength: 10,
-                    "initComplete": function (settings, json) {
-                        $('div.dataTables_wrapper div.dataTables_filter input').attr('placeholder', 'Recherche').css("font-size", "11px");
+                    initComplete: function (settings, json) {
+                        $("div.dataTables_wrapper div.dataTables_filter input")
+                            .attr("placeholder", "Recherche")
+                            .css("font-size", "11px");
                     },
                     language: {
-                        "search": "",
-                        "zeroRecords": "Aucun article",
+                        search: "",
+                        zeroRecords: "Aucun article",
                         paginate: {
                             previous: "Précédent",
                             next: "Suivant",
                         },
                     },
-                    dom: 'Bfrtip',
+                    dom: "Bfrtip",
                     buttons: [
                         {
                             className: "btn btn-sm mr-1 btn-secondary",
@@ -81,27 +80,31 @@ window.pageInitializers.article = function () {
                             },
                         },
                         {
-                            className: "btn btn-sm mr-1 btn-success btn-min-width ",
+                            className:
+                                "btn btn-sm mr-1 btn-success btn-min-width ",
                             text: '<i class="ft-plus"> Ajouter</i>',
                             action: function () {
                                 // id_article = "";
-                                $('.entete_modal').text("Ajout");
-                                $('#btn_add_article').text("Ajouter");
+                                $(".entete_modal").text("Ajout");
+                                $("#btn_add_article").text("Ajouter");
                                 $("#AjoutArticleModal").modal(
                                     { backdrop: "static", keyboard: false },
-                                    "show"
+                                    "show",
                                 );
-                                $('#ajout_article').find(':input:not([type="submit"], [type="hidden"]):not([type="radio"])').each(function () {
-                                    if ($(this).is('select.selectpicker')) {
-                                        // Réinitialiser le selectpicker en vidant les sélections
-                                        $(this).selectpicker('val', []);
-                                    } else {
-                                        // Réinitialiser les autres champs en vidant leur valeur
-                                        $(this).val('');
-                                    }
-                                });
+                                $("#ajout_article")
+                                    .find(
+                                        ':input:not([type="submit"], [type="hidden"]):not([type="radio"])',
+                                    )
+                                    .each(function () {
+                                        if ($(this).is("select.selectpicker")) {
+                                            // Réinitialiser le selectpicker en vidant les sélections
+                                            $(this).selectpicker("val", []);
+                                        } else {
+                                            // Réinitialiser les autres champs en vidant leur valeur
+                                            $(this).val("");
+                                        }
+                                    });
                                 // formatPrixImput();
-
                             },
                         },
                     ],
@@ -110,187 +113,185 @@ window.pageInitializers.article = function () {
                 $("#card_liste_article").unblock();
             },
             error: function (xhr) {
-                console.error('Erreur:', xhr);
+                console.error("Erreur:", xhr);
                 $("#card_liste_article").unblock();
-            }
+            },
         });
-
-
-
     }
 
     function changeunite() {
-        var maxQuantity = $('#unite').find('option:selected').data('supun');
+        var maxQuantity = $("#unite").find("option:selected").data("supun");
         // Si maxQuantity est 0, vider le champ et sortir
         if (maxQuantity === 1) {
-            $('#presentation').attr("readonly", true);
-            $('#presentation').val(1);
-        }
-        else {
-            $('#presentation').attr("readonly", false);
+            $("#presentation").attr("readonly", true);
+            $("#presentation").val(1);
+        } else {
+            $("#presentation").attr("readonly", false);
         }
     }
 
     function charge_unite() {
         $.ajax({
-
             beforeSend: function () {
-
                 $("#AjoutArticleModal").block({
-                    message: '<div class="ft-refresh-cw icon-spin font-medium-2" style="margin:auto , font-size : 80px !important"></div>',
+                    message:
+                        '<div class="ft-refresh-cw icon-spin font-medium-2" style="margin:auto , font-size : 80px !important"></div>',
 
                     overlayCSS: {
                         backgroundColor: "black",
                         opacity: 0.1,
                         cursor: "wait",
-
                     },
                     css: {
                         border: 0,
                         padding: 0,
-                        backgroundColor: "transparent"
-                    }
+                        backgroundColor: "transparent",
+                    },
                 });
-
             },
-            url: base + 'charge_unite',
+            url: base + "charge_unite",
             type: "GET",
             dataType: "json",
             complete: function () {
                 enCours = false; // Remet la variable à false, que la requête ait réussi ou échoué
             },
             error: function (xhr, status, error) {
-                alertCustom("danger", 'ft-x', "Une erreur s'est produite");
-            }, success: function (res) {
+                alertCustom("danger", "ft-x", "Une erreur s'est produite");
+            },
+            success: function (res) {
                 $("#unite").empty();
                 $("#unite").append(res.data);
-                $("#unite").selectpicker('refresh');
+                $("#unite").selectpicker("refresh");
                 if (id_unite != "") {
-                    $('#unite').val(id_unite).selectpicker('refresh');
+                    $("#unite").val(id_unite).selectpicker("refresh");
                     changeunite();
-
                 }
 
-                $('#unite').on('change', function () {
-
+                $("#unite").on("change", function () {
                     changeunite();
-
-
                 });
 
                 $("#AjoutArticleModal").unblock();
-
-            }
+            },
         });
-
     }
 
+    $(document)
+        .off("submit", "#ajout_article")
+        .on("submit", "#ajout_article", function (e) {
+            e.preventDefault();
+            if (enCours) return; // Empêche un deuxième clic si une requête est en cours
+            enCours = true;
+            let data = new FormData(this);
 
+            data.append("id_article", id_article);
 
-    $(document).off("submit", "#ajout_article").on("submit", "#ajout_article", function (e) {
-        e.preventDefault();
-        if (enCours) return; // Empêche un deuxième clic si une requête est en cours
-        enCours = true;
-        let data = new FormData(this);
-
-        data.append("id_article", id_article);
-
-        $.ajax({
-            beforeSend: function () { },
-            url: base + "ajout_article",
-            type: "POST",
-            processData: false,
-            contentType: false,
-            cache: false,
-            dataType: "JSON",
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            data: data, complete: function () {
-                enCours = false; // Remet la variable à false, que la requête ait réussi ou échoué
-            },
-            success: function (res) {
-                if (id_article != "") {
-                    if (res.status == "success") {
-                        id_article = "";
-                        alertCustom("success", "ft-check", "Modification effectué avec succée");
-                        $('#ajout_article').find(':input:not([type="radio"])').each(function () {
-                            if ($(this).is('select.selectpicker')) {
-                                // Réinitialiser le selectpicker en vidant les sélections
-                                $(this).selectpicker('val', []);
-                            } else {
-                                // Réinitialiser les autres champs en vidant leur valeur
-                                $(this).val('');
-                            }
-                            $("#AjoutArticleModal").modal("hide");
-                        });
+            $.ajax({
+                beforeSend: function () {},
+                url: base + "ajout_article",
+                type: "POST",
+                processData: false,
+                contentType: false,
+                cache: false,
+                dataType: "JSON",
+                headers: {
+                    "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr(
+                        "content",
+                    ),
+                },
+                data: data,
+                complete: function () {
+                    enCours = false; // Remet la variable à false, que la requête ait réussi ou échoué
+                },
+                success: function (res) {
+                    if (id_article != "") {
+                        if (res.status == "success") {
+                            id_article = "";
+                            alertCustom(
+                                "success",
+                                "ft-check",
+                                "Modification effectué avec succée",
+                            );
+                            $("#ajout_article")
+                                .find(':input:not([type="radio"])')
+                                .each(function () {
+                                    if ($(this).is("select.selectpicker")) {
+                                        // Réinitialiser le selectpicker en vidant les sélections
+                                        $(this).selectpicker("val", []);
+                                    } else {
+                                        // Réinitialiser les autres champs en vidant leur valeur
+                                        $(this).val("");
+                                    }
+                                    $("#AjoutArticleModal").modal("hide");
+                                });
+                        } else {
+                            alertCustom(
+                                "danger",
+                                "ft-x",
+                                "Modification non effectué",
+                            );
+                        }
                     } else {
-                        alertCustom("danger", "ft-x", "Modification non effectué");
+                        $("#card_liste_article").unblock();
+                        if (res.status == "success") {
+                            alertCustom(
+                                "success",
+                                "ft-check",
+                                "Ajout effectué avec succée",
+                            );
+
+                            $("#ajout_article")
+                                .find(':input:not([type="radio"])')
+                                .each(function () {
+                                    if ($(this).is("select.selectpicker")) {
+                                        // Réinitialiser le selectpicker en vidant les sélections
+                                        $(this).selectpicker("val", []);
+                                    } else {
+                                        // Réinitialiser les autres champs en vidant leur valeur
+                                        $(this).val("");
+                                    }
+                                });
+                        } else {
+                            alertCustom("danger", "ft-x", "Ajout non effectué");
+                        }
+                        $('[data-dismiss="modal"]').focus(); // Déplacer le focus ailleurs (sur un élément visible)
+                        $("#AjoutArticleModal").modal("hide");
                     }
 
-                } else {
-
-                    $("#card_liste_article").unblock();
-                    if (res.status == "success") {
-                        alertCustom("success", "ft-check", "Ajout effectué avec succée");
-
-                        $('#ajout_article').find(':input:not([type="radio"])').each(function () {
-                            if ($(this).is('select.selectpicker')) {
-                                // Réinitialiser le selectpicker en vidant les sélections
-                                $(this).selectpicker('val', []);
-                            } else {
-                                // Réinitialiser les autres champs en vidant leur valeur
-                                $(this).val('');
-                            }
-                        });
-                    } else {
-                        alertCustom("danger", "ft-x", "Ajout non effectué");
-                    }
-                    $('[data-dismiss="modal"]').focus();  // Déplacer le focus ailleurs (sur un élément visible)
-                    $("#AjoutArticleModal").modal("hide");
-                }
-
-                liste_article();
-
-            },
+                    liste_article();
+                },
+            });
         });
-    });
 
-
-
-     window.edit_article = function(id) {
+    window.edit_article = function (id) {
         if (enCours) return; // Empêche un deuxième clic si une requête est en cours
         enCours = true;
         id_article = id;
         //   formatPrixImput();
-        $('.entete_modal').text("Modification");
-        $('#btn_add_article').text("Modifier");
+        $(".entete_modal").text("Modification");
+        $("#btn_add_article").text("Modifier");
         $("#AjoutArticleModal").modal(
             { backdrop: "static", keyboard: false },
-            "show"
+            "show",
         );
 
-
-        var designation = $('#art_' + id).data('designation');
-        var presentation = $('#art_' + id).data('presentation');
-        id_unite = $('#art_' + id).data('unite');
+        var designation = $("#art_" + id).data("designation");
+        var presentation = $("#art_" + id).data("presentation");
+        var seuil = $("#art_" + id).data("seuil");
+        id_unite = $("#art_" + id).data("unite");
 
         charge_unite();
 
-
         $('input[name="designation"]').val(designation);
         $('input[name="presentation"]').val(presentation);
-        $('#unite').val(id_unite).selectpicker('refresh');
+        $('input[name="seuil"]').val(seuil);
+        $("#unite").val(id_unite).selectpicker("refresh");
+    };
 
-    }
-
-
-
-     window.delete_article = function(id) {
-
-
+    window.delete_article = function (id) {
         $("#card_liste_article").block({
-            message: `
+            message:
+                `
 
 
         <div class="card" style="max-width:400px ; ">
@@ -301,7 +302,9 @@ window.pageInitializers.article = function () {
             <div class="card-body">
                 <p>Voulez-vous supprimer cet article ?</p>
 
-                    <button type="button" data-id="`+ id + `"  data-action="delete_article_from_dialog" class="mr-1 mb-1 btn btn-sm btn-warning btn-min-width"><i class="ft-check"></i> Oui</button>
+                    <button type="button" data-id="` +
+                id +
+                `"  data-action="delete_article_from_dialog" class="mr-1 mb-1 btn btn-sm btn-warning btn-min-width"><i class="ft-check"></i> Oui</button>
                     <button type="button" data-action="close_overlay_liste_article" class="mr-1 mb-1 btn btn-sm btn-outline-light btn-min-width"><i class="ft-x"></i> Annuler</button>
 
 
@@ -314,53 +317,45 @@ window.pageInitializers.article = function () {
         `,
 
             overlayCSS: {
-                backgroundColor: 'black',
+                backgroundColor: "black",
                 opacity: 0.1,
                 cursor: "wait",
-
             },
             css: {
                 border: 0,
                 padding: 0,
-                backgroundColor: "transparent"
-            }
+                backgroundColor: "transparent",
+            },
         });
+    };
 
-
-    }
-
-
-
-
-    window.delete_article_from_dialog = function(id) {
+    window.delete_article_from_dialog = function (id) {
         if (enCours) return; // Empêche un deuxième clic si une requête est en cours
         enCours = true;
         $("#card_liste_article").unblock();
 
         $.ajax({
             beforeSend: function () {
-
                 $("#card_liste_article").block({
-                    message: '<div class="ft-refresh-cw icon-spin font-medium-2" style="margin:auto"></div>',
+                    message:
+                        '<div class="ft-refresh-cw icon-spin font-medium-2" style="margin:auto"></div>',
 
                     overlayCSS: {
                         backgroundColor: "black",
                         opacity: 0.1,
                         cursor: "wait",
-
                     },
                     css: {
                         border: 0,
                         padding: 0,
-                        backgroundColor: "transparent"
-                    }
+                        backgroundColor: "transparent",
+                    },
                 });
-
             },
             url: base + "delete_article",
             type: "POST",
             headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
             },
             complete: function () {
                 enCours = false; // Remet la variable à false, que la requête ait réussi ou échoué
@@ -371,25 +366,110 @@ window.pageInitializers.article = function () {
                 id_article = "";
 
                 if (res.data > 0) {
-
-                    alertCustom("success", 'ft-check', "Suppression effectué avec succée");
-
+                    alertCustom(
+                        "success",
+                        "ft-check",
+                        "Suppression effectué avec succée",
+                    );
                 } else {
-
-                    alertCustom("danger", 'ft-x', "Suppression non effectué");
-
+                    alertCustom("danger", "ft-x", "Suppression non effectué");
                 }
 
                 liste_article();
-
             },
         });
+    };
 
-    }
-
-     window.close_overlay_liste_article = function() {
+    window.close_overlay_liste_article = function () {
         $("#card_liste_article").unblock();
-    }
+    };
 
+    window.afficher_stock_detail = function (id) {
+        let articleId = id
+        console.log(articleId);
+;        let designation = $("#ar_" + id).data("design");
 
-}
+        $("#designation_article_detail").text(designation);
+
+        $("#listeStockDetailModal").modal(
+            { backdrop: "static", keyboard: false },
+            "show",
+        );
+
+        $.ajax({
+            beforeSend: function () {
+                $("#card_liste_stockDetail").block({
+                    message:
+                        '<div class="ft-refresh-cw icon-spin font-medium-2" style="margin:auto , font-size : 80px !important"></div>',
+                    overlayCSS: {
+                        backgroundColor: "black",
+                        opacity: 0.1,
+                        cursor: "wait",
+                    },
+                    css: {
+                        border: 0,
+                        padding: 0,
+                        backgroundColor: "transparent",
+                    },
+                });
+            },
+            url: base + "liste_stock_detail",
+            type: "POST", // on utilise GET pour récupérer les données sans csrf
+            headers: {
+                "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+            },
+            data: { article_id: articleId },
+
+            success: function (res) {
+                //Detruire la table avant de la reconstruire
+                if ($.fn.DataTable.isDataTable("#table_stockdetail")) {
+                    $("#table_stockdetail").DataTable().destroy();
+                }
+
+                // Vider le contenu de la table avant de la remplir avec les nouvelles données
+                $("#table_stockdetail").empty();
+                $("#table_stockdetail").append(res.data);
+
+                $("#table_stockdetail").DataTable({
+                    destroy: true,
+                    ordering: true,
+                    order: [[0, "desc"]],
+                    responsive: true,
+                    info: false,
+                    paging: false,
+                    deferRender: true,
+                    pageLength: 10,
+                    initComplete: function (settings, json) {
+                        $("div.dataTables_wrapper div.dataTables_filter input")
+                            .attr("placeholder", "Recherche")
+                            .css("font-size", "11px");
+                    },
+                    language: {
+                        search: "",
+                        zeroRecords: "Aucun Lot",
+                        paginate: {
+                            previous: "Précédent",
+                            next: "Suivant",
+                        },
+                    },
+                    dom: "Bfrtip",
+                    buttons: [
+                        {
+                            className: "btn btn-sm mr-1 btn-secondary",
+                            text: '<i class="ft-rotate-cw"> </i>',
+                            action: function () {
+                                afficher_stock_detail(id).call();
+                            },
+                        },
+                    ],
+                });
+
+                $("#card_liste_stockDetail").unblock();
+            },
+            error: function (xhr) {
+                console.error("Erreur:", xhr);
+                $("#card_liste_stockDetail").unblock();
+            },
+        });
+    };
+};

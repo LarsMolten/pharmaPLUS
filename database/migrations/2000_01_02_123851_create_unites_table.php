@@ -21,8 +21,9 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        // Insérer des valeurs initiales pour la table `unites`
+        // Insérer des valeurs initiales pour la table `unites` puis ajuster les id comme suits : 0, 1, 2, 3, 5
         DB::table('unites')->insert([
+            ['nomUnite' => 'Ut', 'nomComplet' => 'Ut', 'supun' => false, 'created_at' => now(), 'updated_at' => now()],
             ['nomUnite' => 'BT', 'nomComplet' => 'Boîte', 'supun' => false, 'created_at' => now(), 'updated_at' => now()],
             ['nomUnite' => 'Flacon',  'nomComplet' => 'Flacon',  'supun' => true, 'created_at' => now(), 'updated_at' => now()],
             ['nomUnite' => 'Tube',  'nomComplet' => 'Tube',  'supun' => true, 'created_at' => now(), 'updated_at' => now()],

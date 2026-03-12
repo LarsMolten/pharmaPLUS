@@ -13,6 +13,7 @@ class entree_index extends Model
         'ref_entree',
         'motif',
         'nb_article',
+        'montant_total',
         'etat'
     ];
 }

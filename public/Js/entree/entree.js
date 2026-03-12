@@ -7,8 +7,13 @@ window.pageInitializers.entree = function () {
     // ************************************************** declaration *******************************************
 
     let id_index = "";
+    let id_entree_detail = "";
 
     /* ############################################### ENTREE INDEX #################################################################*/
+
+    window.actialiser_index = function (){
+         liste_entreeIndex();
+    }
 
     function liste_entreeIndex() {
         $.ajax({
@@ -48,12 +53,12 @@ window.pageInitializers.entree = function () {
                 $("#table_entreeIndex").append(res.data);
 
                 // formatage des nombres
-                // $("#table_entreeIndex td.format-prix").each(function () {
-                //     let val = $(this).text().trim();
-                //     if (val !== "" && !isNaN(parseFloat(val))) {
-                //         $(this).text(formatNumberDisplay(val));
-                //     }
-                // });
+                $("#table_entreeIndex td.format-prix").each(function () {
+                    let val = $(this).text().trim();
+                    if (val !== "" && !isNaN(parseFloat(val))) {
+                        $(this).text(formatNumberDisplay(val));
+                    }
+                });
 
                 $("#table_entreeIndex").DataTable({
                     destroy: true,
@@ -120,7 +125,6 @@ window.pageInitializers.entree = function () {
         });
     }
 
-
     $(document)
         .off("submit", "#ajout_entreeIndex")
         .on("submit", "#ajout_entreeIndex", function (e) {
@@ -137,7 +141,7 @@ window.pageInitializers.entree = function () {
             data.append("id_entreeIndex", id_index);
 
             $.ajax({
-                beforeSend: function () { },
+                beforeSend: function () {},
                 url: base + "ajout_entreeIndex",
                 type: "POST",
                 processData: false,
@@ -172,11 +176,10 @@ window.pageInitializers.entree = function () {
 
                         // Rafraîchir DataTable proprement
 
-                        $('[data-dismiss="modal"]').focus();  // Déplacer le focus ailleurs (sur un élément visible)
+                        $('[data-dismiss="modal"]').focus(); // Déplacer le focus ailleurs (sur un élément visible)
                         $("#AjoutEntreeIndexModal").modal("hide");
 
                         liste_entreeIndex();
-
                     } else {
                         alertCustom(
                             "danger",
@@ -184,33 +187,26 @@ window.pageInitializers.entree = function () {
                             "Opération non effectuée",
                         );
                     }
-
                 },
             });
         });
 
-
-
-
     window.edit_entree_index = function (id) {
-
         id_index = id;
         //   formatPrixImput();
-        $('.entete_modal').text("Modification");
-        $('#btn_add_entreeIndex').text("Modifier");
+        $(".entete_modal").text("Modification");
+        $("#btn_add_entreeIndex").text("Modifier");
         $("#AjoutEntreeIndexModal").modal(
             { backdrop: "static", keyboard: false },
-            "show"
+            "show",
         );
 
-        let ref_entree = $('#en_' + id).data('ref_entree');
-        let motif = $('#en_' + id).data('motif');
-
+        let ref_entree = $("#en_" + id).data("ref_entree");
+        let motif = $("#en_" + id).data("motif");
 
         $('input[name="ref_entree"]').val(ref_entree);
-        $('#motif').val(motif);
-
-    }
+        $("#motif").val(motif);
+    };
 
     window.delete_entree_index = function (id) {
         if (enCours) return; // Empêche un deuxième clic si une requête est en cours
@@ -284,12 +280,12 @@ window.pageInitializers.entree = function () {
 
     /* ############################################### ENTREE DETAILS #################################################################*/
 
-
     window.afficher_entree_detail = function (id) {
 
+        id_index = id;
         $("#listeEntreeDetailModal").modal(
             { backdrop: "static", keyboard: false },
-            "show"
+            "show",
         );
 
         $.ajax({
@@ -311,18 +307,17 @@ window.pageInitializers.entree = function () {
                 });
             },
 
-
             url: base + "liste_entreeDetail",
-            type: "GET", // on utilise GET pour récupérer les données sans csrf
+            type: "POST", // on utilise GET pour récupérer les données sans csrf
             dataType: "json",
-            //   headers: {
-            //     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            // },
+            headers: {
+                "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+            },
+            data: { id_index: id_index },
             // complete: function () {
             //     enCours = false;
             // },
             success: function (res) {
-
                 if ($.fn.DataTable.isDataTable("#table_entreedetail")) {
                     $("#table_entreedetail").DataTable().destroy();
                 }
@@ -331,17 +326,17 @@ window.pageInitializers.entree = function () {
                 $("#table_entreedetail").append(res.data);
 
                 // formatage des nombres
-                // $("#table_entreeIndex td.format-prix").each(function () {
-                //     let val = $(this).text().trim();
-                //     if (val !== "" && !isNaN(parseFloat(val))) {
-                //         $(this).text(formatNumberDisplay(val));
-                //     }
-                // });
+                $("#table_entreedetail td.format-prix").each(function () {
+                    let val = $(this).text().trim();
+                    if (val !== "" && !isNaN(parseFloat(val))) {
+                        $(this).text(formatNumberDisplay(val));
+                    }
+                });
 
                 $("#table_entreedetail").DataTable({
                     destroy: true,
                     ordering: true,
-                    order: [[0, "desc"]],
+                    order: [[0, "asc"]],
                     responsive: true,
                     info: false,
                     paging: true,
@@ -362,7 +357,6 @@ window.pageInitializers.entree = function () {
                     },
                     dom: "Bfrtip",
                     buttons: [
-
                         {
                             className:
                                 "btn btn-sm mr-1 btn-success btn-min-width ",
@@ -385,6 +379,25 @@ window.pageInitializers.entree = function () {
                                 //     });
                             },
                         },
+                        {
+                            className:
+                                "btn btn-sm mr-1 btn-info btn-min-width ",
+                            text: '<i class="ft-upload"> Excel</i>',
+                            action: function () {
+                                // id_index = id;
+                                $("#ImportExcelModal").modal(
+                                    { backdrop: "static", keyboard: false },
+                                    "show",
+                                );
+                                $("#import_excel")
+                                    .find(
+                                        ':input:not([type="submit"], [type="hidden"]):not([type="radio"])',
+                                    )
+                                    .each(function () {
+                                        $(this).val("");
+                                    });
+                            },
+                        },
                     ],
                 });
 
@@ -395,7 +408,305 @@ window.pageInitializers.entree = function () {
                 $("#card_liste_entreeDetail").unblock();
             },
         });
-    }
+    };
+
+    $(document)
+        .off("submit", "#import_excel")
+        .on("submit", "#import_excel", function (e) {
+            e.preventDefault();
+            if (enCours) return; // Empêche un deuxième clic si une requête est en cours
+            enCours = true;
+
+            console.log(id_index);
+            let data = new FormData(this);
+            data.append("id_index", id_index);
+
+            $.ajax({
+                beforeSend: function () {
+                    $("#table_entreedetail").block({
+                        message:
+                            '<div class="ft-refresh-cw icon-spin font-medium-2" style="margin:auto"></div>',
+
+                        overlayCSS: {
+                            backgroundColor: "black",
+                            opacity: 0.1,
+                            cursor: "wait",
+                        },
+                        css: {
+                            border: 0,
+                            padding: 0,
+                            backgroundColor: "transparent",
+                        },
+                    });
+                },
+                url: base + "import_excel",
+                type: "POST",
+                headers: {
+                    "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr(
+                        "content",
+                    ),
+                },
+                complete: function () {
+                    enCours = false; // Remet la variable à false, que la requête ait réussi ou échoué
+                },
+                data: data,
+                processData: false,
+                contentType: false,
+
+                success: function (res) {
+                    enCours = false;
+
+                    if (res.status == "success") {
+                        alertCustom(
+                            "success",
+                            "ft-check",
+                            "Importation effectué avec succée",
+                        );
+                    } else {
+                        alertCustom("danger", "ft-x", "Importation echouée");
+                    }
+
+                    $("#ImportExcelModal").modal("hide");
+                    $("#table_entreedetail").unblock();
+                    afficher_entree_detail(id_index).call();
+                    liste_entreeIndex();
+                },
+            });
+        });
+
+    window.valider_entree_detail = function (id) {
+        if (enCours) return; // Empêche un deuxième clic si une requête est en cours
+        // id_entree_detail = id;
+
+        let qte = $("#en_" + id).data("qte");
+
+       $("#table_entreedetail").block({
+
+        message: `
+
+
+            <div class="card" style="max-width:400px ; ">
+            <div class="card-header" style="max-width:400px ;">
+                    <i class="ft-info" style='color:rgb(59, 29, 252);font-size:50px'></i>
+            </div>
+            <div class="card-content">
+                <div class="card-body">
+                    <h3>Est-vous sûr de vouloire valider :</h3>
+                    <h2>`+qte+`</h2>
+                    </br>
+                    </br>
+
+                        <button type="button" data-id="`+ id + `"  data-action="confirm_validation_entree_detail" class="mr-1 mb-1 btn btn-sm btn-warning btn-min-width"><i class="ft-check"></i> Oui</button>
+                        <button type="button" data-action="annuler_confirm_validation_entree_detail" class="mr-1 mb-1 btn btn-sm btn-outline-light btn-min-width"><i class="ft-x"></i> Annuler</button>
+
+
+                </div>
+            </div>
+            </div>
+
+
+            `,
+
+        overlayCSS: {
+            backgroundColor: 'black',
+            opacity: 0.1,
+            cursor: "wait",
+
+        },
+        css: {
+            border: 0,
+            padding: 0,
+            backgroundColor: "transparent"
+        }
+    });
+    };
+
+    window.confirm_validation_entree_detail = function (id) {
+        if (enCours) return; // Empêche un deuxième clic si une requête est en cours
+        enCours = true;
+
+        $("#table_entreedetail").unblock();
+
+        $.ajax({
+            beforeSend: function () {
+                $("#table_entreedetail").block({
+                    message:
+                        '<div class="ft-refresh-cw icon-spin font-medium-2" style="margin:auto"></div>',
+
+                    overlayCSS: {
+                        backgroundColor: "black",
+                        opacity: 0.1,
+                        cursor: "wait",
+                    },
+                    css: {
+                        border: 0,
+                        padding: 0,
+                        backgroundColor: "transparent",
+                    },
+                });
+            },
+            url: base + "valider_entree_detail",
+            type: "POST",
+            headers: {
+                "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+            },
+            complete: function () {
+                enCours = false; // Remet la variable à false, que la requête ait réussi ou échoué
+            },
+            data: { id_entree_detail: id },
+            success: function (res) {
+                enCours = false;
+                $("#table_entreedetail").unblock();
+
+                id_entree_detail = "";
+
+                if (res.status == "success") {
+                    alertCustom(
+                        "success",
+                        "ft-check",
+                        "Validation effectué avec succée",
+                    );
+                } else {
+                    alertCustom("danger", "ft-x", "Validation non effectué");
+                }
+
+                  afficher_entree_detail(id_index).call();
+            },
+        });
+    };
+
+
+      window.annuler_entree_detail_validee = function (id) {
+        if (enCours) return; // Empêche un deuxième clic si une requête est en cours
+        // id_entree_detail = id;
+
+        let qte = $("#en_" + id).data("qte");
+
+       $("#table_entreedetail").block({
+
+        message: `
+
+
+            <div class="card" style="max-width:400px ; ">
+            <div class="card-header" style="max-width:400px ;">
+                    <i class="ft-warning" style='color:rgb(247, 121, 30);font-size:50px'></i>
+            </div>
+            <div class="card-content">
+                <div class="card-body">
+                    <h3>Vollez-vous retirer :</h3>
+                    <h2>`+qte+`</h2>
+                    </br>
+                    </br>
+
+                        <button type="button" data-id="`+ id + `"  data-action="confirm_annulation_entree_detail_validee" class="mr-1 mb-1 btn btn-sm btn-warning btn-min-width"><i class="ft-check"></i> Oui</button>
+                        <button type="button" data-action="annuler_annuler_validation_entree_detail" class="mr-1 mb-1 btn btn-sm btn-outline-light btn-min-width"><i class="ft-x"></i> Annuler</button>
+
+
+                </div>
+            </div>
+            </div>
+
+
+            `,
+
+        overlayCSS: {
+            backgroundColor: 'black',
+            opacity: 0.1,
+            cursor: "wait",
+
+        },
+        css: {
+            border: 0,
+            padding: 0,
+            backgroundColor: "transparent"
+        }
+    });
+    };
+    window.confirm_annulation_entree_detail_validee = function (id) {
+        if (enCours) return; // Empêche un deuxième clic si une requête est en cours
+        enCours = true;
+
+        $("#table_entreedetail").unblock();
+
+        $.ajax({
+            beforeSend: function () {
+                $("#table_entreedetail").block({
+                    message:
+                        '<div class="ft-refresh-cw icon-spin font-medium-2" style="margin:auto"></div>',
+
+                    overlayCSS: {
+                        backgroundColor: "black",
+                        opacity: 0.1,
+                        cursor: "wait",
+                    },
+                    css: {
+                        border: 0,
+                        padding: 0,
+                        backgroundColor: "transparent",
+                    },
+                });
+            },
+            url: base + "annuler_validation_entree_detail",
+            type: "POST",
+            headers: {
+                "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+            },
+            complete: function () {
+                enCours = false; // Remet la variable à false, que la requête ait réussi ou échoué
+            },
+            data: { id_entree_detail: id },
+            success: function (res) {
+                enCours = false;
+                $("#table_entreedetail").unblock();
+
+                id_entree_detail = "";
+
+                if (res.status == "success") {
+                    alertCustom(
+                        "success",
+                        "ft-check",
+                        "Validation effectué avec succée",
+                    );
+                } else {
+                    alertCustom("danger", "ft-x", "Validation non effectué");
+                }
+
+                  afficher_entree_detail(id_index).call();
+            },
+        });
+    };
+
+
+    window.annuler_confirm_validation_entree_detail = function () {
+        $("#table_entreedetail").unblock();
+        id_entree_detail = "";
+    };
+    window.annuler_annuler_validation_entree_detail = function () {
+        $("#table_entreedetail").unblock();
+        id_entree_detail = "";
+    };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

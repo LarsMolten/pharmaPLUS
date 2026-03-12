@@ -16,12 +16,13 @@ class article extends Model
         'presentation',
         'unite',
         'stock',
+        'seuil',
         'statut',
         'etat',
     ];
 
 
-     public function unite()
+     public function uniteRelation()
     {
         return $this->belongsTo(unite::class,'unite');
     }

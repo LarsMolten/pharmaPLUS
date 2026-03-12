@@ -55,6 +55,7 @@
 
         {{-- les modale article --}}
         @include('article.modalArticle')
+        @include('article.modalDetailStock')
 
     </section>
 

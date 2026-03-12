@@ -34,6 +34,7 @@
         {{-- les modale article --}}
         @include('entree.modalEntreeIndex')
         @include('entreeDetail.modalEntreeDetail')
+        @include('entreeDetail.modalImportExcel')
 
     </section>
 

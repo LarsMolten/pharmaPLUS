@@ -27,6 +27,7 @@ class StorearticleRequest extends FormRequest
             'presentation' => 'required|string|max:255',
             'unite' => 'required|exists:unites,id',
             'stock' => 'integer|min:0',
+            'seuil' => 'integer|min:0',
             'statut' => 'integer|max:1',
             'etat' => 'integer|max:1',
         ];
