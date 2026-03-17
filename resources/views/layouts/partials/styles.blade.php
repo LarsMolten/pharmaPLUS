@@ -41,6 +41,7 @@
     {{-- <link rel="stylesheet" type="text/css" href="{{ asset('app-assets/css/pages/dashboard-ecommerce.css') }}"> --}}
     <!-- bootstrap-select CSS -->
     <link rel="stylesheet" href="{{ asset('app-assets/css/bootstrap-select.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('app-assets/css/bootstrap-datepicker3.css') }}">
      <!-- BEGIN: Custom CSS-->
      <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/style.css') }}">
      <!-- END: Custom CSS-->

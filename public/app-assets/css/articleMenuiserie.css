@@ -54,6 +54,11 @@ td{
     color: #353131 !important;
     border: 1px solid #0000001c !important;
 }
+
+td .format-prix {
+  font-weight: bold;
+}
+
 th{
     border: 1px solid #0000001c !important;
 }

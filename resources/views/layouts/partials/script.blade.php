@@ -27,6 +27,7 @@
 
 <!-- bootstrap-select JS -->
 <script src="{{ asset('app-assets/js/bootstrap-select.min.js') }}"></script>
+<script src="{{ asset('app-assets/js/bootstrap-datepicker.min.js') }}"></script>
 
 {{-- Script pour DataTable --}}
 <script src="{{ asset('app-assets/vendors/js/tables/datatable/datatables.min.js') }}"></script>
@@ -38,3 +39,4 @@
 <script src="{{ asset('Js/entree/entree.js') }}"></script>
 <script src="{{ asset('Js/utilisateur.js') }}"></script>
 <script src="{{ asset('Js/gestion/gestion.js') }}"></script>
+<script src="{{ asset('Js/vente/panier.js') }}"></script>

@@ -250,6 +250,10 @@ input[type="datetime-local"],
 input[type="month"] {
   -webkit-appearance: listbox; }
 
+td .format-prix {
+  font-weight: bold;
+}
+
 textarea {
   overflow: auto;
   resize: vertical; }

@@ -65,7 +65,7 @@ class ArticleController extends Controller
                 $Medic_presentatio = $unite->nomUnite == "Unité" ? "Unité" : $presentationMedic;
 
                 $s_boite = round($article->stock / $article->presentation, 2);
-                $stock_article = "{$s_boite} / {$article->stock}";
+                $stock_article = "<strong>{$s_boite}</strong> / {$article->stock}";
 
                 $statut_medic = ($article->statut == 1) ? "Actif" : "Inactif";
 
@@ -79,7 +79,7 @@ class ArticleController extends Controller
 
                 $th .= "<tr>
                             <td  style='width:5%'>REF-{$article->id}</td>
-                            <td  style='width:20%'>{$article->designation}</td>
+                            <td  style='width:20%; text-align: left;'>{$article->designation}</td>
                             <td  style='width:10%'>{$Medic_presentatio}</td>
                             <td style='width:5%'>{$article->presentation}</td>
                             <td style='width:10% ; {$bg_color}'>{$stock_article}</td>

@@ -339,7 +339,9 @@ function formatNumberDisplay(value) {
     let parts = value.split(".");
     parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ".");
 
-    return parts.join(",");
+    let formated = parts.join(",");
+
+    return "<strong>"+ formated + "</strong>";
 }
 
 

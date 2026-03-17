@@ -51,7 +51,7 @@ window.pageInitializers.article = function () {
                 $("#card_article").DataTable({
                     destroy: true,
                     ordering: true,
-                    order: [[0, "desc"]],
+                    order: [[1, "asc"]],
                     responsive: true,
                     info: false,
                     paging: true,

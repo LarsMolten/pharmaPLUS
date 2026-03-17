@@ -35,6 +35,8 @@
         @include('entree.modalEntreeIndex')
         @include('entreeDetail.modalEntreeDetail')
         @include('entreeDetail.modalImportExcel')
+        @include('entreeDetail.modalFormEntreeDetail')
+        @include('entreeDetail.modalProposition')
 
     </section>
 

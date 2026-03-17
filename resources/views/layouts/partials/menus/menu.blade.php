@@ -10,7 +10,7 @@
             </li>
 
             <li class="nav-item">
-                <a href="#" class="menu-item">
+                <a href="{{ route('afficher_panier') }}" class="menu-item">
                     <i class="la la-shopping-cart"></i>
                     <span class="menu-title">Ventes</span>
                 </a>

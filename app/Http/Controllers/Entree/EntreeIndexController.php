@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\EntreeIndex\StoreEntreeIndexRequest;
 use App\Models\EntreeDetail\entree_detail;
 use App\Models\EntreeIndex\entree_index;
+use App\Models\pourcentage;
 use Illuminate\Http\Request;
 
 class EntreeIndexController extends Controller
@@ -30,6 +31,8 @@ class EntreeIndexController extends Controller
         try {
 
             $entrees = entree_index::where('etat', 1)->orderBy('created_at', 'asc')->get();
+            
+            $pourcentage =  pourcentage::first();
 
             $th = "
                 <thead>
@@ -37,7 +40,9 @@ class EntreeIndexController extends Controller
                         <th style='text-align: center;'>Referance</th>
                         <th style='text-align: center;'>Motif</th>
                         <th style='text-align: center;'>Nb d'article</th>
-                        <th style='text-align: center;'>Montant</th>
+                        <th style='text-align: center;'>Montant d'achat</th>
+                        <th style='text-align: center;'>Montant <span style='color: hsl(206, 100%, 67%)'>+$pourcentage->pourcentage %</span></th>
+                        <th style='text-align: center;'>Montant estimé</th>
                         <th style='text-align: center;'>Date</th>
                         <th style='text-align: center;'>Actions</th>
                     </tr>
@@ -47,18 +52,22 @@ class EntreeIndexController extends Controller
             foreach ($entrees as $entree) {
 
                 //    natao tafara
-                $btn_supp = ($entree->nb_article == 0) ? "<a class='danger delete mr-1' data-action='delete_entree_index' data-id='{$entree->id}'  ><i class='la la-trash-o'></i></a>" : "";
-
+                
                 $stats = entree_detail::where('entree_indices_id', $entree->id)
-                    ->selectRaw('COUNT(*) as nb_article, SUM(montant_entree) as montant_total')
-                    ->first();
-
+                                        ->selectRaw('COUNT(*) as nb_article, SUM(montant_entree) as montant_total, SUM(montant_gain_brut) as montant_gain_brut, SUM(montant_gain_proposee) as montant_gain_proposee')
+                                        ->first();
+                                        
+                $btn_supp = ($stats->nb_article == 0) ? "<a class='danger delete mr-1' data-action='delete_entree_index' data-id='{$entree->id}'  ><i class='la la-trash-o'></i></a>" : "";
                 $montant_total = ($stats->montant_total)?? 0;
+                $montant_gain_brut = ($stats->montant_gain_brut)?? 0;
+                $montant_gain_proposee = ($stats->montant_gain_proposee)?? 0;
                 $th .= "<tr>
                             <td  style='width:10%'>{$entree->ref_entree}</td>
                             <td style='width:20%'>{$entree->motif}</td>
                             <td  style='width:10%'>{$stats->nb_article}</td>
                             <td  style='width:10%' class='format-prix'>{$montant_total} Ar</td>
+                            <td  style='width:10%' class='format-prix'>{$montant_gain_brut} Ar</td>
+                            <td  style='width:10%' class='format-prix'>{$montant_gain_proposee} Ar</td>
                             <td  style='width:10%'>{$entree->created_at}</td>";
                 // on a utilisé SPA pour éviter de recharger la page à chaque action, donc on a besoin de l'id passer en 'data-id' de l'article pour faire les actions d'édition et de suppression en ajax par data-action
                 $th .= "<td style='width:10%'>

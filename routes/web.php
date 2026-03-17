@@ -13,6 +13,7 @@ use App\Http\Controllers\DetailKit\DetailKitController;
 use App\Http\Controllers\Kit\KitController;
 use App\Http\Controllers\Entree\EntreeIndexController;
 use App\Http\Controllers\EntreeDetail\EntreeDetailController;
+use App\Http\Controllers\Panier\PanierController;
 use App\Models\Kit\kit;
 use Spatie\Permission\Models\Role;
 
@@ -95,9 +96,14 @@ Route::post('/delete_entree_index', [EntreeIndexController::class, 'delete_entre
 
 // entrée detail
 Route::post('/liste_entreeDetail', [EntreeDetailController::class, 'liste_entreeDetail'])->name('liste_entreeDetail');
+Route::post('/ajout_entree_detail', [EntreeDetailController::class, 'ajout_entree_detail'])->name('ajout_entree_detail');
 Route::post('/import_excel', [EntreeDetailController::class, 'import_excel'])->name('import_excel');
 Route::post('/valider_entree_detail', [EntreeDetailController::class, 'valider_entree_detail'])->name('valider_entree_detail');
 Route::post('/annuler_validation_entree_detail', [EntreeDetailController::class, 'annuler_validation_entree_detail'])->name('annuler_validation_entree_detail');
+Route::get('/charge_article', [EntreeDetailController::class, 'charge_article'])->name('charge_article');
+Route::post('/modifier_proposition_pu', [EntreeDetailController::class, 'modifier_proposition_pu'])->name('modifier_proposition_pu');
 
 
-
+// Vente
+Route::get('/afficher_panier', [PanierController::class, 'index'])->name('afficher_panier');
+Route::get('/liste_panier', [PanierController::class, 'liste_panier'])->name('liste_panier');

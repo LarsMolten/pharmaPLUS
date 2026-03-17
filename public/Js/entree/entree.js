@@ -8,12 +8,13 @@ window.pageInitializers.entree = function () {
 
     let id_index = "";
     let id_entree_detail = "";
+    let id_article_entree = "";
 
     /* ############################################### ENTREE INDEX #################################################################*/
 
-    window.actialiser_index = function (){
-         liste_entreeIndex();
-    }
+    window.actialiser_index = function () {
+        liste_entreeIndex();
+    };
 
     function liste_entreeIndex() {
         $.ajax({
@@ -56,14 +57,14 @@ window.pageInitializers.entree = function () {
                 $("#table_entreeIndex td.format-prix").each(function () {
                     let val = $(this).text().trim();
                     if (val !== "" && !isNaN(parseFloat(val))) {
-                        $(this).text(formatNumberDisplay(val));
+                        $(this).html(formatNumberDisplay(val));
                     }
                 });
 
                 $("#table_entreeIndex").DataTable({
                     destroy: true,
                     ordering: true,
-                    order: [[0, "desc"]],
+                    order: [[4, "desc"]],
                     responsive: true,
                     info: false,
                     paging: true,
@@ -281,7 +282,6 @@ window.pageInitializers.entree = function () {
     /* ############################################### ENTREE DETAILS #################################################################*/
 
     window.afficher_entree_detail = function (id) {
-
         id_index = id;
         $("#listeEntreeDetailModal").modal(
             { backdrop: "static", keyboard: false },
@@ -326,10 +326,10 @@ window.pageInitializers.entree = function () {
                 $("#table_entreedetail").append(res.data);
 
                 // formatage des nombres
-                $("#table_entreedetail td.format-prix").each(function () {
+                $("#table_entreedetail td.format-prix ").each(function () {
                     let val = $(this).text().trim();
                     if (val !== "" && !isNaN(parseFloat(val))) {
-                        $(this).text(formatNumberDisplay(val));
+                        $(this).html(formatNumberDisplay(val));
                     }
                 });
 
@@ -363,26 +363,66 @@ window.pageInitializers.entree = function () {
                             text: '<i class="ft-plus"> Ajouter</i>',
                             action: function () {
                                 // id_article = "";
-                                // $(".entete_modal").text("Nouvel entré");
-                                // $("#btn_add_entreeIndex").text("Ajouter");
-                                // $("#AjoutEntreeIndexModal").modal(
-                                //     { backdrop: "static", keyboard: false },
-                                //     "show",
-                                // );
-                                // $("#ajout_entreeIndex")
-                                //     .find(
-                                //         ':input:not([type="submit"], [type="hidden"]):not([type="radio"])',
-                                //     )
-                                //     .each(function () {
-                                //         // Réinitialiser les autres champs en vidant leur valeur
-                                //         $(this).val("");
-                                //     });
+                                $(".entete_modal").text("Ajouter");
+                                $("#btn_add_article_entree_detail").text(
+                                    "Ajouter",
+                                );
+
+                                charge_article();
+
+                                $("#AjoutArticleEntreeDetaileModal").modal(
+                                    { backdrop: "static", keyboard: false },
+                                    "show",
+                                );
+
+                                $("#card_liste_entreeDetail").block({
+                                    message:
+                                        '<div class="ft-refresh-cw icon-spin font-medium-2" style="margin:auto , font-size : 80px !important"></div>',
+
+                                    overlayCSS: {
+                                        backgroundColor: "black",
+                                        opacity: 0.1,
+                                        cursor: "wait",
+                                    },
+                                    css: {
+                                        border: 0,
+                                        padding: 0,
+                                        backgroundColor: "transparent",
+                                    },
+                                });
+
+                                $("#ajout_article_entree_detail")
+                                    .find(
+                                        ':input:not([type="submit"], [type="hidden"]):not([type="radio"])',
+                                    )
+                                    .each(function () {
+                                        // Réinitialiser les autres champs en vidant leur valeur
+                                        $(this).val("");
+                                    });
+
+                                $("#date_peremption").datepicker({
+                                    format: "mm-yyyy",
+                                    viewMode: "months",
+                                    minViewMode: "months",
+                                    forceParse: true,
+                                    clearBtn: true,
+                                });
+
+                                $(document)
+                                    .off("click", "#date_peremption")
+                                    .on(
+                                        "click",
+                                        "#date_peremption-icon",
+                                        function () {
+                                            $("#date_peremption").focus(); // Déclenche le calendrier
+                                        },
+                                    );
                             },
                         },
                         {
                             className:
                                 "btn btn-sm mr-1 btn-info btn-min-width ",
-                            text: '<i class="ft-upload"> Excel</i>',
+                            text: '<i class="ft-upload"> Importer</i>',
                             action: function () {
                                 // id_index = id;
                                 $("#ImportExcelModal").modal(
@@ -410,6 +450,158 @@ window.pageInitializers.entree = function () {
         });
     };
 
+    window.close_modal_entree_detail = function () {
+        $('[data-dismiss="modal"]').focus();
+        $("#card_liste_entreeDetail").unblock();
+    };
+
+    function charge_article() {
+        $.ajax({
+            beforeSend: function () {
+                $("#AjoutEntreeIndexModal").block({
+                    message:
+                        '<div class="ft-refresh-cw icon-spin font-medium-2" style="margin:auto , font-size : 80px !important"></div>',
+
+                    overlayCSS: {
+                        backgroundColor: "black",
+                        opacity: 0.1,
+                        cursor: "wait",
+                    },
+                    css: {
+                        border: 0,
+                        padding: 0,
+                        backgroundColor: "transparent",
+                    },
+                });
+            },
+            url: base + "charge_article",
+            type: "GET",
+            dataType: "json",
+            complete: function () {
+                enCours = false; // Remet la variable à false, que la requête ait réussi ou échoué
+            },
+            error: function (xhr, status, error) {
+                alertCustom("danger", "ft-x", "Une erreur s'est produite");
+            },
+            success: function (res) {
+                $("#article_id").empty();
+                $("#article_id").append(res.data);
+                $("#article_id").selectpicker("refresh");
+                if (id_article_entree != "") {
+                    $("#article_id")
+                        .val(id_article_entree)
+                        .selectpicker("refresh");
+                }
+
+                $("#AjoutEntreeIndexModal").unblock();
+            },
+        });
+    }
+
+    $(document)
+        .off("submit", "#ajout_article_entree_detail")
+        .on("submit", "#ajout_article_entree_detail", function (e) {
+            e.preventDefault();
+            // if (enCours) return; // Empêche un deuxième clic si une requête est en cours
+            // enCours = true;
+
+            let form = $(this);
+            let data = new FormData(this);
+
+            data.append("entree_indices_id", id_index);
+            data.append("id_article_entree", id_article_entree);
+            data.append("id_entree_detail", id_entree_detail);
+
+            $.ajax({
+                beforeSend: function () {},
+                url: base + "ajout_entree_detail",
+                type: "POST",
+                processData: false,
+                contentType: false,
+                cache: false,
+                dataType: "JSON",
+                headers: {
+                    "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr(
+                        "content",
+                    ),
+                },
+                data: data,
+                // complete: function () {
+                //     enCours = false; // Remet la variable à false, que la requête ait réussi ou échoué
+                // },
+                success: function (res) {
+                    if (res.status == "success") {
+                        // Reset formulaire
+                        form[0].reset();
+                        form.removeData("id"); // supprime mode modification
+                        $("#card_liste_entreeDetail").unblock();
+                        $("#entete_modal").text("Ajouter");
+                        $("#btn_add_article_entree_detail").text("Ajouter");
+
+                        alertCustom(
+                            "success",
+                            "ft-check",
+                            id_article_entree
+                                ? "Modification effectuée avec succès"
+                                : "Ajout effectué avec succès",
+                        );
+
+                        if (id_article_entree) {
+                            $('[data-dismiss="modal"]').focus();
+                            $("#AjoutArticleEntreeDetaileModal").modal('hide');
+                        }
+
+                        afficher_entree_detail(id_index).call();
+                    } else {
+                        alertCustom(
+                            "danger",
+                            "ft-x",
+                            "Opération non effectuée",
+                        );
+                    }
+                },
+            });
+        });
+
+    window.edit_entree_detail_article = function (id) {
+        id_entree_detail = id;
+        $("#entete_modal").text("Modidier");
+        $("#btn_add_article_entree_detail").text("Modifier");
+        $("#AjoutArticleEntreeDetaileModal").modal(
+            { backdrop: "static", keyboard: false },
+            "show",
+        );
+
+        let article_id = $("#ent_" + id).data("article_id");
+        let qte_entree = $("#ent_" + id).data("qte_entree");
+        let prix_achat_boite = $("#ent_" + id).data("prix_achat_boite");
+        let pu_proposee = $("#ent_" + id).data("pu_proposee");
+        let date_peremption = $("#ent_" + id).data("date_peremption");
+
+        id_article_entree = article_id;
+
+        charge_article();
+        $("#article_id").val(article_id).selectpicker("refresh");
+        $("#qte_entree").val(qte_entree);
+        $("#prix_achat_boite").val(prix_achat_boite);
+        $("#pu_proposee").val(pu_proposee);
+        $("#date_peremption").val(date_peremption);
+
+        $("#date_peremption").datepicker({
+            format: "mm-yyyy",
+            viewMode: "months",
+            minViewMode: "months",
+            forceParse: true,
+            clearBtn: true,
+        });
+
+        $(document)
+            .off("click", "#date_peremption")
+            .on("click", "#date_peremption-icon", function () {
+                $("#date_peremption").focus(); // Déclenche le calendrier
+            });
+    };
+
     $(document)
         .off("submit", "#import_excel")
         .on("submit", "#import_excel", function (e) {
@@ -417,7 +609,6 @@ window.pageInitializers.entree = function () {
             if (enCours) return; // Empêche un deuxième clic si une requête est en cours
             enCours = true;
 
-            console.log(id_index);
             let data = new FormData(this);
             data.append("id_index", id_index);
 
@@ -480,9 +671,9 @@ window.pageInitializers.entree = function () {
 
         let qte = $("#en_" + id).data("qte");
 
-       $("#table_entreedetail").block({
-
-        message: `
+        $("#table_entreedetail").block({
+            message:
+                `
 
 
             <div class="card" style="max-width:400px ; ">
@@ -492,11 +683,15 @@ window.pageInitializers.entree = function () {
             <div class="card-content">
                 <div class="card-body">
                     <h3>Est-vous sûr de vouloire valider :</h3>
-                    <h2>`+qte+`</h2>
+                    <h2>` +
+                qte +
+                `</h2>
                     </br>
                     </br>
 
-                        <button type="button" data-id="`+ id + `"  data-action="confirm_validation_entree_detail" class="mr-1 mb-1 btn btn-sm btn-warning btn-min-width"><i class="ft-check"></i> Oui</button>
+                        <button type="button" data-id="` +
+                id +
+                `"  data-action="confirm_validation_entree_detail" class="mr-1 mb-1 btn btn-sm btn-warning btn-min-width"><i class="ft-check"></i> Oui</button>
                         <button type="button" data-action="annuler_confirm_validation_entree_detail" class="mr-1 mb-1 btn btn-sm btn-outline-light btn-min-width"><i class="ft-x"></i> Annuler</button>
 
 
@@ -507,18 +702,17 @@ window.pageInitializers.entree = function () {
 
             `,
 
-        overlayCSS: {
-            backgroundColor: 'black',
-            opacity: 0.1,
-            cursor: "wait",
-
-        },
-        css: {
-            border: 0,
-            padding: 0,
-            backgroundColor: "transparent"
-        }
-    });
+            overlayCSS: {
+                backgroundColor: "black",
+                opacity: 0.1,
+                cursor: "wait",
+            },
+            css: {
+                border: 0,
+                padding: 0,
+                backgroundColor: "transparent",
+            },
+        });
     };
 
     window.confirm_validation_entree_detail = function (id) {
@@ -570,21 +764,20 @@ window.pageInitializers.entree = function () {
                     alertCustom("danger", "ft-x", "Validation non effectué");
                 }
 
-                  afficher_entree_detail(id_index).call();
+                afficher_entree_detail(id_index).call();
             },
         });
     };
 
-
-      window.annuler_entree_detail_validee = function (id) {
+    window.annuler_entree_detail_validee = function (id) {
         if (enCours) return; // Empêche un deuxième clic si une requête est en cours
         // id_entree_detail = id;
 
         let qte = $("#en_" + id).data("qte");
 
-       $("#table_entreedetail").block({
-
-        message: `
+        $("#table_entreedetail").block({
+            message:
+                `
 
 
             <div class="card" style="max-width:400px ; ">
@@ -594,11 +787,15 @@ window.pageInitializers.entree = function () {
             <div class="card-content">
                 <div class="card-body">
                     <h3>Vollez-vous retirer :</h3>
-                    <h2>`+qte+`</h2>
+                    <h2>` +
+                qte +
+                `</h2>
                     </br>
                     </br>
 
-                        <button type="button" data-id="`+ id + `"  data-action="confirm_annulation_entree_detail_validee" class="mr-1 mb-1 btn btn-sm btn-warning btn-min-width"><i class="ft-check"></i> Oui</button>
+                        <button type="button" data-id="` +
+                id +
+                `"  data-action="confirm_annulation_entree_detail_validee" class="mr-1 mb-1 btn btn-sm btn-warning btn-min-width"><i class="ft-check"></i> Oui</button>
                         <button type="button" data-action="annuler_annuler_validation_entree_detail" class="mr-1 mb-1 btn btn-sm btn-outline-light btn-min-width"><i class="ft-x"></i> Annuler</button>
 
 
@@ -609,18 +806,17 @@ window.pageInitializers.entree = function () {
 
             `,
 
-        overlayCSS: {
-            backgroundColor: 'black',
-            opacity: 0.1,
-            cursor: "wait",
-
-        },
-        css: {
-            border: 0,
-            padding: 0,
-            backgroundColor: "transparent"
-        }
-    });
+            overlayCSS: {
+                backgroundColor: "black",
+                opacity: 0.1,
+                cursor: "wait",
+            },
+            css: {
+                border: 0,
+                padding: 0,
+                backgroundColor: "transparent",
+            },
+        });
     };
     window.confirm_annulation_entree_detail_validee = function (id) {
         if (enCours) return; // Empêche un deuxième clic si une requête est en cours
@@ -671,11 +867,10 @@ window.pageInitializers.entree = function () {
                     alertCustom("danger", "ft-x", "Validation non effectué");
                 }
 
-                  afficher_entree_detail(id_index).call();
+                afficher_entree_detail(id_index).call();
             },
         });
     };
-
 
     window.annuler_confirm_validation_entree_detail = function () {
         $("#table_entreedetail").unblock();
@@ -686,30 +881,81 @@ window.pageInitializers.entree = function () {
         id_entree_detail = "";
     };
 
+    window.edit_proposition_pu = function (id) {
+        id_article_entree = id;
+        //   formatPrixImput();
+        $("#EditPropositionModal").modal(
+            { backdrop: "static", keyboard: false },
+            "show",
+        );
 
+        let prix_unitaire = $("#pr_" + id).data("prix_unitaire");
+        let proposi = $("#pr_" + id).data("proposition");
 
+        $("#proposee_prix").val(proposi);
+        $("#prix_unitaire_brut").text(prix_unitaire);
+    };
 
+    $(document)
+        .off("submit", "#modifier_proposition_pu")
+        .on("submit", "#modifier_proposition_pu", function (e) {
+            e.preventDefault();
+            if (enCours) return; // Empêche un deuxième clic si une requête est en cours
+            enCours = true;
 
+            let data = new FormData(this);
+            data.append("id_article_entree", id_article_entree);
 
+            $.ajax({
+                beforeSend: function () {
+                    $("#table_entreedetail").block({
+                        message:
+                            '<div class="ft-refresh-cw icon-spin font-medium-2" style="margin:auto"></div>',
 
+                        overlayCSS: {
+                            backgroundColor: "black",
+                            opacity: 0.1,
+                            cursor: "wait",
+                        },
+                        css: {
+                            border: 0,
+                            padding: 0,
+                            backgroundColor: "transparent",
+                        },
+                    });
+                },
+                url: base + "modifier_proposition_pu",
+                type: "POST",
+                headers: {
+                    "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr(
+                        "content",
+                    ),
+                },
+                complete: function () {
+                    enCours = false; // Remet la variable à false, que la requête ait réussi ou échoué
+                },
+                data: data,
+                processData: false,
+                contentType: false,
 
+                success: function (res) {
+                    enCours = false;
 
+                    if (res.status == "success") {
+                        alertCustom(
+                            "success",
+                            "ft-check",
+                            "Modification effectué avec succée",
+                        );
+                    } else {
+                        alertCustom("danger", "ft-x", "Modification echouée");
+                    }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+                    $("#EditPropositionModal").modal("hide");
+                    $("#table_entreedetail").unblock();
+                    afficher_entree_detail(id_index).call();
+                    liste_entreeIndex();
+                },
+            });
+        });
 };

@@ -5,6 +5,7 @@ namespace App\Imports;
 use App\Models\Article\article;
 use App\Models\EntreeDetail\entree_detail;
 use App\Models\EntreeIndex\entree_index;
+use App\Models\pourcentage;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\ToCollection;
@@ -27,6 +28,8 @@ class EntreeDetailImport implements ToCollection
     {
         unset($rows[0]); // supprimer la première ligne
         unset($rows[1]); // supprimer la deuxieme ligne
+        $pourcent = pourcentage::first();
+        $pourcentage = $pourcent->pourcentage;
 
         foreach ($rows as $row) {
 
@@ -49,7 +52,7 @@ class EntreeDetailImport implements ToCollection
             $prix_boite = $this->cleanPrice($row[8]);
             $p_u = $prix_boite / ($article->presentation);
 
-            $prix_unitaire_vente = $p_u + ($p_u * 20 / 100); //+20%
+            $prix_unitaire_vente = $p_u + ($p_u * $pourcentage / 100); //+20%
 
             // -------- Date --------
             $date_peremption = $this->parseDate($row[11]);
