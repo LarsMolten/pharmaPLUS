@@ -10,6 +10,7 @@ use App\Models\Unite\unite;
 use App\Http\Requests\Article\StorearticleRequest;
 use App\Http\Requests\Article\UpdatearticleRequest;
 use App\Models\EntreeDetail\entree_detail;
+use App\Models\pourcentage;
 
 class ArticleController extends Controller
 {
@@ -52,13 +53,13 @@ class ArticleController extends Controller
                 $unite = unite::find($article->unite);
 
                 $nb_lot = entree_detail::where([
-                                            ['article_id', $article->id],
-                                            ['stock_restant_lot', '>', 0],
-                                            ['isValide', 1],
-                                            ['etat', 1]
-                                        ])
-                                        ->selectRaw('COUNT(*) as nb_lot')
-                                        ->first();
+                    ['article_id', $article->id],
+                    ['stock_restant_lot', '>', 0],
+                    ['isValide', 1],
+                    ['etat', 1]
+                ])
+                    ->selectRaw('COUNT(*) as nb_lot')
+                    ->first();
 
                 $presentationMedic = "{$unite->nomUnite}/{$article->presentation}";
 
@@ -142,13 +143,14 @@ class ArticleController extends Controller
     {
         try {
 
+            $pourcentage = pourcentage::first();
             // Récupérer tous les detail de stock d'article par lot ayant encore de quantité
             $details = entree_detail::where([
-                                            ['article_id', $request->article_id],
-                                            ['stock_restant_lot', '>', 0],
-                                            ['isValide', 1],
-                                            ['etat', 1]
-                                        ])->get();
+                ['article_id', $request->article_id],
+                ['stock_restant_lot', '>', 0],
+                ['isValide', 1],
+                ['etat', 1]
+            ])->get();
 
             $th = "
                 <thead>
@@ -156,7 +158,8 @@ class ArticleController extends Controller
                         <th style='text-align: center;'>#</th>
                         <th style='text-align: center;'>Lot</th>
                         <th style='text-align: center;'>Stock dispo</th>
-                        <th style='text-align: center;'>Prix unitaire</th>
+                        <th style='text-align: center;'>Prix unitaire <span style='color: hsl(206, 100%, 67%)'>+$pourcentage->pourcentage %</span></th>
+                        <th style='text-align: center;'>P.U Proposé</th>
                         <th style='text-align: center;'>Date de péremption</th>
                         <th style='text-align: center;'>Date d'entré</th>
                         <th style='text-align: center;'>Actions</th>
@@ -171,7 +174,7 @@ class ArticleController extends Controller
 
 
                 $s_boite = (round($detail->stock_restant_lot / $article->presentation, 2)) ?? 0;
-                $stock_restan_lot = "{$s_boite} / {$detail->stock_restant_lot}";
+                $stock_restan_lot = "<strong>{$s_boite}</strong> / {$detail->stock_restant_lot}";
 
 
                 $bg_color_s = "";
@@ -183,24 +186,25 @@ class ArticleController extends Controller
                     $bg_color_s .= "background-color: rgb(255, 205, 178);";
                 }
 
+                $bg1 = ($detail->stock_restant_lot > $article->seuil) ? "background-color: rgba(53, 244, 101, 0.91)" : "background-color: rgba(233, 244, 236, 0.99)";
+                $bg2 = (date('YYmmdd') >= $detail->date_peremption) ? "background-color: rgba(243, 133, 122, 0.91)" : "";
 
-                if (date('YYmm') >= $detail->date_peremption) {                         //condition de péremption
-                    $bg_color_p .= "background-color: rgb(251, 102, 61);";
-                }
 
-                // if($article->stock <= $article->seuil) {
-                //     $bg_color_p .= "background-color: rgb(241, 163, 122);";
-                // }
+
+
+                //si a péremption approche
+
 
                 $th .= "<tr>
-                            <td  style='width:5%'>{$num}</td>
-                            <td  style='width:20%'>{$detail->lot}</td>
-                            <td  style='width:10%' {$bg_color_p}>{$stock_restan_lot}</td>
-                            <td style='width:10%'>{$detail->prix_unitaire}</td>
-                            <td style='width:20% ; {$bg_color_p}'>{$detail->date_peremption}</td>
-                            <td style='width:10%'>{$detail->created_at}</td>";
+                            <td  style='width:5%; $bg2'>{$num}</td>
+                            <td  style='width:20%; $bg2'>{$detail->lot}</td>
+                            <td  style='width:10%; $bg1 ' {$bg_color_p}>{$stock_restan_lot}</td>
+                            <td style='width:10%; $bg2' class='format-prix'>{$detail->prix_unitaire} Ar</td>
+                            <td style='width:10%; $bg2' class='format-prix'>{$detail->pu_proposee} Ar</td>
+                            <td style='width:20% ; $bg2'>{$detail->date_peremption}</td>
+                            <td style='width:10%; $bg2' >{$detail->created_at}</td>";
                 // on a utilisé SPA pour éviter de recharger la page à chaque action, donc on a besoin de l'id passer en 'data-id' de l'article pour faire les actions d'édition et de suppression en ajax par data-action
-                $th .= "<td style='width:10%'>
+                $th .= "<td style='width:10%; $bg2'>
 
                             <a class='success mr-1' data-action='retirer_stock_lot_perimee' id='ar_{$detail->id}' data-design='{$article->designation}' data-id='{$detail->id}'  ><i class='la la-list'></i></a>
 

@@ -555,6 +555,12 @@ window.pageInitializers.entree = function () {
 
                         afficher_entree_detail(id_index).call();
                         id_article_entree = "";
+                    } else if (res.status == "error") {
+                        alertCustom(
+                            "warning",
+                            "ft-x",
+                            "Veuillez verifier le fichier importé !",
+                        );
                     } else {
                         alertCustom(
                             "danger",
@@ -583,7 +589,6 @@ window.pageInitializers.entree = function () {
         let pu_proposee = $("#ent_" + id).data("pu_proposee");
         let date_peremption = $("#ent_" + id).data("date_peremption");
         id_article_entree = article_id;
-
 
         charge_article();
 

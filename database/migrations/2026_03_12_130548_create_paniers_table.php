@@ -21,9 +21,9 @@ return new class extends Migration
             $table->decimal('p_u_brut', 12, 2);
             $table->decimal('p_u_proposee', 12, 2);
             $table->integer('qte')->default(0);
-            $table->decimal('montant_brut', 12, 4);
-            $table->decimal('montant_proposee', 12, 4);
-            $table->decimal('montant_ecart', 12, 4);
+            $table->decimal('montant_brut', 12, 2);
+            $table->decimal('montant_proposee', 12, 2);
+            $table->decimal('montant_ecart', 12, 2);
             $table->integer('user_id');
             $table->timestamps();
         });

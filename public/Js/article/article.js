@@ -430,6 +430,14 @@ window.pageInitializers.article = function () {
                 $("#table_stockdetail").empty();
                 $("#table_stockdetail").append(res.data);
 
+                 // formatage des nombres
+                 $("#table_stockdetail td.format-prix").each(function () {
+                    let val = $(this).text().trim();
+                    if (val !== "" && !isNaN(parseFloat(val))) {
+                        $(this).html(formatNumberDisplay(val));
+                    }
+                });
+
                 $("#table_stockdetail").DataTable({
                     destroy: true,
                     ordering: true,

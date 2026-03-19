@@ -34,7 +34,7 @@ class KitController extends Controller
                 $th .= "<tr>
                             <td  style='width:5%'>{$kit->id}</td>
                             <td  style='width:20%'>{$kit->nom_kit}</td>
-                            <td class='format-prix' style='width:20%' >{$kit->prix_kit}</td>";
+                            <td class='format-prix' style='width:20%' >{$kit->prix_kit} Ar</td>";
                 // on a utilisé SPA pour éviter de recharger la page à chaque action, donc on a besoin de l'id passer en 'data-id' de l'article pour faire les actions d'édition et de suppression en ajax par data-action
                 $th .= "<td style='width:10%'>
                             <a class='primary edit mr-1' data-nom_kit='{$kit->nom_kit}'

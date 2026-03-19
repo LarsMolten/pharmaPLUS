@@ -26,6 +26,8 @@ class EntreeDetailImport implements ToCollection
 
     public function collection(Collection $rows)
     {
+
+
         unset($rows[0]); // supprimer la première ligne
         unset($rows[1]); // supprimer la deuxieme ligne
         $pourcent = pourcentage::first();
@@ -53,6 +55,7 @@ class EntreeDetailImport implements ToCollection
             $p_u = $prix_boite / ($article->presentation);
 
             $prix_unitaire_vente = $p_u + ($p_u * $pourcentage / 100); //+20%
+            $pu_proposee = bcmul(round($prix_unitaire_vente / 100), 100, 2);
 
             // -------- Date --------
             $date_peremption = $this->parseDate($row[11]);
@@ -61,10 +64,10 @@ class EntreeDetailImport implements ToCollection
             // $stock_unite = $boite * $unite;
 
             // incrementation nombre d'article entré
-            
-           
+
+
             $lot = $this->generateLot($article->id, $date_peremption);
-            
+
 
             entree_detail::create([
 
@@ -76,15 +79,18 @@ class EntreeDetailImport implements ToCollection
                 'qte_entree' => $qte_unite,
 
                 'prix_achat_boite' => $prix_boite,
-                'prix_unitaire' => $prix_unitaire_vente,
 
-                'montant_entree' => $prix_boite * $boite,
+                'prix_unitaire' => $prix_unitaire_vente,
+                'pu_proposee' => $pu_proposee,
+
+                'montant_entree' => bcmul($prix_boite, $boite, 2),
+                'montant_gain_brut' => bcmul($prix_unitaire_vente, $qte_unite, 2),
+                'montant_gain_proposee' => bcmul($pu_proposee, $qte_unite, 2),
 
                 'date_peremption' => $date_peremption,
             ]);
-
-        } 
-
+        }
+        return "success";
     }
 
 
@@ -103,7 +109,6 @@ class EntreeDetailImport implements ToCollection
     private function generateLot($article, $date)
     {
         return 'LOT-' . $article . '-' . date('ymd') . '-' . date('ym', strtotime($date));
-        
     }
 
 

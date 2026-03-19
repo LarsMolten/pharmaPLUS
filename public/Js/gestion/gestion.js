@@ -62,7 +62,7 @@ window.pageInitializers.gestion = function () {
                 $("#table_analyse td.format-prix").each(function () {
                     let val = $(this).text().trim();
                     if (val !== "" && !isNaN(parseFloat(val))) {
-                        $(this).text(formatNumberDisplay(val));
+                        $(this).html(formatNumberDisplay(val));
                     }
                 });
 
@@ -319,12 +319,12 @@ window.pageInitializers.gestion = function () {
                 $("#table_categorie").append(res.data);
 
                 // formatage des nombres
-                // $("#table_categorie td.format-prix").each(function () {
-                //     let val = $(this).text().trim();
-                //     if (val !== "" && !isNaN(parseFloat(val))) {
-                //         $(this).text(formatNumberDisplay(val));
-                //     }
-                // });
+                $("#table_categorie td.format-prix").each(function () {
+                    let val = $(this).text().trim();
+                    if (val !== "" && !isNaN(parseFloat(val))) {
+                        $(this).html(formatNumberDisplay(val));
+                    }
+                });
 
                 $("#table_categorie").DataTable({
                     destroy: true,
@@ -573,7 +573,7 @@ window.pageInitializers.gestion = function () {
                 $("#table_service td.format-prix").each(function () {
                     let val = $(this).text().trim();
                     if (val !== "" && !isNaN(parseFloat(val))) {
-                        $(this).text(formatNumberDisplay(val));
+                        $(this).html(formatNumberDisplay(val));
                     }
                 });
 
@@ -901,7 +901,7 @@ window.pageInitializers.gestion = function () {
                 $("#table_kit td.format-prix").each(function () {
                     let val = $(this).text().trim();
                     if (val !== "" && !isNaN(parseFloat(val))) {
-                        $(this).text(formatNumberDisplay(val));
+                        $(this).html(formatNumberDisplay(val));
                     }
                 });
 
@@ -1164,12 +1164,12 @@ window.pageInitializers.gestion = function () {
                 $("#table_detailkit").append(res.data);
 
                 // formatage des nombres
-                // $("#table_detailkit td.format-prix").each(function () {
-                //     let val = $(this).text().trim();
-                //     if (val !== "" && !isNaN(parseFloat(val))) {
-                //         $(this).text(formatNumberDisplay(val));
-                //     }
-                // });
+                $("#table_detailkit td.format-prix").each(function () {
+                    let val = $(this).text().trim();
+                    if (val !== "" && !isNaN(parseFloat(val))) {
+                        $(this).html(formatNumberDisplay(val));
+                    }
+                });
 
                 $("#table_detailkit").DataTable({
                     destroy: true,

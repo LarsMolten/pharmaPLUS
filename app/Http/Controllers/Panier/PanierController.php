@@ -45,9 +45,9 @@ class PanierController extends Controller
             $_n = 1;
             $produit_id = "";
 
-            $total_brut = 0;
-            $total_proposee = 0;
-            $total_ecart = 0;
+            $total_brut = 0.00;
+            $total_proposee = 0.00;
+            $total_ecart = 0.00;
 
             foreach ($paniers as $panier) {
 
@@ -55,18 +55,20 @@ class PanierController extends Controller
                 $art = article::find($panier->article_id);
                 $produit_id = $art->id;
 
-                $total_brut = bcadd($panier->montant_brut, $panier->montant_brut, 4);
-                $total_proposee = bcadd($panier->montant_proposee, $panier->montant_proposee, 4);
-                $total_ecart = bcadd($panier->montant_ecart, $panier->montant_ecart, 2);
+                $total_brut = bcadd($total_brut, $panier->montant_brut, 2);
+                $total_proposee = bcadd($total_proposee,$panier->montant_proposee, 2);
+                $total_ecart = bcsub($total_proposee,$total_brut, 2);
+
+                // $montant_proposee = ro
 
 
 
                 $th .= "<tr>
                             <td  style='width:5%'>{$_n}</td>
                             <td  style='width:20%'>{$art->designation}</td>
-                            <td  style='width:5%' class='format-prix'>{$panier->p_u_proposee}</td>
-                            <td style='width:5%' class='format-prix'>{$panier->qte}</td>
-                            <td style='width:10%' class='format-prix'>{$panier->montant_proposee}</td> ";
+                            <td  style='width:5%; text-align: right;' class='format-prix '>{$panier->p_u_proposee}</td>
+                            <td style='width:5%; text-align: right;' class='format-prix'>{$panier->qte}</td>
+                            <td style='width:10%; text-align: right;' class='format-prix'>{$panier->montant_proposee}</td> ";
                 // on a utilisé SPA pour éviter de recharger la page à chaque action, donc on a besoin de l'id passer en 'data-id' de l'article pour faire les actions d'édition et de suppression en ajax par data-action
                 $th .= "<td style='width:5%'>
 
@@ -218,13 +220,15 @@ class PanierController extends Controller
 
                         $prendre = min($qte, $lot->stock_restant_lot);
 
-                        if($prendre <= 0) continue;
+                        if ($prendre <= 0) continue;
 
-                        $montant_brut = bcmul($lot->prix_unitaire, $prendre, 4);
-                        $montant_proposee = bcmul($lot->pu_proposee, $prendre, 4);
-                        $montant_ecart = bcsub($montant_proposee, $montant_brut, 4);
-                        $montant_ecart = ($montant_ecart > 0) ? $montant_ecart : 0;
+                        $montant_brut = bcmul($lot->prix_unitaire, $prendre, 2);
+                        $montant_proposee = bcmul($lot->pu_proposee, $prendre, 2);
+                        $montant_ecart = bcsub($montant_proposee, $montant_brut, 2);
 
+                        if ($montant_ecart < 0) {
+                            $montant_ecart = 0;
+                        }
 
                         panier::create([
                             'entree_detail_id' => $lot->id,

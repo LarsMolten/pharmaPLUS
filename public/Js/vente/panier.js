@@ -57,7 +57,7 @@ window.pageInitializers.panier = function () {
                 $("#btn_display").html(res.bt);
 
                 // formatage des nombres
-                 $("#table_entreeIndex td.format-prix").each(function () {
+                 $("#table_panier td.format-prix").each(function () {
                     let val = $(this).text().trim();
                     if (val !== "" && !isNaN(parseFloat(val))) {
                         $(this).html(formatNumberDisplay(val));

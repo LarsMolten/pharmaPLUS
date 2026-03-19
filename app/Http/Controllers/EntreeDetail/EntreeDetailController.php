@@ -38,7 +38,8 @@ class EntreeDetailController extends Controller
                 <thead>
                     <tr>
                         <th style='text-align: center;'>#</th>
-                        <th style='text-align: center;'>REF-Article</th>
+                        <th style='text-align: center;'>REF</th>
+                        <th style='text-align: center;'>Designation</th>
                         <th style='text-align: center;'>Présentation</th>
                         <th style='text-align: center;'>Lot</th>
                         <th style='text-align: center;'>Stock Initial</th>
@@ -123,7 +124,8 @@ class EntreeDetailController extends Controller
 
                 $th .= "<tr>
                             <td  style='width:5%'>{$id_detail}</td>
-                            <td  style='width:10%'>REF-{$entree->article_id}</td>
+                            <td  style='width:5%'>REF-{$entree->article_id}</td>
+                            <td  style='width:20%; text-align: left;'>{$article->designation}</td>
                             <td  style='width:5%'>{$presentation}</td>
                             <td style='width:15%'>{$entree->lot}</td>
                             <td style='width:10%'>{$quantite_initial}</td>

@@ -26,6 +26,7 @@ class ServiceController extends Controller
                         <th style='text-align: center;'>Catégories</th>
                         <th style='text-align: center;'>Services</th>
                         <th style='text-align: center;'>Prix</th>
+                        <th style='text-align: center;'>Date</th>
                         <th style='text-align: center;'>Actions</th>
                     </tr>
                 </thead>";
@@ -44,7 +45,8 @@ class ServiceController extends Controller
                             <td  style='width:5%'>{$service->id}</td>
                             <td  style='width:20%'>{$cat_nom}</td>
                             <td  style='width:20%'>{$service->nom_service}</td>
-                            <td calss='format-prix' style='width:10%'>{$service->prix_service}</td> ";
+                            <td  style='width:10%' class='format-prix'>{$service->prix_service} Ar</td>
+                            <td  style='width:10%' >{$service->created_at}</td> ";
                 // on a utilisé SPA pour éviter de recharger la page à chaque action, donc on a besoin de l'id passer en 'data-id' de l'article pour faire les actions d'édition et de suppression en ajax par data-action
                 $th .= "<td style='width:10%'>
                             <a class='primary edit mr-1' data-categorie='{$cat_id}'
