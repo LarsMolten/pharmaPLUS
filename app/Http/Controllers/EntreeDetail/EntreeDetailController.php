@@ -99,13 +99,13 @@ class EntreeDetailController extends Controller
                 }
 
                 $btn_class = ($entree->isValide == 0) ? "success" : "danger";
-                $i_class = ($entree->isValide == 0) ? "la la-check" : "la la-stop";
+                $i_class = ($entree->isValide == 0) ? "la la-check-square la-2x" : "la la-minus-square la-2x";
                 $action_validation = ($entree->isValide == 0) ? "valider_entree_detail" : "annuler_entree_detail_validee";
 
                 $btn_validation = ($entree->isVendus == 0) ? "<a class='{$btn_class}  mr-1' id='en_{$entree->id}' data-action='{$action_validation}' data-qte='{$quantite_entree}' data-id='{$entree->id}'><i class='{$i_class}'></i></a> " : "";
 
 
-                $btn_delete = ($entree->isValide == 0) ? "<a class='danger delete mr-1' data-action='delete_entree_index' data-id='{$entree->id}'  ><i class='la la-trash-o'></i></a>" : "";
+                $btn_delete = ($entree->isValide == 0) ? "<a class='danger delete mr-1' data-action='delete_entree_detail' data-id='{$entree->id}'  ><i class='la la-trash-o'></i></a>" : "";
 
                 $btn_edit = ($entree->isValide == 0) ? "<a class='primary edit mr-1' id='ent_{$entree->id}' 
                                                                                 data-action='edit_entree_detail_article' 
@@ -383,7 +383,9 @@ class EntreeDetailController extends Controller
 
                 $color = ($article->stock <= $article->seuil) ? "color: red;" : "";
 
-                $un .= "<option style='{$color}' id='a_{$article->id}' data-stock='{$article->stock}' data-presentation='{$article->presentation}' value='{$article->id}' >{$article->designation} ______ ($stock_article)</option>";
+
+                $un .= "<option style='{$color}' data-stock_dispo='{$stock_article}' data-stock='{$article->stock}' data-presentation='{$article->presentation}' value='{$article->id}' >{$article->designation} ______ ($stock_article)</option>";
+           
             }
             return response()->json([
                 'success' => true,
@@ -408,7 +410,8 @@ class EntreeDetailController extends Controller
             $detail = entree_detail::findOrFail($request->id_article_entree);
 
             $detail->update([
-                'pu_proposee' => $request->pu_proposee
+                'pu_proposee' => $request->pu_proposee,
+                'montant_gain_proposee' => $detail->qte_entree * $request->pu_proposee,
             ]);
 
             DB::commit();
@@ -456,5 +459,23 @@ class EntreeDetailController extends Controller
         $day = $parts[2];
 
         return Carbon::create($year, $month, $day);
+    }
+
+
+     public function delete_entree_detail(Request $request)
+    {
+        try {
+            $entree = entree_detail::where('id', $request->id_entree_detail)->update(['etat' => 0]);
+
+            return response()->json([
+                'status' => "success",
+                'data' => $entree
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => "error",
+                'message' => $e->getMessage()
+            ], 500);
+        }
     }
 }

@@ -190,7 +190,7 @@ function alertCustom(type_message, ft_icon, message) {
     var id = "alertdialog";
     var alert =
         `
-                    <div style="z-index: 999999999" class="alert bg-` +
+                    <div style="z-index: 9999999999999" class="alert bg-` +
         type_message +
         ` alert-icon-left alert-arrow-left alert-dismissible mb-2" role="alert">
                         <span class="alert-icon"><i class="` +

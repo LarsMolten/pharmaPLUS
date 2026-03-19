@@ -11,7 +11,7 @@
 
              <div class="col-12">
 
-                @include('vente.partials.navbar_vente.navbar_vente') 
+                 @include('vente.partials.navbar_vente.navbar_vente')
 
              </div>
 
@@ -47,11 +47,9 @@
                          <div class="row">
 
                              <div class="col-12">
-                                 <div class="card bg-dark">
-                                     <h1 class="content-header-title text-center white"
-                                         style="font-weight: 800; font-size: 45px ">
-                                         0,00
-                                         Ar</h1>
+                                 <div class="card bg-dark" id="affichage_montant_panier">
+                                     
+
                                  </div>
                              </div>
 
@@ -77,6 +75,13 @@
                                          </div>
 
                                      </div>
+                                 </section>
+                             </div>
+                             <div class="col-12">
+                                 <section id="btn_display" class="">
+
+                                    
+                                     
                                  </section>
                              </div>
 

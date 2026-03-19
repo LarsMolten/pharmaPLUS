@@ -538,6 +538,8 @@ window.pageInitializers.entree = function () {
                         $("#entete_modal").text("Ajouter");
                         $("#btn_add_article_entree_detail").text("Ajouter");
 
+                        id_entree_detail = "";
+
                         alertCustom(
                             "success",
                             "ft-check",
@@ -548,10 +550,11 @@ window.pageInitializers.entree = function () {
 
                         if (id_article_entree) {
                             $('[data-dismiss="modal"]').focus();
-                            $("#AjoutArticleEntreeDetaileModal").modal('hide');
+                            $("#AjoutArticleEntreeDetaileModal").modal("hide");
                         }
 
                         afficher_entree_detail(id_index).call();
+                        id_article_entree = "";
                     } else {
                         alertCustom(
                             "danger",
@@ -565,8 +568,10 @@ window.pageInitializers.entree = function () {
 
     window.edit_entree_detail_article = function (id) {
         id_entree_detail = id;
+
         $("#entete_modal").text("Modidier");
         $("#btn_add_article_entree_detail").text("Modifier");
+
         $("#AjoutArticleEntreeDetaileModal").modal(
             { backdrop: "static", keyboard: false },
             "show",
@@ -577,10 +582,11 @@ window.pageInitializers.entree = function () {
         let prix_achat_boite = $("#ent_" + id).data("prix_achat_boite");
         let pu_proposee = $("#ent_" + id).data("pu_proposee");
         let date_peremption = $("#ent_" + id).data("date_peremption");
-
         id_article_entree = article_id;
 
+
         charge_article();
+
         $("#article_id").val(article_id).selectpicker("refresh");
         $("#qte_entree").val(qte_entree);
         $("#prix_achat_boite").val(prix_achat_boite);
@@ -958,4 +964,74 @@ window.pageInitializers.entree = function () {
                 },
             });
         });
+
+    window.delete_entree_detail = function (id) {
+        // if (enCours) return; // Empêche un deuxième clic si une requête est en cours
+        id_entree_detail = id;
+        show_delete_dialog_modal(
+            id_entree_detail,
+            "Êtes-vous sûr de vouloir supprimer cette entrée ?",
+            "#card_liste_entreeDetail",
+            "confirmer_delete_entree_detail",
+            "annuler_delete_entree_detail",
+        );
+    };
+
+    window.confirmer_delete_entree_detail = function (id) {
+        if (enCours) return; // Empêche un deuxième clic si une requête est en cours
+        enCours = true;
+
+        $("#card_liste_entreeDetail").unblock();
+
+        $.ajax({
+            beforeSend: function () {
+                $("#table_entreedetail").block({
+                    message:
+                        '<div class="ft-refresh-cw icon-spin font-medium-2" style="margin:auto"></div>',
+
+                    overlayCSS: {
+                        backgroundColor: "black",
+                        opacity: 0.1,
+                        cursor: "wait",
+                    },
+                    css: {
+                        border: 0,
+                        padding: 0,
+                        backgroundColor: "transparent",
+                    },
+                });
+            },
+            url: base + "delete_entree_detail",
+            type: "POST",
+            headers: {
+                "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+            },
+            complete: function () {
+                enCours = false; // Remet la variable à false, que la requête ait réussi ou échoué
+            },
+            data: { id_entree_detail: id },
+            success: function (res) {
+                $("#table_entreedetail").unblock();
+                enCours = false;
+                id_entree_detail = "";
+
+                if (res.data > 0) {
+                    alertCustom(
+                        "success",
+                        "ft-check",
+                        "Suppression effectué avec succée",
+                    );
+                } else {
+                    alertCustom("danger", "ft-x", "Suppression non effectué");
+                }
+
+                afficher_entree_detail(id_index).call();
+            },
+        });
+    };
+
+    window.annuler_delete_entree_detail = function () {
+        $("#card_liste_entreeDetail").unblock();
+        id_entree_detail = "";
+    };
 };

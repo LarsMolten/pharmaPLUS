@@ -10,13 +10,17 @@ class panier extends Model
     use HasFactory;
 
     protected $fillable = [
+        'entree_detail_id',
         'article_id',
         'analyse_id',
         'service_id',
         'kit_id',
-        'p_u',
+        'p_u_brut',
+        'p_u_proposee',
         'qte',
-        'montant',
+        'montant_brut',
+        'montant_proposee',
+        'montant_ecart',
         'user_id'
     ];
 
