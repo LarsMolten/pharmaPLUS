@@ -41,7 +41,7 @@
                                 <button type="submit" id="btn_add_entreeIndex"
                                     class="mr-1 mb-1 btn btn-sm btn-success btn-min-width"><i class="ft-check"></i>
                                     Ajouter</button>
-                                <button type="button" data-dismiss="modal"
+                                <button type="button" data-dismiss="modal" data-action="resert_form_entreedetail"
                                     class="mr-1 mb-1 btn btn-sm btn-outline-light btn-min-width"><i class="ft-x"></i>
                                     Annuler</button>
 

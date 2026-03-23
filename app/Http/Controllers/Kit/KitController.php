@@ -88,6 +88,29 @@ class KitController extends Controller
         }
     }
 
+     public function charge_kit(){
+        try {
+
+            $kits = kit::where('etat', 1)->get();
+
+            $kt = "";
+
+            foreach($kits as $kit){
+                $kt .= "<option data-prix='{$kit->prix_kit}' value='{$kit->id}'>{$kit->nom_kit} ........................<span style='text-align: right; !important'>{$kit->prix_kit} Ar</span></option>";
+            }
+
+            return response()->json([
+                'success' => true,
+                'data' => $kt
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage()
+            ], 500);
+        }
+    }
+
     public function delete_kit(Request $request){
         try {
              $kit = kit::where('id', $request->id_kit)->update(['etat' => 0]);

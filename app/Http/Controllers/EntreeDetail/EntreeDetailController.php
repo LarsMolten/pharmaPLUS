@@ -103,7 +103,7 @@ class EntreeDetailController extends Controller
                 $i_class = ($entree->isValide == 0) ? "la la-check-square la-2x" : "la la-minus-square la-2x";
                 $action_validation = ($entree->isValide == 0) ? "valider_entree_detail" : "annuler_entree_detail_validee";
 
-                $btn_validation = ($entree->isVendus == 0) ? "<a class='{$btn_class}  mr-1' id='en_{$entree->id}' data-action='{$action_validation}' data-qte='{$quantite_entree}' data-id='{$entree->id}'><i class='{$i_class}'></i></a> " : "";
+                $btn_validation = (($entree->isVendus == 0) && ($entree->date_peremption > now())) ? "<a class='{$btn_class}  mr-1' id='en_{$entree->id}' data-action='{$action_validation}' data-qte='{$quantite_entree}' data-id='{$entree->id}-{$quantite_entree}'><i class='{$i_class}'></i></a> " : "";
 
 
                 $btn_delete = ($entree->isValide == 0) ? "<a class='danger delete mr-1' data-action='delete_entree_detail' data-id='{$entree->id}'  ><i class='la la-trash-o'></i></a>" : "";
@@ -119,13 +119,14 @@ class EntreeDetailController extends Controller
 
                 $btn_edit_proposition = ($entree->isVendus == 0) ? "<a class='info edit mr-1' id='pr_{$entree->id}' data-proposition='{$entree->pu_proposee}' data-prix_unitaire='{$entree->prix_unitaire}' data-action='edit_proposition_pu' data-id='{$entree->id}'><i class='la la-pencil-square-o'></i></a>" : "";
 
-                $bg1 = ($stock_rest > $article->seuil) ? "background-color: rgba(158, 236, 177, 0.91)" : "background-color: rgba(233, 244, 236, 0.99)";
-                $bg2 = ($stock_d_g > $article->seuil) ? "background-color: rgb(46, 214, 20)" : "background-color: rgb(198, 218, 195)";
+                $bg1 = ($stock_rest > $article->seuil) ? "background-color: rgba(158, 236, 177, 0.91);" : "background-color: rgba(233, 244, 236, 0.99);";
+                $bg2 = ($stock_d_g > $article->seuil) ? "background-color: rgb(46, 214, 20);" : "background-color: rgb(198, 218, 195);";
+                $bg3 = ($entree->date_peremption <= now()) ? "background-color: rgb(252, 111, 72);" : "";
 
                 $th .= "<tr>
-                            <td  style='width:5%'>{$id_detail}</td>
-                            <td  style='width:5%'>REF-{$entree->article_id}</td>
-                            <td  style='width:20%; text-align: left;'>{$article->designation}</td>
+                            <td  style='width:5%; $bg3'>{$id_detail}</td>
+                            <td  style='width:5%; $bg3 '>REF-{$entree->article_id}</td>
+                            <td  style='width:20%; text-align: left; $bg3'>{$article->designation}</td>
                             <td  style='width:5%'>{$presentation}</td>
                             <td style='width:15%'>{$entree->lot}</td>
                             <td style='width:10%'>{$quantite_initial}</td>
@@ -138,7 +139,7 @@ class EntreeDetailController extends Controller
                             <td style='width:20%' class='format-prix'>{$entree->montant_entree} Ar</td>
                             <td style='width:20%' class='format-prix'>{$entree->montant_gain_brut} Ar</td>
                             <td style='width:20%' class='format-prix'>{$entree->montant_gain_proposee} Ar</td>
-                            <td style='width:10%'>{$entree->date_peremption}</td>";
+                            <td style='width:10%; $bg3'>{$entree->date_peremption}</td>";
                 // on a utilisé SPA pour éviter de recharger la page à chaque action, donc on a besoin de l'id passer en 'data-id' de l'article pour faire les actions d'édition et de suppression en ajax par data-action
                 $th .= "<td style='width:10%'>
 
@@ -286,34 +287,40 @@ class EntreeDetailController extends Controller
 
     public function valider_entree_detail(Request $request)
     {
-        DB::beginTransaction();
-
         try {
 
-            $detail = entree_detail::findOrFail($request->id_entree_detail);
-            $article = article::findOrFail($detail->article_id);
+            DB::beginTransaction();
+            $status = "";
+            $detail = entree_detail::lockForUpdate()
+                ->findOrFail($request->id_entree_detail);
 
-            $stock_entree = $article->stock + $detail->qte_entree;
+            if ($detail->date_peremption <= now()) {
+                $status = "perime";
+                throw new \Exception("perime");
+            }
 
+            $article = article::lockForUpdate()
+                ->findOrFail($detail->article_id);
 
+            $qteEntree = $detail->qte_entree;
+            $stockInitial = $article->stock;
+            $stockFinal = $stockInitial + $qteEntree;
 
             // Mise à jour détail
             $detail->update([
-                'qte_initial' => $article->stock,
-                'stock_restant_lot' => $detail->qte_entree,
-                'stock_dispo' => $stock_entree,
-                'isValide' => true
+                'qte_initial'        => $stockInitial,
+                'stock_restant_lot'  => $qteEntree,
+                'stock_dispo'        => $stockFinal,
+                'isValide'           => 1
             ]);
 
-            // Mise à jour article
-            $article->update([
-                'stock' => $stock_entree
-            ]);
+            // Mise à jour article (plus rapide)
+            $article->increment('stock', $qteEntree);
 
             DB::commit();
-
+            $status = "success";
             return response()->json([
-                'status' => 'success'
+                'status' => $status
             ]);
         } catch (\Throwable $e) {
 
@@ -328,43 +335,51 @@ class EntreeDetailController extends Controller
 
 
     public function annuler_validation_entree_detail(Request $request)
-    {
+{
+    try {
+
         DB::beginTransaction();
 
-        try {
+        $detail = entree_detail::lockForUpdate()
+                    ->findOrFail($request->id_entree_detail);
 
-            $detail = entree_detail::findOrFail($request->id_entree_detail);
-            $article = article::findOrFail($detail->article_id);
+        $article = article::lockForUpdate()
+                    ->findOrFail($detail->article_id);
 
-            $stock_entree = $article->stock - $detail->qte_entree;
-            $stock_rest_lot = $detail->stock_restant_lot - $detail->qte_entree;
+        $qteEntree = $detail->qte_entree;
+        $stockFinal = $article->stock - $qteEntree;
 
-            $article->update([
-                'stock' => $stock_entree
-            ]);
-
-            $detail->update([
-                'qte_initial' => $stock_entree,
-                'stock_restant_lot' => $stock_rest_lot,
-                'stock_dispo' => $stock_entree,
-                'isValide' => false
-            ]);
-
-            DB::commit();
-
-            return response()->json([
-                'status' => 'success'
-            ]);
-        } catch (\Throwable $e) {
-
-            DB::rollBack();
-
-            return response()->json([
-                'status' => 'error',
-                'message' => $e->getMessage()
-            ], 500);
+        if ($stockFinal < 0) {
+            throw new \Exception("stock_invalide");
         }
+
+        // Mise à jour article
+        $article->decrement('stock', $qteEntree);
+
+        // Mise à jour détail
+        $detail->update([
+            'qte_initial'       => $stockFinal,
+            'stock_restant_lot' => 0,
+            'stock_dispo'       => $stockFinal,
+            'isValide'          => 0
+        ]);
+
+        DB::commit();
+
+        return response()->json([
+            'status' => 'success'
+        ]);
+
+    } catch (\Throwable $e) {
+
+        DB::rollBack();
+
+        return response()->json([
+            'status' => 'error',
+            'message' => $e->getMessage()
+        ], 500);
     }
+}
 
 
     public function charge_article()
@@ -387,7 +402,6 @@ class EntreeDetailController extends Controller
 
 
                 $un .= "<option style='{$color}' data-stock_dispo='{$stock_article}' data-stock='{$article->stock}' data-presentation='{$article->presentation}' value='{$article->id}' >{$article->designation} ______ ($stock_article)</option>";
-           
             }
             return response()->json([
                 'success' => true,
@@ -464,7 +478,7 @@ class EntreeDetailController extends Controller
     }
 
 
-     public function delete_entree_detail(Request $request)
+    public function delete_entree_detail(Request $request)
     {
         try {
             $entree = entree_detail::where('id', $request->id_entree_detail)->update(['etat' => 0]);

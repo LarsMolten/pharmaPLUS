@@ -14,6 +14,7 @@ use App\Http\Controllers\Kit\KitController;
 use App\Http\Controllers\Entree\EntreeIndexController;
 use App\Http\Controllers\EntreeDetail\EntreeDetailController;
 use App\Http\Controllers\Panier\PanierController;
+use App\Models\Analyse\analyse;
 use App\Models\Kit\kit;
 use Spatie\Permission\Models\Role;
 
@@ -75,6 +76,7 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/liste_service', [ServiceController::class, 'liste_service'])->name('liste_service');
     Route::get('/charge_categorie', [ServiceController::class, 'charge_categorie'])->name('charge_categorie');
+    Route::get('/charge_service', [ServiceController::class, 'charge_service'])->name('charge_service');
     Route::post('/ajout_service', [ServiceController::class, 'ajout_service'])->name('ajout_service');
     Route::post('/delete_service', [ServiceController::class, 'delete_service'])->name('delete_service');
 
@@ -111,6 +113,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/charge_article_vente', [PanierController::class, 'charge_article_vente'])->name('charge_article_vente');
     Route::post('/ajout_panier', [PanierController::class, 'ajout_panier'])->name('ajout_panier');  // ***************************************standart*************
     Route::post('/delete_one_or_all_panier', [PanierController::class, 'delete_one_or_all_panier'])->name('delete_one_or_all_panier');
+    Route::get('/charge_analyse', [AnalyseController::class, 'charge_analyse'])->name('charge_analyse');
+    Route::get('/charge_kit', [KitController::class, 'charge_kit'])->name('charge_kit');
 
 
 

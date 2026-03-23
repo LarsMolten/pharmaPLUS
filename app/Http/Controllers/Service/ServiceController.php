@@ -94,6 +94,29 @@ class ServiceController extends Controller
             ], 500);
         }
     }
+     public function charge_service(){
+        try {
+
+            $services = service::where('etat', 1)->get();
+
+            $sr = "";
+
+            foreach($services as $service){
+                $sr .= "<option data-prix='{$service->prix_service}' value='{$service->id}'>{$service->nom_service} ........................<span style='text-align: right; !important'>{$service->prix_service} Ar</span></option>";
+            }
+            // var_dump($cat);die();
+
+            return response()->json([
+                'success' => true,
+                'data' => $sr
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage()
+            ], 500);
+        }
+    }
 
 
      public function ajout_service(Request $request){

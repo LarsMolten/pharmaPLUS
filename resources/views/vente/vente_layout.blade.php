@@ -21,8 +21,8 @@
                  <div class="row">
 
                      <div class="md-col-12 col-4">
-                         <div class="card">
-                             <div class="card-body">
+                         <div class="card" >
+                             <div class="card-body" id="card_tab_content_vente">
 
 
                                  <div class="tab-content px-1 pt-1">

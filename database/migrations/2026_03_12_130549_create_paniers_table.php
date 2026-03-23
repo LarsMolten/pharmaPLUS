@@ -18,12 +18,12 @@ return new class extends Migration
             $table->string('analyse_id')->nullable();
             $table->foreignId('service_id')->nullable();
             $table->foreignId('kit_id')->nullable();
-            $table->decimal('p_u_brut', 12, 2);
-            $table->decimal('p_u_proposee', 12, 2);
+            $table->decimal('p_u_brut', 12, 2)->default(0);
+            $table->decimal('p_u_proposee', 12, 2)->default(0);
             $table->integer('qte')->default(0);
-            $table->decimal('montant_brut', 12, 2);
-            $table->decimal('montant_proposee', 12, 2);
-            $table->decimal('montant_ecart', 12, 2);
+            $table->decimal('montant_brut', 12, 2)->default(0);
+            $table->decimal('montant_proposee', 12, 2)->default(0);
+            $table->decimal('montant_ecart', 12, 2)->default(0);
             $table->integer('user_id');
             $table->timestamps();
         });

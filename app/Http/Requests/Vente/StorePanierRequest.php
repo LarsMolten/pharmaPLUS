@@ -24,9 +24,9 @@ class StorePanierRequest extends FormRequest
         return [
             'type_vente' => 'string|nullable',
             'id_panier' => 'integer|nullable',
-            'entree_detail_id' => 'integer',
+            'entree_detail_id' => 'integer|nullable',
             'article_id' => 'integer|nullable',
-            'analyse_id' => 'string|nullable',
+            'analyse_id' => 'array|nullable',
             'service_id' => 'integer|nullable',
             'kit_id' => 'integer|nullable',
             'p_u_brut' => 'numeric|min:0',

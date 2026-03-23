@@ -33,7 +33,7 @@
                 <div class="col-md-12">
                     <div class="form-group">
                         <label for="userinput1" class="">Quantité</label>
-                        <input type="text" id="qte_vente" required name="qte"
+                        <input type="text" id="qte_vente_art" required name="qte"
                             class="form-control input-sm format-number" placeholder="Quantité">
                     </div>
                 </div>

@@ -187,7 +187,7 @@ class ArticleController extends Controller
                 }
 
                 $bg1 = ($detail->stock_restant_lot > $article->seuil) ? "background-color: rgba(53, 244, 101, 0.91)" : "background-color: rgba(233, 244, 236, 0.99)";
-                $bg2 = (date('YYmmdd') >= $detail->date_peremption) ? "background-color: rgba(243, 133, 122, 0.91)" : "";
+                $bg2 = (now() >= $detail->date_peremption) ? "background-color: rgba(243, 133, 122, 0.91)" : "";
 
 
 

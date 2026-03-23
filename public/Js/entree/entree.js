@@ -97,7 +97,7 @@ window.pageInitializers.entree = function () {
                                 "btn btn-sm mr-1 btn-success btn-min-width ",
                             text: '<i class="ft-plus"> Ajouter</i>',
                             action: function () {
-                                // id_article = "";
+                                id_index = "";
                                 $(".entete_modal").text("Nouvel entré");
                                 $("#btn_add_entreeIndex").text("Ajouter");
                                 $("#AjoutEntreeIndexModal").modal(
@@ -163,6 +163,7 @@ window.pageInitializers.entree = function () {
                         // Reset formulaire
                         form[0].reset();
                         form.removeData("id"); // supprime mode modification
+                        id_index = "";
 
                         $("#entete_modal").text("Nouvel entré");
                         $("#btn_add_entreeIndex").text("Ajouter");
@@ -279,6 +280,7 @@ window.pageInitializers.entree = function () {
         id_index = "";
     };
 
+   
     /* ############################################### ENTREE DETAILS #################################################################*/
 
     window.afficher_entree_detail = function (id) {
@@ -554,7 +556,8 @@ window.pageInitializers.entree = function () {
                         }
 
                         afficher_entree_detail(id_index).call();
-                        id_article_entree = "";
+                        resert_form_entreedetail();
+                        
                     } else if (res.status == "error") {
                         alertCustom(
                             "warning",
@@ -612,6 +615,22 @@ window.pageInitializers.entree = function () {
                 $("#date_peremption").focus(); // Déclenche le calendrier
             });
     };
+
+     window.resert_form_entreedetail = function () {
+        id_article_entree = "";
+        $("#ajout_article_entree_detail")
+            .find(':input:not([type="radio"])')
+            .each(function () {
+                if ($(this).is("select.selectpicker")) {
+                    // Réinitialiser le selectpicker en vidant les sélections
+                    $("#article_id").selectpicker("val", []);
+                } else {
+                    // Réinitialiser les autres champs en vidant leur valeur
+                    $(this).val("");
+                }
+            });
+    };
+
 
     $(document)
         .off("submit", "#import_excel")
@@ -680,7 +699,14 @@ window.pageInitializers.entree = function () {
         if (enCours) return; // Empêche un deuxième clic si une requête est en cours
         // id_entree_detail = id;
 
-        let qte = $("#en_" + id).data("qte");
+          value = id.toString();
+        // Sépare partie entière et décimale
+        let part = value.split("-");
+        let _id = part[0];
+        let qte = part[1];
+
+        // let qte = $("#en_" + id).data("qte");
+
 
         $("#table_entreedetail").block({
             message:
@@ -701,7 +727,7 @@ window.pageInitializers.entree = function () {
                     </br>
 
                         <button type="button" data-id="` +
-                id +
+                _id +
                 `"  data-action="confirm_validation_entree_detail" class="mr-1 mb-1 btn btn-sm btn-warning btn-min-width"><i class="ft-check"></i> Oui</button>
                         <button type="button" data-action="annuler_confirm_validation_entree_detail" class="mr-1 mb-1 btn btn-sm btn-outline-light btn-min-width"><i class="ft-x"></i> Annuler</button>
 
@@ -771,11 +797,14 @@ window.pageInitializers.entree = function () {
                         "ft-check",
                         "Validation effectué avec succée",
                     );
-                } else {
-                    alertCustom("danger", "ft-x", "Validation non effectué");
+                }else if(res.status == "perime"){
+                    alertCustom("warning", "ft-x", "Cet article est perimé !");
+                }
+                else {
+                    alertCustom("danger", "ft-x", "Validation non effectuée !");
                 }
 
-                afficher_entree_detail(id_index).call();
+                afficher_entree_detail(id_index);
             },
         });
     };
@@ -875,10 +904,10 @@ window.pageInitializers.entree = function () {
                         "Validation effectué avec succée",
                     );
                 } else {
-                    alertCustom("danger", "ft-x", "Validation non effectué");
+                    alertCustom("danger", "ft-x", res.message);
                 }
 
-                afficher_entree_detail(id_index).call();
+                afficher_entree_detail(id_index);
             },
         });
     };

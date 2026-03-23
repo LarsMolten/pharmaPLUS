@@ -337,7 +337,7 @@ function formatNumberDisplay(value) {
 
     // Sépare partie entière et décimale
     let parts = value.split(".");
-    parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, " ");
 
     let formated = parts.join(",");
 

@@ -441,7 +441,7 @@ window.pageInitializers.article = function () {
                 $("#table_stockdetail").DataTable({
                     destroy: true,
                     ordering: true,
-                    order: [[0, "desc"]],
+                    order: [[0, "asc"]],
                     responsive: true,
                     info: false,
                     paging: false,

@@ -91,6 +91,30 @@ class AnalyseController extends Controller
         }
     }
 
+
+    public function charge_analyse(){
+        try {
+
+            $analyses = analyse::where('etat', 1)->get();
+
+            $an = "";
+
+            foreach($analyses as $analyse){ 
+                $an .= "<option value='{$analyse->id}'>{$analyse->nom} </option>";
+            }
+
+            return response()->json([
+                'success' => true,
+                'data' => $an
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage()
+            ], 500);
+        }
+    }
+
      // suppression d'un analyse
     public function delete_analyse(Request $request){
         try {
