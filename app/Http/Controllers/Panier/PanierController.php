@@ -149,8 +149,8 @@ class PanierController extends Controller
 
                     <div class='form-actions right' style='height: 96px;'>
 
-                    <button type='button' data-action='encaisser_panier' id='btn_encaisser'
-                        class='mr-1 mb-1 btn btn-sm btn-success btn-min-width'><i class='ft-check'></i>
+                    <button type='button' data-action='afficher_modal_validation_vente' id='btn_encaisser'
+                        class='mr-1 mb-1 btn btn-sm btn-info btn-min-width'><i class='ft-check'></i>
                         Encaisser</button>
 
                     <button type='button' data-action='delete_one_or_all_panier' data-id='0'
@@ -183,7 +183,7 @@ class PanierController extends Controller
 
             $validated = $request->validated();
             $data = "";
-
+            // dd($request);
 
             // verifier le type de vente
             switch ($request->page_type) {
@@ -226,7 +226,7 @@ class PanierController extends Controller
 
             DB::beginTransaction();
 
-            $userId = auth()->id();
+            $userId = auth()->id(); 
 
             $montant = bcmul($prix_service, $qte, 2);
 
@@ -244,7 +244,7 @@ class PanierController extends Controller
             if ($id_panier) {
 
                 // modification
-                panier::where([
+                 panier::where([
                     ['id', $id_panier],
                     ['user_id', $userId]
                 ])->update($data);
@@ -257,7 +257,7 @@ class PanierController extends Controller
                 ])->exists();
 
                 if ($exists) {
-                    throw new \Exception("deja_ajoutee");
+                    throw new \Exception("deja_ajoutee"); 
                 }
 
                 panier::create($data);

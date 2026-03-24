@@ -95,5 +95,7 @@
 
              </div>
 
+             @include('vente.partials.form_vente.form_valider')
+
      </section>
  @endsection

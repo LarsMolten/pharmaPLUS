@@ -1,8 +1,5 @@
 <div role="tabpanel" class="tab-pane active" id="active11" aria-labelledby="active-tab11" aria-expanded="true">
 
-    <div class="category-title pb-1">
-        <h5 id="title_form"></h5>
-    </div>
     <form class="form" method="post" action="ajout_panier" id="ajout_panier">
 
         @csrf
@@ -37,7 +34,7 @@
             <button type="submit" id="btn_add_panier" class="mr-1 mb-1 btn btn-sm btn-success btn-min-width"><i
                     class="ft-check"></i>
                 Ajouter</button>
-            <button type="button" data-dismiss="modal" data-action="reset_form_vente_kit"
+            <button type="button" data-dismiss="modal" data-action="reset_form_vente_service"
                 class="mr-1 mb-1 btn btn-sm btn-outline-light btn-min-width"><i class="ft-x"></i>
                 Annuler</button>
 

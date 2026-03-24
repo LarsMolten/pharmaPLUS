@@ -421,7 +421,9 @@ window.pageInitializers.panier = function () {
         const quantite = parts[4];
         page_type = parts[5];
         analyse_selected = parts[6];
-        analyse_selected = JSON.parse(analyse_selected);
+        if (analyse_selected) {
+            analyse_selected = JSON.parse(analyse_selected);
+        }
 
         $("#title_form").text("Modification");
         $("#btn_add_panier").text("Modifier");
@@ -660,5 +662,14 @@ window.pageInitializers.panier = function () {
     window.annuler_delete_one_or_all_panier = function () {
         $("#card_liste_panier").unblock();
         id_panier = "";
+    };
+
+    /*################################################# VALIDER UN PANIER ###############################################*/
+
+    window.afficher_modal_validation_vente = function () {
+        $("#ValiderVenteModal").modal(
+            { backdrop: "static", keyboard: false },
+            "show",
+        );
     };
 };

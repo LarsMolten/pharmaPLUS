@@ -37,7 +37,7 @@
             <button type="submit" id="btn_add_panier" class="mr-1 mb-1 btn btn-sm btn-success btn-min-width"><i
                     class="ft-check"></i>
                 Ajouter</button>
-            <button type="button" data-dismiss="modal" data-action="reset_form_vente_service"
+            <button type="button" data-dismiss="modal" data-action="reset_form_vente_kit"
                 class="mr-1 mb-1 btn btn-sm btn-outline-light btn-min-width"><i class="ft-x"></i>
                 Annuler</button>
 
