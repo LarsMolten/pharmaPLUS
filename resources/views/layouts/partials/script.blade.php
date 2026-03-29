@@ -33,6 +33,8 @@
 <script src="{{ asset('app-assets/vendors/js/tables/datatable/datatables.min.js') }}"></script>
 <script src="{{ asset('app-assets/js/scripts/tables/datatables/datatable-basic.js') }}"></script>
 
+{{-- <script src="{{ asset('js/qz-tray.js') }}"></script> --}}
+{{-- <script src="https://cdn.jsdelivr.net/npm/qz-tray/qz-tray.js"></script> --}}
 
 
 <script src="{{ asset('Js/article/article.js') }}"></script>
@@ -40,3 +42,5 @@
 <script src="{{ asset('Js/utilisateur.js') }}"></script>
 <script src="{{ asset('Js/gestion/gestion.js') }}"></script>
 <script src="{{ asset('Js/vente/panier.js') }}"></script>
+
+

@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Role;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class role extends Model
+class Role extends Model
 {
     use HasFactory;
     protected $fillable = [

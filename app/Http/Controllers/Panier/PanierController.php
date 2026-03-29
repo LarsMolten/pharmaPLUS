@@ -57,8 +57,10 @@ class PanierController extends Controller
             $total_proposee = 0.00;
             $total_ecart = 0.00;
 
-            foreach ($paniers as $panier) {
+            $btn_edit_panier = "";
 
+            foreach ($paniers as $panier) {
+                    // dd($panier);
 
                 if ($panier->article_id) {
                     $art = article::find($panier->article_id);
@@ -85,7 +87,19 @@ class PanierController extends Controller
                     $qte_edit = $panier->qte; //1
 
                     $analys = json_encode(explode(',', $panier->analyse_id));
-
+                }
+              
+                if ($panier->consultation_id) {
+                    $consult = service::find($panier->consultation_id);
+                    $produit_id = $consult->id;
+                    $designation = $consult->nom_service;
+                    $type = "consultation";
+                    $qte_edit = 1;
+                    $btn_edit_consult = " <a class='primary edit mr-1' 
+                            id='pan_{$panier->id}'
+                            data-action='edit_consultation_panier'
+                            data-id='{$panier->id}-{$type}-{$produit_id}-{$panier->p_u_brut}-{$qte_edit}-{$panier->nom_patient}-{$panier->sex_patient}-{$panier->age_patient}-{$panier->unite_age}-{$panier->type_docteur}-{$panier->docteur}'><i class='la la-pencil-square-o'></i></a>
+                    ";
                 }
                 if ($panier->service_id) {
                     $serv = service::find($panier->service_id);
@@ -107,21 +121,27 @@ class PanierController extends Controller
                 $total_brut = bcadd($total_brut, $panier->montant_brut, 2);
                 $total_proposee = bcadd($total_proposee, $panier->montant_proposee, 2);
                 $total_ecart = bcsub($total_proposee, $total_brut, 2);
-                $data_ana = (!empty($analys))? $analys : "";
+                $data_ana = (!empty($analys)) ? $analys : "";
+
+                $btn_edit = " <a class='primary edit mr-1' 
+                                        id='pan_{$panier->id}'
+                                        data-action='edit_panier'
+                                        data-id='{$panier->id}-{$type}-{$produit_id}-{$panier->p_u_brut}-{$qte_edit}-{$type}-{$data_ana}'><i class='la la-pencil-square-o'></i></a>
+                                ";
+              
+                $btn_edit_panier = ($panier->consultation_id) ? $btn_edit_consult : $btn_edit;   
+                
 
                 $th .= "<tr>
                             <td  style='width:5%'>{$_n}</td>
                             <td  style='width:20%; text-align: left;'>{$designation}</td>
-                            <td  style='width:5%; text-align: right;' class='format-prix '>{$panier->p_u_proposee}</td>
+                            <td  style='width:5%; text-align: right;' class='format-prix '>{$panier->p_u_brut}</td>
                             <td style='width:5%;' class='format-prix'>{$panier->qte}</td>
-                            <td style='width:10%; text-align: right;' class='format-prix'>{$panier->montant_proposee}</td> ";
+                            <td style='width:10%; text-align: right;' class='format-prix'>{$panier->montant_brut}</td> ";
                 // on a utilisé SPA pour éviter de recharger la page à chaque action, donc on a besoin de l'id passer en 'data-id' de l'article pour faire les actions d'édition et de suppression en ajax par data-action
                 $th .= "<td style='width:5%'>
-
-                            <a class='primary edit mr-1' 
-                                id='pan_{$panier->id}'
-                                data-action='edit_panier' data-id='{$panier->id}-{$type}-{$produit_id}-{$panier->p_u_proposee}-{$qte_edit}-{$type}-{$data_ana}'><i class='la la-pencil-square-o'></i></a>
-
+                            {$btn_edit_panier}
+                           
                              <a class='danger delete mr-1' data-action='delete_one_or_all_panier' data-id='{$panier->id}' ><i class='la la-trash-o'></i></a>
                         </tr>";
 
@@ -134,16 +154,19 @@ class PanierController extends Controller
 
             $pan = "
                      <h1 class='content-header-title text-center white format-prix'
-                                         style='font-weight: 800; font-size: 45px '>{$total_proposee} Ar</h1>
+                                         style='font-weight: 800; font-size: 45px '>{$total_brut} Ar</h1>
                                      
-
-                                        <h6  class='mx-2 row white'> 
-                                            <p class='col-6' style='text-align: left;'>Brut : <span class='format-prix'>$total_brut</span> Ar</p>
-                                            <p class='col-6' style='text-align: right;'> Ecart : <span class ='format-prix'>$total_ecart</span> Ar</p> 
-                                        </h6>
+                   
+                                       
 
                                     
             ";
+
+            //  <h6  class='mx-2 row white'> 
+            //                              <p class='col-6' style='text-align: left;'>Brut : <span class='format-prix'>$total_brut</span> Ar</p>
+            //                              <p class='col-6' style='text-align: right;'> Ecart : <span class ='format-prix'>$total_ecart</span> Ar</p> 
+            //                             </h6>
+            
 
             $bt = "
 
@@ -188,6 +211,10 @@ class PanierController extends Controller
             // verifier le type de vente
             switch ($request->page_type) {
 
+                case 'service':
+                    $data = $this->ajout_service_panier($request->id_panier, $request->service_id, $request->prix_produit, $request->qte);
+                    break;
+
                 case 'article':
                     $data = $this->fifoVente($request->id_panier, $request->article_id, $request->qte);
                     break;
@@ -203,7 +230,7 @@ class PanierController extends Controller
                     break;
 
                 default:
-                    $data = $this->ajout_service_panier($request->id_panier, $request->service_id, $request->prix_produit, $request->qte);
+                    $data = $this->ajout_consultation_panier($request->id_panier, $request->consultation_id, $request->nom_patient, $request->sex_patient, $request->age_patient, $request->unite_age, $request->type_docteur, $request->docteur, $request->prix_consultation);
                     break;
             }
 
@@ -220,13 +247,75 @@ class PanierController extends Controller
         }
     }
 
+    private function ajout_consultation_panier($id_panier, $consultation_id, $nom_patient, $sex_patient, $age_patient, $unite_age, $type_docteur, $docteur, $prix_consultatio)
+    {
+        try {
+
+            DB::beginTransaction();
+
+            $userId = auth()->id();
+
+            // $montant = bcmul($prix_consultatio, 1, 2);
+
+            $data = [
+                'consultation_id' => $consultation_id,
+                'nom_patient' => $nom_patient,
+                'sex_patient' => $sex_patient,
+                'age_patient' => $age_patient,
+                'unite_age' => $unite_age,
+                'type_docteur' => $type_docteur,
+                'docteur' => $docteur,
+                'p_u_brut' => $prix_consultatio,
+                'p_u_proposee' => $prix_consultatio,
+                'qte' => 1,
+                'montant_brut' => $prix_consultatio,
+                'montant_proposee' => $prix_consultatio,
+                'montant_ecart' => 0,
+                'user_id' => $userId,
+            ];
+
+            if ($id_panier) {
+
+                // modification
+                panier::where([
+                    ['id', $id_panier],
+                    ['user_id', $userId]
+                ])->update($data);
+            } else {
+
+                // vérification déjà dans panier
+                // $exists = panier::where([
+                //     ['consultation_id', $consultation_id],
+                //     ['user_id', $userId]
+                // ])->exists();
+
+                // if ($exists) {
+                //     throw new \Exception("deja_ajoutee"); 
+                // }
+
+                panier::create($data);
+            }
+
+            DB::commit();
+
+            return "success";
+        } catch (\Throwable $e) {
+
+            DB::rollBack();
+
+            return $e->getMessage();
+        }
+    }
+
+
+
     private function ajout_service_panier($id_panier, $service_id, $prix_service, $qte)
     {
         try {
 
             DB::beginTransaction();
 
-            $userId = auth()->id(); 
+            $userId = auth()->id();
 
             $montant = bcmul($prix_service, $qte, 2);
 
@@ -244,7 +333,7 @@ class PanierController extends Controller
             if ($id_panier) {
 
                 // modification
-                 panier::where([
+                panier::where([
                     ['id', $id_panier],
                     ['user_id', $userId]
                 ])->update($data);
@@ -257,7 +346,7 @@ class PanierController extends Controller
                 ])->exists();
 
                 if ($exists) {
-                    throw new \Exception("deja_ajoutee"); 
+                    throw new \Exception("deja_ajoutee");
                 }
 
                 panier::create($data);
@@ -353,7 +442,7 @@ class PanierController extends Controller
 
                 // vérification déjà dans panier
                 $exists = panier::where([
-                    ['service_id', $kit_id],
+                    ['kit_id', $kit_id],
                     ['user_id', $userId]
                 ])->exists();
 

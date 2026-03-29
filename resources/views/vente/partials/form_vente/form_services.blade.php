@@ -1,4 +1,4 @@
-<div role="tabpanel" class="tab-pane active" id="active11" aria-labelledby="active-tab11" aria-expanded="true">
+<div role="tabpanel" class="tab-pane" id="active11" aria-labelledby="active-tab11" aria-expanded="false">
 
     <form class="form" method="post" action="ajout_panier" id="ajout_panier">
 

@@ -14,8 +14,10 @@ use App\Http\Controllers\Kit\KitController;
 use App\Http\Controllers\Entree\EntreeIndexController;
 use App\Http\Controllers\EntreeDetail\EntreeDetailController;
 use App\Http\Controllers\Panier\PanierController;
+use App\Http\Controllers\Vente\VenteController;
 use App\Models\Analyse\analyse;
 use App\Models\Kit\kit;
+use App\Models\Vente\vente;
 use Spatie\Permission\Models\Role;
 
 /*
@@ -39,7 +41,7 @@ Route::get('/dashboard', function () {
 
 
 Route::middleware('auth')->group(function () {
-    
+
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
@@ -115,9 +117,16 @@ Route::middleware('auth')->group(function () {
     Route::post('/delete_one_or_all_panier', [PanierController::class, 'delete_one_or_all_panier'])->name('delete_one_or_all_panier');
     Route::get('/charge_analyse', [AnalyseController::class, 'charge_analyse'])->name('charge_analyse');
     Route::get('/charge_kit', [KitController::class, 'charge_kit'])->name('charge_kit');
+    Route::post('/charge_personnel', [ServiceController::class, 'charge_personnel'])->name('charge_personnel');
 
+    // Route::get('/charge_info_patient', [VenteController::class, 'charge_info_patient'])->name('charge_info_patient');
+    Route::get('/charge_info_patient', [VenteController::class, 'charge_info_patient'])->name('charge_info_patient');
+    Route::post('/valider_vente', [VenteController::class, 'valider_vente'])->name('valider_vente');
 
+    Route::get('/print_recu_article/{id}', [VenteController::class, 'print_recu_article'])->name('print.recu.article');
+    Route::get('/print_recu_consultation/{id}', [VenteController::class, 'print_recu_consultation'])->name('print.recu.consultation');
 
+    Route::get('/print_recu_complet/{id}', [VenteController::class, 'print_recu_complet'])->name('print.recu.complet');
 
 
 

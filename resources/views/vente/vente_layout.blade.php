@@ -21,11 +21,13 @@
                  <div class="row">
 
                      <div class="md-col-12 col-4">
-                         <div class="card" >
+                         <div class="card">
                              <div class="card-body" id="card_tab_content_vente">
 
 
                                  <div class="tab-content px-1 pt-1">
+
+                                     @include('vente.partials.form_vente.form_consultation')
 
                                      @include('vente.partials.form_vente.form_services')
 
@@ -48,7 +50,7 @@
 
                              <div class="col-12">
                                  <div class="card bg-dark" id="affichage_montant_panier">
-                                     
+
 
                                  </div>
                              </div>
@@ -80,8 +82,8 @@
                              <div class="col-12">
                                  <section id="btn_display" class="">
 
-                                    
-                                     
+
+
                                  </section>
                              </div>
 
@@ -98,4 +100,8 @@
              @include('vente.partials.form_vente.form_valider')
 
      </section>
+
+     <script>
+         const BASE_URL = "{{ url('/') }}";
+     </script>
  @endsection

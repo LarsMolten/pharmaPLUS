@@ -7,13 +7,15 @@ use App\Http\Controllers\Controller;
 
 use App\Models\Service\service;
 use App\Models\Categorie\categorie;
+use App\Models\personnels;
 use Illuminate\Http\Request;
 
 class ServiceController extends Controller
 {
 
 
-    public function liste_service(){
+    public function liste_service()
+    {
         try {
 
             // Récupérer tous les articles
@@ -31,11 +33,11 @@ class ServiceController extends Controller
                     </tr>
                 </thead>";
 
-            $th .="<tbody>";
-            foreach($services as $service){
+            $th .= "<tbody>";
+            foreach ($services as $service) {
 
                 $categorie = categorie::find($service->categorie_id);
-                if($categorie){
+                if ($categorie) {
                     $cat_id = $categorie->id;
                     $cat_nom = $categorie->nom_cat;
                 }
@@ -56,29 +58,30 @@ class ServiceController extends Controller
                             <a class='danger delete mr-1' data-action='delete_service' data-id='{$service->id}' ><i class='la la-trash-o'></i></a>
                         </tr>";
             }
-            $th .="</tbody>";
+            $th .= "</tbody>";
             // var_dump($th);die();
 
 
 
-        return response()->json([
-            'success' => true,
-            'data' => $th
-        ]);
+            return response()->json([
+                'success' => true,
+                'data' => $th
+            ]);
         } catch (\Exception $e) {
             return response()->json($th, 500);
         }
     }
 
 
-     public function charge_categorie(){
+    public function charge_categorie()
+    {
         try {
 
             $categories = categorie::where('etat', 1)->get();
 
             $cat = "";
 
-            foreach($categories as $categorie){
+            foreach ($categories as $categorie) {
                 $cat .= "<option value='{$categorie->id}'>{$categorie->nom_cat}</option>";
             }
             // var_dump($cat);die();
@@ -94,21 +97,67 @@ class ServiceController extends Controller
             ], 500);
         }
     }
-     public function charge_service(){
+
+    
+    public function charge_service()
+    {
         try {
 
-            $services = service::where('etat', 1)->get();
+            $services = service::where([
+                ['isConsult', 0],
+                ['etat', 1]
+                ])->get();
 
+            $consult = service::where('id', 1)->first();
             $sr = "";
 
-            foreach($services as $service){
+            foreach ($services as $service) {
                 $sr .= "<option data-prix='{$service->prix_service}' value='{$service->id}'>{$service->nom_service} ........................<span style='text-align: right; !important'>{$service->prix_service} Ar</span></option>";
             }
-            // var_dump($cat);die();
+
+            // chargement de select pour consultation
+            $t_dr = "
+                        <option value='generaliste' > Généraliste </option>
+                        <option value='dentiste' > Dentiste </option>
+            
+            ";
 
             return response()->json([
                 'success' => true,
-                'data' => $sr
+                'data' => $sr,
+                'consult_id' => $consult->id,
+                'consult_prix' => $consult->prix_service,
+                't_dr' => $t_dr,
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage()
+            ], 500);
+        }
+    }
+    public function charge_personnel(Request $request)
+    {
+        try {
+
+            $per = "";
+
+            if ($request->type_docteur != "") {
+
+                $prs = personnels::where('foction', $request->type_docteur)->get();
+                foreach ($prs as $p) {
+                    $per .= "<option  value='{$p->id}'> Dr {$p->nom} </option>";
+                }
+            } else {
+
+                $per .= "<option  value=''>  </option>";
+              
+            }
+
+
+            return response()->json([
+                'success' => true,
+                'data' => $per,
             ]);
         } catch (\Exception $e) {
             return response()->json([
@@ -119,20 +168,21 @@ class ServiceController extends Controller
     }
 
 
-     public function ajout_service(Request $request){
+    public function ajout_service(Request $request)
+    {
         try {
 
-             $validated = $request->validate([
+            $validated = $request->validate([
                 'categorie_id' => 'required|exists:categories,id',
                 'nom_service' => 'required|string|max:255',
                 'prix_service' => 'required|numeric|min:0',
             ]);
 
-            if($request->id_service != ""){
+            if ($request->id_service != "") {
                 // var_dump($validated);die();
                 $service = service::where('id', $request->id_service)->update($validated);
-            }else{
-            $service = service::create($validated);
+            } else {
+                $service = service::create($validated);
             }
             return response()->json([
 
@@ -148,16 +198,16 @@ class ServiceController extends Controller
         }
     }
 
-      // suppression d'un article
-    public function delete_service(Request $request){
+    // suppression d'un article
+    public function delete_service(Request $request)
+    {
         try {
-             $service = service::where('id', $request->id_service)->update(['etat' => 0]);
+            $service = service::where('id', $request->id_service)->update(['etat' => 0]);
 
-                return response()->json([
-                    'status' => "success",
-                    'data' => $service
-                ]);
-
+            return response()->json([
+                'status' => "success",
+                'data' => $service
+            ]);
         } catch (\Exception $e) {
             return response()->json([
                 'status' => "error",
@@ -165,6 +215,4 @@ class ServiceController extends Controller
             ], 500);
         }
     }
-
-
 }

@@ -2,15 +2,6 @@ window.pageInitializers = window.pageInitializers || {};
 
 window.pageInitializers.panier = function () {
     // ************************************************ initialisation de la page ******************************
-    liste_panier();
-    charge_article_vente();
-    charge_analyse_panier();
-    // charge_categorie_panier();
-    charge_service_panier();
-    charge_kit_vente();
-
-    // ************************************************** declaration *******************************************
-
     let id_panier = "";
     let id_article_vente = "";
     let produit_id = "";
@@ -18,31 +9,56 @@ window.pageInitializers.panier = function () {
     let id_service = "";
     let prix_produit = "";
     let analyse_selected = [];
-    let page_type = "service";
+    let page_type = "consultation";
+    let type_doc_selected = "";
+    let doc_selected = "";
 
+    // ************************************************** declaration *******************************************
+
+    liste_panier();
+    charge_article_vente();
+    charge_analyse_panier();
+    // charge_categorie_panier();
+    charge_service_panier();
+    charge_kit_vente();
+    charge_personnel(type_doc_selected);
+
+    // ************************************************** declaration *******************************************
+
+    window.get_tab_consultation = function (id) {
+        page_type = id;
+        reset_form_vente_service();
+        reset_form_vente_article();
+        reset_form_vente_analyse();
+        reset_form_vente_kit();
+    };
     window.get_tab_service = function (id) {
         page_type = id;
         reset_form_vente_article();
         reset_form_vente_analyse();
         reset_form_vente_kit();
+        reset_form_vente_consultation();
     };
     window.get_tab_article = function (id) {
         page_type = id;
         reset_form_vente_service();
         reset_form_vente_analyse();
         reset_form_vente_kit();
+        reset_form_vente_consultation();
     };
     window.get_tab_analyse = function (id) {
         page_type = id;
         reset_form_vente_service();
         reset_form_vente_article();
         reset_form_vente_kit();
+        reset_form_vente_consultation();
     };
     window.get_tab_kit = function (id) {
         page_type = id;
         reset_form_vente_service();
         reset_form_vente_article();
         reset_form_vente_analyse();
+        reset_form_vente_consultation();
     };
 
     // **********************************************************************************************************
@@ -192,6 +208,22 @@ window.pageInitializers.panier = function () {
                         .data("prix");
                 });
 
+                // pour consultation
+                $("#type_docteur").empty();
+                $("#type_docteur").append(res.t_dr);
+                $("#type_docteur").selectpicker("refresh");
+
+                $("#type_docteur").on("change", function () {
+                    type_doc_selected = $("#type_docteur")
+                        .find("option:selected")
+                        .val();
+                    // console.log(type_doc_selected);
+                    charge_personnel(type_doc_selected);
+                });
+
+                $("#consultation_id").val(res.consult_id);
+                $("#prix_consultation").val(res.consult_prix);
+
                 $("#active11").unblock();
             },
         });
@@ -339,6 +371,50 @@ window.pageInitializers.panier = function () {
             },
         });
     }
+    function charge_personnel(type_doc) {
+        $.ajax({
+            beforeSend: function () {
+                $("#choix_docteur").block({
+                    message:
+                        '<div class="ft-refresh-cw icon-spin font-medium-2" style="margin:auto , font-size : 80px !important"></div>',
+
+                    overlayCSS: {
+                        backgroundColor: "black",
+                        opacity: 0.1,
+                        cursor: "wait",
+                    },
+                    css: {
+                        border: 0,
+                        padding: 0,
+                        backgroundColor: "transparent",
+                    },
+                });
+            },
+            url: base + "charge_personnel",
+            type: "POST",
+            dataType: "JSON",
+            error: function (xhr, status, error) {
+                alertCustom("danger", "ft-x", "Une erreur s'est produite");
+            },
+            headers: {
+                "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+            },
+            data: { type_docteur: type_doc },
+            complete: function () {
+                enCours = false; // Remet la variable à false, que la requête ait réussi ou échoué
+            },
+            success: function (res) {
+                $("#docteur").empty();
+                $("#docteur").append(res.data);
+                $("#docteur").selectpicker("refresh");
+                if (doc_selected != "") {
+                    $("#docteur").val(doc_selected).selectpicker("refresh");
+                }
+
+                $("#choix_docteur").unblock();
+            },
+        });
+    }
 
     /* ######################################################## AJOUT AU PANIER ################################################*/
     $(document)
@@ -374,6 +450,7 @@ window.pageInitializers.panier = function () {
                 },
                 success: function (res) {
                     enCours = false;
+                    doc_selected = "";
                     if (res.status == "success") {
                         // Reset formulaire
                         form[0].reset();
@@ -390,6 +467,8 @@ window.pageInitializers.panier = function () {
                                 : "Ajout effectué avec succès",
                         );
                         charge_article_vente();
+                        charge_service_panier();
+                        charge_personnel(doc_selected);
                         liste_panier();
                         reset_form_vente_service();
                         reset_form_vente_article();
@@ -411,15 +490,65 @@ window.pageInitializers.panier = function () {
         });
 
     /* ######################################################## edit panier ################################################*/
+
+    window.edit_consultation_panier = function (id) {
+        const parts = String(id).split("-");
+        console.log(parts);
+
+        id_panier = parts[0];
+        let type = parts[1];
+        produit_id = parts[2];
+        let prix_consulation = parts[3];
+        let quantite = parts[4];
+        page_type = type;
+        let nom_patient = parts[5];
+        let sex_patient = parts[6];
+        let age_patient = parts[7];
+        let unite_age = parts[8];
+        type_doc_selected = parts[9];
+        doc_selected = parts[10];
+
+        $("#title_form").text("Modification");
+        $("#btn_add_panier").text("Modifier");
+
+        // Reset tabs
+        $("#card_tab_g ul li a").removeClass("active");
+        $(".tab-content .tab-pane").removeClass("active");
+
+        $("#active-tab21").addClass("active").focus();
+        $("#active21").addClass("active");
+
+        $("#nom_patient").val(nom_patient);
+        $("input[name='sex_patient'][value='" + sex_patient + "']").prop(
+            "checked",
+            true,
+        );
+
+        $("#age_patient").val(age_patient);
+        $("input[name='unite_age'][value='" + unite_age + "']").prop(
+            "checked",
+            true,
+        );
+
+        $("#type_docteur").val(type_doc_selected).selectpicker("refresh");
+
+        charge_personnel(type_doc_selected);
+
+        $("#consultation_id").val(produit_id);
+        $("#prix_consultation").val(prix_consulation);
+    };
+
     window.edit_panier = function (id) {
         const parts = String(id).split("-");
+        console.log(parts);
 
         id_panier = parts[0];
         const type = parts[1];
         produit_id = parts[2];
         prix_service = parts[3];
         const quantite = parts[4];
-        page_type = parts[5];
+        // page_type = parts[5];
+        page_type = type;
         analyse_selected = parts[6];
         if (analyse_selected) {
             analyse_selected = JSON.parse(analyse_selected);
@@ -453,6 +582,12 @@ window.pageInitializers.panier = function () {
                 ids = analyse_selected.split(",");
             }
             $("#analyse_id_vente").selectpicker("val", ids);
+        } else if (type == "kit") {
+            $("#link-tab33").addClass("active").focus();
+            $("#link33").addClass("active");
+
+            $("#kit_id_vente").val(produit_id).selectpicker("refresh");
+            $("#qte_kit").val(quantite);
         } else {
             $("#active-tab11").addClass("active").focus();
             $("#active11").addClass("active");
@@ -460,56 +595,6 @@ window.pageInitializers.panier = function () {
             $("#qte_service").val(quantite);
         }
     };
-
-    // window.edit_panier = function (id) {
-    //     // Convertit en string si nécessaire
-    //     value = id.toString();
-    //     // Sépare partie entière et décimale
-    //     let part = value.split("-");
-
-    //     id_panier = part[0];
-    //     let type = part[1];
-    //     produit_id = part[2];
-    //     prix_service = part[3];
-    //     let quantite = part[4];
-    //     page_type = part[5]; //type page
-
-    //     $("#title_form").text("Modification");
-    //     $("#btn_add_panier").text("Modifier");
-
-    //     // desactiver tous les tab
-    //     $("#card_tab_g ul li a")
-    //         .removeClass("nav-link active")
-    //         .addClass("nav-link");
-    //     //desactiver tous les tab-content
-    //     $("div .tab-content div")
-    //         .removeClass("tab-pane active")
-    //         .addClass("tab-pane");
-
-    //     switch (type) {
-    //         case "article":
-    //             //reactiver le tab et tab-content concerné
-    //             $("#link-tab11").addClass("nav-link active").focus();
-    //             $("#link11").addClass("tab-pane active").focus();
-    //             $("#s_dispo_title").attr("hidden", false);
-    //             $("#qte_vente_art").attr("readonly", false);
-
-    //             // $("#s_dispo").text(stock);
-    //             charge_article_vente();
-    //             $("#article_id_vente").val(produit_id).selectpicker("refresh");
-    //             $("#qte_vente_art").val(quantite);
-    //             break;
-
-    //         default:
-    //             $("#active-tab11").addClass("nav-link active").focus();
-    //             $("#active11").addClass("tab-pane active").focus();
-
-    //             $("#id_service").val(produit_id).selectpicker("refresh");
-    //             $("#qte_service").val(quantite);
-    //             break;
-    //     }
-
-    // };
 
     window.reset_form_vente_service = function () {
         id_panier = "";
@@ -546,6 +631,22 @@ window.pageInitializers.panier = function () {
         $("#btn_add_panier").text("Ajouter");
         $("#kit_id_vente").selectpicker("val", []);
         $("#qte_kit").val("");
+    };
+    window.reset_form_vente_consultation = function () {
+        id_panier = "";
+        produit_id = "";
+        type_doc_selected = "";
+        doc_selected = "";
+        $("#title_form").text("Ajout");
+        $("#btn_add_panier").text("Ajouter");
+        $("#nom_patient").val("");
+        $("input[name='sex_patient'][value='1']").prop("checked", true);
+
+        $("#age_patient").val("");
+        $("input[name='unite_age'][value='1']").prop("checked", true);
+
+        $("#type_docteur").selectpicker("val", []);
+        charge_personnel(type_doc_selected);
     };
 
     /* ######################################################## ############### ################################################*/
@@ -666,10 +767,183 @@ window.pageInitializers.panier = function () {
 
     /*################################################# VALIDER UN PANIER ###############################################*/
 
+    function charge_info_patient() {
+        $.ajax({
+            beforeSend: function () {
+                $("#valider_vente").block({
+                    message:
+                        '<div class="ft-refresh-cw icon-spin font-medium-2" style="margin:auto , font-size : 80px !important"></div>',
+
+                    overlayCSS: {
+                        backgroundColor: "black",
+                        opacity: 0.1,
+                        cursor: "wait",
+                    },
+                    css: {
+                        border: 0,
+                        padding: 0,
+                        backgroundColor: "transparent",
+                    },
+                });
+            },
+            url: base + "charge_info_patient",
+            type: "GET",
+            dataType: "json",
+            error: function (xhr, status, error) {
+                alertCustom("danger", "ft-x", "Une erreur s'est produite");
+            },
+
+            complete: function () {
+                enCours = false; // Remet la variable à false, que la requête ait réussi ou échoué
+            },
+            success: function (res) {
+                $("#patient_vente").val(res.data);
+                $("#net_payer").text(res.net);
+
+                $("#net_payer .format-prix ").each(function () {
+                    let val = $(this).text().trim();
+                    if (val !== "" && !isNaN(parseFloat(val))) {
+                        $(this).html(formatNumberDisplay(val));
+                    }
+                });
+                $("#valider_vente").unblock();
+            },
+        });
+    }
+
     window.afficher_modal_validation_vente = function () {
+        charge_info_patient();
         $("#ValiderVenteModal").modal(
             { backdrop: "static", keyboard: false },
             "show",
         );
     };
+
+    $(document).on("input", "#montant_paye", function () {
+        // récupérer net à payer
+        let net = $("#net_payer").text();
+
+        // retirer espaces
+        net = net.replace(/\s/g, "");
+
+        let montantPaye = $(this).val().replace(/\s/g, "");
+
+        // convertir en nombre
+        net = parseFloat(net) || 0;
+        montantPaye = parseFloat(montantPaye) || 0;
+
+        // calcul monnaie
+        let monnaie = montantPaye - net;
+
+        // empêcher valeur négative
+        if (monnaie < 0) monnaie = 0;
+
+        // afficher
+        $("#monnaie").val(monnaie.toLocaleString("fr-FR"));
+    });
+
+    $(document)
+        .off("submit", "#valider_vente")
+        .on("submit", "#valider_vente", function (e) {
+            e.preventDefault();
+            if (enCours) return; // Empêche un deuxième clic si une requête est en cours
+            // enCours = true;
+
+            let form = $(this);
+            let data = new FormData(this);
+
+            $.ajax({
+                beforeSend: function () {},
+                url: base + "valider_vente",
+                type: "POST",
+                processData: false,
+                contentType: false,
+                cache: false,
+                dataType: "JSON",
+                headers: {
+                    "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr(
+                        "content",
+                    ),
+                },
+                data: data,
+                complete: function () {
+                    enCours = false; // Remet la variable à false, que la requête ait réussi ou échoué
+                },
+                success: function (res) {
+                    enCours = false;
+                    doc_selected = "";
+                    if (res.status == "success") {
+                        // Reset formulaire
+                        form[0].reset();
+                        form.removeData("id"); // supprime mode modification
+
+                        alertCustom(
+                            "success",
+                            "ft-check",
+                            "Validation effectué avec succès",
+                        );
+
+                        $("#patient_vente").val("");
+                        $("#montant_paye").val("");
+
+                        // printPDF(res);
+
+                         let urlPrintPdf =
+                                BASE_URL +
+                                "/print_recu_consultation/" +
+                                res.vente_id;
+
+                            window.open(urlPrintPdf, "_blank");
+
+                        // if (res.has_article) {
+                        //     let urlArticle =
+                        //         BASE_URL +
+                        //         "/print_recu_article/" +
+                        //         res.vente_id;
+
+                        //     window.open(urlArticle, "_blank");
+                        // }
+
+                        // if (res.has_consultation) {
+                        //     let urlConsult =
+                        //         BASE_URL +
+                        //         "/print_recu_consultation/" +
+                        //         res.vente_id;
+
+                        //     setTimeout(function () {
+                        //         window.open(urlConsult, "_blank");
+                        //     }, 500);
+                        // }
+
+                        liste_panier();
+                        $("#ValiderVenteModal").modal("hide");
+                    } else {
+                        alertCustom(
+                            "danger",
+                            "ft-x",
+                            "Opération non effectuée",
+                        );
+                    }
+                },
+            });
+        });
+
+
+
+    function printPDF(res) {
+        if (res.has_article) {
+            let urlArticle = BASE_URL + "/print_recu_article/" + res.vente_id;
+
+            window.open(urlArticle, "_blank");
+        }
+
+        if (res.has_consultation) {
+            let urlConsult =
+                BASE_URL + "/print_recu_consultation/" + res.vente_id;
+
+            setTimeout(function () {
+                window.open(urlConsult, "_blank");
+            }, 500);
+        }
+    }
 };
