@@ -59,6 +59,14 @@ class VenteController extends Controller
             $user = auth()->id();
 
             $paniers = panier::where('user_id', $user)->get();
+            $totals = $paniers->sum('montant_brut');
+            dd($totals);
+
+            if($request->montant_paye < $totals){
+                 return response()->json([
+                    'status' => 'insuffisant'
+                ]);
+            }
 
             if ($paniers->isEmpty()) {
                 return response()->json([
