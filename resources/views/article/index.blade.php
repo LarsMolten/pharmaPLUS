@@ -9,7 +9,7 @@
             <div class="col-12">
 
                 {{-- card filtre --}}
-                <div class="card">
+                {{-- <div class="card">
                     <div class="card-header">
                         <a data-action="collapse ">
                             <h3 class="card-title">Filtre</h3>
@@ -27,7 +27,7 @@
 
                         </div>
                     </div>
-                </div>
+                </div> --}}
 
 
                 <div class="card">

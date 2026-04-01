@@ -893,27 +893,10 @@ window.pageInitializers.panier = function () {
                                 "/print_recu_consultation/" +
                                 res.vente_id;
 
-                            window.open(urlPrintPdf, "_blank");
+                            setTimeout(function () {
+                                window.open(urlPrintPdf, "_blank");
+                            }, 500);
 
-                        // if (res.has_article) {
-                        //     let urlArticle =
-                        //         BASE_URL +
-                        //         "/print_recu_article/" +
-                        //         res.vente_id;
-
-                        //     window.open(urlArticle, "_blank");
-                        // }
-
-                        // if (res.has_consultation) {
-                        //     let urlConsult =
-                        //         BASE_URL +
-                        //         "/print_recu_consultation/" +
-                        //         res.vente_id;
-
-                        //     setTimeout(function () {
-                        //         window.open(urlConsult, "_blank");
-                        //     }, 500);
-                        // }
 
                         liste_panier();
                         $("#ValiderVenteModal").modal("hide");

@@ -4,14 +4,13 @@
      <section class="row flexbox-container">
          <div class="col-12 d-flex align-items-center justify-content-center">
              <div class="col-lg-4 col-md-8 col-10 box-shadow-2 p-0">
-                 <div class="card border-grey border-lighten-3 m-0">
+                 <div class="login-card border-grey border-lighten-3 m-0">
                      <div class="card-header border-0">
                          <div class="card-title text-center">
-                             <div class="p-1"><img src="{{ asset('app-assets/images/logo/logo-dark.png') }}"
+                             <div class="p-1"><img src="{{ asset('logo/logo.png') }}" style="width: 100px; border-radius: 50%;"
                                      alt="branding logo"></div>
                          </div>
-                         <h6 class="card-subtitle line-on-side text-muted text-center font-small-3 pt-2"><span>Login with
-                                 Modern</span>
+                         <h6 class="card-subtitle line-on-side text-muted text-center font-small-3 pt-2"><span>Login</span>
                          </h6>
                      </div>
                      <div class="card-content">

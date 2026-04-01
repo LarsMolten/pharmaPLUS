@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Vente;
 
 use App\Http\Controllers\Controller;
+use App\Models\Analyse\analyse;
 use App\Models\Consultation\consultation;
 use App\Models\Panier\panier;
 use App\Models\Service\service;
@@ -79,6 +80,7 @@ class VenteController extends Controller
             $vente = vente::create([
                 'reference_vente' => 'V' . date('YmdHis'),
                 'user_id' => $user,
+                'client' => $request->client,
                 'montant_brut' => $total_brut,
                 'montant_proposee' => $total_propose,
                 'montant_ecart' => $total_ecart,
@@ -281,80 +283,175 @@ class VenteController extends Controller
     public function print_recu_consultation($id)
     {
         // Récupérer la vente et les relations
-        $vente = Vente::with(['details.article', 'user'])->findOrFail($id);
+        $vente = Vente::with(['details.article', 'details.service', 'details.kit', 'user'])->findOrFail($id);
 
         $details = $vente->details;
 
         $totalVente = $details->sum('montant');
 
         /*** ============================================================ ARTICLES =================== ***/
-        $articles = $details->whereNotNull('article_id');
-        $totalArticle = $articles->sum('montant');
+        $articles = "";
+        $totalArticle = "";
+        $payeArticle = "";
+        $monnaieArticle = "";
+        if ($details->whereNotNull('article_id')->count() > 0) {
 
-        $payeArticle = "0.00";
-        if (bccomp($totalVente, "0", 2) > 0) {
-            $ratio = bcdiv($totalArticle, $totalVente, 6);
-            $payeArticle = bcmul($ratio, $vente->montant_paye, 2);
+            $articles = $details->whereNotNull('article_id');
+            $totalArticle = $articles->sum('montant');
+
+            $payeArticle = "0.00";
+            if (bccomp($totalVente, "0", 2) > 0) {
+                $ratio = bcdiv($totalArticle, $totalVente, 6);
+                $payeArticle = bcmul($ratio, $vente->montant_paye, 2);
+            }
+
+            $monnaieArticle = bcsub($payeArticle, $totalArticle, 2);
+            if (bccomp($monnaieArticle, "0", 2) < 0) {
+                $ecart = bcmul($monnaieArticle, "-1", 2);
+                $payeArticle = bcadd($payeArticle, $ecart, 2);
+                $monnaieArticle = "0.00";
+            }
+        }
+        /*** ============================================================= ANALYSE =================== ***/
+        $analyses = "";
+        $totalAnalyse = "";
+        $payeAnalyse = "";
+        $monnaieAnalyse = "";
+        $nomsAnalyses = "";
+
+
+        if ($details->whereNotNull('analyse_id')) {
+            $analyses = $details->whereNotNull('analyse_id');
+            $ids = collect($details)
+                ->pluck('analyse_id')
+                ->filter()
+                ->flatMap(fn($item) => explode(',', $item))
+                ->unique()
+                ->values()
+                ->toArray();
+
+            $nomsAnalyses = analyse::whereIn('id', $ids)
+                ->pluck('nom')
+                ->implode(', ');
+
+            $totalAnalyse = $analyses->sum('montant');
+
+            $payeAnalyse = "0.00";
+            if (bccomp($totalVente, "0", 2) > 0) {
+                $ratio = bcdiv($totalAnalyse, $totalVente, 6);
+                $payeAnalyse = bcmul($ratio, $vente->montant_paye, 2);
+            }
+
+            $monnaieAnalyse = bcsub($payeAnalyse, $totalAnalyse, 2);
+            if (bccomp($monnaieAnalyse, "0", 2) < 0) {
+                $ecart = bcmul($monnaieAnalyse, "-1", 2);
+                $payeAnalyse = bcadd($payeAnalyse, $ecart, 2);
+                $monnaieAnalyse = "0.00";
+            }
         }
 
-        $monnaieArticle = bcsub($payeArticle, $totalArticle, 2);
-        if (bccomp($monnaieArticle, "0", 2) < 0) {
-            $ecart = bcmul($monnaieArticle, "-1", 2);
-            $payeArticle = bcadd($payeArticle, $ecart, 2);
-            $monnaieArticle = "0.00";
+        /*** ============================================================= SERVICES =================== ***/
+        $services = "";
+        $totalService = "";
+        $payeService = "";
+        $monnaieService = "";
+
+        if ($details->whereNotNull('service_id')->count() > 0) {
+
+            $services = $details->whereNotNull('service_id');
+            $totalService = $services->sum('montant');
+
+            $payeService = "0.00";
+            if (bccomp($totalVente, "0", 2) > 0) {
+                $ratio = bcdiv($totalService, $totalVente, 6);
+                $payeService = bcmul($ratio, $vente->montant_paye, 2);
+            }
+
+            $monnaieService = bcsub($payeService, $totalService, 2);
+            if (bccomp($monnaieService, "0", 2) < 0) {
+                $ecart = bcmul($monnaieService, "-1", 2);
+                $payeService = bcadd($payeService, $ecart, 2);
+                $monnaieService = "0.00";
+            }
+        }
+        /*** ============================================================= SERVICES =================== ***/
+        $kits = "";
+        $totalKit = "";
+        $payeKit = "";
+        $monnaieKit = "";
+
+        if ($details->whereNotNull('kit_id')->count() > 0) {
+
+            $kits = $details->whereNotNull('kit_id');
+            $totalKit = $kits->sum('montant');
+
+            $payeKit = "0.00";
+            if (bccomp($totalVente, "0", 2) > 0) {
+                $ratio = bcdiv($totalKit, $totalVente, 6);
+                $payeKit = bcmul($ratio, $vente->montant_paye, 2);
+            }
+
+            $monnaieKit = bcsub($payeKit, $totalKit, 2);
+            if (bccomp($monnaieKit, "0", 2) < 0) {
+                $ecart = bcmul($monnaieKit, "-1", 2);
+                $payeKit = bcadd($payeKit, $ecart, 2);
+                $monnaieKit = "0.00";
+            }
         }
 
         /*** ============================================================= CONSULTATIONS =================== ***/
+        $consultations = "";
+        $ticketsConsultation[] = [];
+        if ($details->whereNotNull('consultation_id')->count() > 0) {
 
-        $consultations = Consultation::with('docteurInfo')
-            ->where('vente_id', $id)
-            ->get();
-            
-        $totalConsultation = $details
-            ->whereNotNull('consultation_id')
-            ->sum('montant');
+            $consultations = Consultation::with('docteurInfo')
+                ->where('vente_id', $id)
+                ->get();
+
+            $totalConsultation = $details
+                ->whereNotNull('consultation_id')
+                ->sum('montant');
 
 
 
-        $partPayeConsultation = "0.00";
-        if (bccomp($totalVente, "0", 2) > 0) {
-            $ratio = bcdiv($totalConsultation, $totalVente, 6);
-            $partPayeConsultation = bcmul($ratio, $vente->montant_paye, 2);
-        }
-
-        $restePaye = $partPayeConsultation;
-
-        $serviceConsult = service::find(1);
-        $prixConsultation = $serviceConsult->prix_service;
-
-        $ticketsConsultation = [];
-        foreach ($consultations as $index => $consult) {
-            $montant = $prixConsultation;
-
-            if ($restePaye >= $montant) {
-                $paye = $montant;
-                $monnaie = 0;
-                $restePaye -= $montant;
-            } else {
-                $paye = $restePaye;
-                $monnaie = 0;
-                $restePaye = 0;
+            $partPayeConsultation = "0.00";
+            if (bccomp($totalVente, "0", 2) > 0) {
+                $ratio = bcdiv($totalConsultation, $totalVente, 6);
+                $partPayeConsultation = bcmul($ratio, $vente->montant_paye, 2);
             }
 
-            if ($index == $consultations->count() - 1) {
-                $paye += $restePaye;
-                $monnaie = $paye - $montant;
+            $restePaye = $partPayeConsultation;
+
+            $serviceConsult = service::find(1);
+            $prixConsultation = $serviceConsult->prix_service;
+
+            $ticketsConsultation = [];
+            foreach ($consultations as $index => $consult) {
+                $montant = $prixConsultation;
+
+                if ($restePaye >= $montant) {
+                    $paye = $montant;
+                    $monnaie = 0;
+                    $restePaye -= $montant;
+                } else {
+                    $paye = $restePaye;
+                    $monnaie = 0;
+                    $restePaye = 0;
+                }
+
+                if ($index == $consultations->count() - 1) {
+                    $paye += $restePaye;
+                    $monnaie = $paye - $montant;
+                }
+
+                $ticketsConsultation[] = [
+                    'consultation' => $consult,
+                    'montant' => $montant,
+                    'paye' => $paye,
+                    'monnaie' => $monnaie
+                ];
             }
-
-            $ticketsConsultation[] = [
-                'consultation' => $consult,
-                'montant' => $montant,
-                'paye' => $paye,
-                'monnaie' => $monnaie
-            ];
         }
-
-
 
 
 
@@ -367,13 +464,31 @@ class VenteController extends Controller
         /*** ============================================================== PDF =================== ***/
         $pdf = Pdf::loadView('Vente.partials.pdf.recu_consultation', [
             'vente' => $vente,
-            'articles' => $articles,
 
+            'articles' => $articles,
             'totalArticle' => $totalArticle,
             'payeArticle' => $payeArticle,
             'monnaieArticle' => $monnaieArticle,
 
             'Consultation' => $ticketsConsultation,
+
+            // 'Analyse' => $analyses,
+            'totalAnalyse' => $totalAnalyse,
+            'payeAnalyse' => $payeAnalyse,
+            'monnaieAnalyse' => $monnaieAnalyse,
+            'nomsAnalyses' => $nomsAnalyses,
+
+            'services' => $services,
+            'totalService' =>  $totalService,
+            'payeService' => $payeService,
+            'monnaieService' => $monnaieService,
+
+            'kits' => $kits,
+            'totalKit' =>  $totalKit,
+            'payeKit' => $payeKit,
+            'monnaieKit' => $monnaieKit,
+          
+
 
         ]);
 

@@ -18,6 +18,7 @@ class vente extends Model
     protected $fillable = [
         'reference_vente',
         'user_id',
+        'client',
         'montant_brut',
         'montant_proposee',
         'montant_ecart',

@@ -26,4 +26,6 @@ class article extends Model
     {
         return $this->belongsTo(unite::class,'unite');
     }
+
+    
 }

@@ -3,6 +3,8 @@
 namespace App\Models\VenteDetail;
 
 use App\Models\Article\article;
+use App\Models\Kit\kit;
+use App\Models\Service\service;
 use App\Models\Vente\vente;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -33,5 +35,13 @@ class VenteDetail extends Model
      public function article()
     {
         return $this->belongsTo(article::class, 'article_id');
+    }
+     public function service()
+    {
+        return $this->belongsTo(service::class, 'service_id');
+    }
+     public function kit()
+    {
+        return $this->belongsTo(kit::class, 'kit_id');
     }
 }

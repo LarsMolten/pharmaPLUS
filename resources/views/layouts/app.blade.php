@@ -12,6 +12,8 @@
         content="admin template, modern admin template, dashboard template, flat admin template, responsive admin template, web app, crypto dashboard, bitcoin dashboard"> --}}
     {{-- <meta name="author" content="PIXINVENT"> --}}
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <link rel="icon"  href="{{ asset('logo/logo-dark.png') }}" style="width: 40px">
+
     <title>@yield('title')</title>
 
 
@@ -26,7 +28,7 @@
 
 <!-- BEGIN: Body-->
 
-<body class="vertical-layout vertical-menu-modern 2-columns   fixed-navbar" data-open="click"
+<body class="vertical-layout vertical-menu-modern 2-columns   fixed-navbar" data-open="click" 
     data-menu="vertical-menu-modern" data-col="2-columns">
 
     <!-- BEGIN: Header-->
@@ -63,7 +65,7 @@
 
 
     <!-- BEGIN: Footer-->
-    @include('layouts.partials.footer.footer')
+    {{-- @include('layouts.partials.footer.footer') --}}
     <!-- END: Footer-->
 
 

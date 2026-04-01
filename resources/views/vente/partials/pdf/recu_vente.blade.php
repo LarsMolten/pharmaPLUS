@@ -211,9 +211,6 @@
 
     <div class="center">
 
-        {{-- <div style="text-align:center; margin:5px 0;">
-            {!! DNS1D::getBarcodeHTML($vente->reference_vente, 'C128', 1.3, 30) !!}
-        </div> --}}
         <table>
             <tr>
                 <td style="color: white;">________</td>

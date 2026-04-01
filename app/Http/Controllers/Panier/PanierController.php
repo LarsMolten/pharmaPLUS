@@ -396,6 +396,13 @@ class PanierController extends Controller
                     ->update($data);
             } else {
 
+                // verification 
+                $exist = panier::where('user_id', $userId)->whereNotNull('analyse_id')->exists();
+
+                if ($exist) {
+                    throw new \Exception("deja_ajoutee");
+                }
+
                 panier::create($data);
             }
 

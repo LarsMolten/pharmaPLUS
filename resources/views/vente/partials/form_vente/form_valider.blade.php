@@ -18,7 +18,7 @@
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <label for="userinput1" class="">Patient / Client</label>
-                                        <input type="text" id="patient_vente" required name="nom_patient"
+                                        <input type="text" id="patient_vente" required name="client"
                                             class="form-control input-sm" placeholder="Patient / Client">
                                     </div>
                                 </div>
