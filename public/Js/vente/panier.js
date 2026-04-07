@@ -888,18 +888,20 @@ window.pageInitializers.panier = function () {
 
                         // printPDF(res);
 
-                         let urlPrintPdf =
-                                BASE_URL +
-                                "/print_recu_consultation/" +
-                                res.vente_id;
+                        let urlPrintPdf =
+                            BASE_URL +
+                            "/print_recu_consultation/" +
+                            res.vente_id;
 
-                            setTimeout(function () {
-                                window.open(urlPrintPdf, "_blank");
-                            }, 500);
-
+                        setTimeout(function () {
+                            window.open(urlPrintPdf, "_blank");
+                        }, 500);
 
                         liste_panier();
+                        $('[data-dismiss="modal"]').focus(); // Déplacer le focus ailleurs (sur un élément visible)
                         $("#ValiderVenteModal").modal("hide");
+                    } else if (res.status == "insuffisant") {
+                        alertCustom("warning", "ft-x", "Espèce insuffisant !");
                     } else {
                         alertCustom(
                             "danger",
@@ -910,8 +912,6 @@ window.pageInitializers.panier = function () {
                 },
             });
         });
-
-
 
     function printPDF(res) {
         if (res.has_article) {

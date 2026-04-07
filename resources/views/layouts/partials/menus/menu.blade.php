@@ -77,7 +77,15 @@
             <li class="nav-item">
                 <a href="{{ route('afficher_panier') }}" class="menu-item">
                     <i class="la la-shopping-cart"></i>
-                    <span class="menu-title">Caisse</span>
+                    <span class="menu-title">Vente & Caisse</span>
+                </a>
+            </li>
+
+            {{-- Liste Vente --}}
+            <li class="nav-item">
+                <a href="{{ route('afficher_liste_vente') }}" class="menu-item">
+                    <i class="la la-shopping-cart"></i>
+                    <span class="menu-title">Historique Vente</span>
                 </a>
             </li>
 
@@ -85,7 +93,7 @@
             <li class="nav-item">
                 <a href="#" class="menu-item">
                     <i class="la la-medkit"></i>
-                    <span class="menu-title">Pharmacie</span>
+                    <span class="menu-title">Gestion Stock</span>
                 </a>
 
                 <ul class="menu-content">
@@ -121,7 +129,7 @@
             <li class="nav-item">
                 <a href="{{ route('gestion.index') }}" class="menu-item">
                     <i class="la la-cogs"></i>
-                    <span class="menu-title">Gestion</span>
+                    <span class="menu-title">Paramètre</span>
                 </a>
             </li>
 

@@ -60,7 +60,6 @@ class VenteController extends Controller
 
             $paniers = panier::where('user_id', $user)->get();
             $totals = $paniers->sum('montant_brut');
-            dd($totals);
 
             if($request->montant_paye < $totals){
                  return response()->json([

@@ -42,5 +42,6 @@
 <script src="{{ asset('Js/utilisateur.js') }}"></script>
 <script src="{{ asset('Js/gestion/gestion.js') }}"></script>
 <script src="{{ asset('Js/vente/panier.js') }}"></script>
+<script src="{{ asset('Js/listeVente/listeVente.js') }}"></script>
 
 

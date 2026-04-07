@@ -6,8 +6,8 @@
             <ul class="nav navbar-nav flex-row">
                 <li class="nav-item mobile-menu d-lg-none mr-auto"><a class="nav-link nav-menu-main menu-toggle hidden-xs"
                         href="#"><i class="ft-menu font-large-1"></i></a></li>
-                <li class="nav-item mr-auto"><a class="navbar-brand" href="index.html"><img class="brand-logo" style="width: 60px"
-                            alt="modern admin logo" src="{{ asset('logo/logo-dark.png') }}">
+                <li class="nav-item mr-auto"><a class="navbar-brand" href="index.html"><img class="brand-logo"
+                            style="width: 60px" alt="modern admin logo" src="{{ asset('logo/logo-dark.png') }}">
                         <h3 class="brand-text">OMIT</h3>
                     </a></li>
                 <li class="nav-item d-none d-lg-block nav-toggle"><a class="nav-link modern-nav-toggle pr-0"
@@ -99,16 +99,87 @@
                             </li>
                         </ul>
                     </li>
-                    <li class="nav-item nav-search"><a class="nav-link nav-link-search" href="#"><i
+
+                    {{-- <li class="nav-item nav-search"><a class="nav-link nav-link-search" href="#"><i
                                 class="ficon ft-search"></i></a>
+                                <input class="input" type="text" placeholder="Explore Modern..." tabindex="0"
+                                    data-search="template-list">
+                                <div class="search-input-close"><i class="ft-x"></i></div>
+                                <ul class="search-list"></ul>
                         <div class="search-input">
-                            <input class="input" type="text" placeholder="Explore Modern..." tabindex="0"
-                                data-search="template-list">
-                            <div class="search-input-close"><i class="ft-x"></i></div>
-                            <ul class="search-list"></ul>
+
                         </div>
-                    </li>
+                    </li> --}}
                 </ul>
+
+
+                <ul  class="nav navbar-nav float-left align-items-center mr-4" id="filtre-vente-container">
+
+        
+                   
+                        <li class="nav-item mr-2">
+
+                            <div class="dropdown">
+
+                                <button class="btn btn-sm btn-outline-info dropdown-toggle" type="button"
+                                    id="filtreDate" data-toggle="dropdown">
+
+                                    <i class="ft-calendar mr-1"></i>
+                                    Aujourd'hui
+
+                                </button>
+
+                                <div class="dropdown-menu">
+
+                                    <a class="dropdown-item filtre-date" href="#" data-type="today"
+                                        data-action="filtre_vente">
+                                        Aujourd'hui
+                                    </a>
+
+                                    <a class="dropdown-item filtre-date" href="#" data-type="yesterday"
+                                        data-action="filtre_vente">
+                                        Hier
+                                    </a>
+
+                                    <a class="dropdown-item filtre-date" href="#" data-type="month"
+                                        data-action="filtre_vente">
+                                        Ce mois
+                                    </a>
+
+                                </div>
+
+                            </div>
+
+                        </li>
+
+
+                        <!-- Filtre date personnalisé -->
+                        <li class="nav-item">
+
+                            <form action="#" id="filtre_date_vente" method="POST" class="form-inline">
+
+                                <input type="date" name="date_debut" id="date_debut"
+                                    class="form-control form-control-sm mr-1">
+
+                                <span class="mx-1 text-muted">—</span>
+
+                                <input type="date" name="date_fin" id="date_fin"
+                                    class="form-control form-control-sm mr-2">
+
+                                <button type="button" data-action="filtrer_vente" class="btn btn-sm btn-info">
+
+                                    <i class="ft-search"></i>
+
+                                </button>
+
+                            </form>
+
+                        </li>
+               
+
+                </ul>
+
+
                 <ul class="nav navbar-nav float-right">
 
                     <li class="dropdown dropdown-notification nav-item"><a class="nav-link nav-link-label"

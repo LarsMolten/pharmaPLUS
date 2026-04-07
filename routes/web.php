@@ -15,6 +15,7 @@ use App\Http\Controllers\Entree\EntreeIndexController;
 use App\Http\Controllers\EntreeDetail\EntreeDetailController;
 use App\Http\Controllers\Panier\PanierController;
 use App\Http\Controllers\Vente\VenteController;
+use App\Http\Controllers\ListeVente\ListeVenteController;
 use App\Models\Analyse\analyse;
 use App\Models\Kit\kit;
 use App\Models\Vente\vente;
@@ -108,7 +109,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/delete_entree_detail', [EntreeDetailController::class, 'delete_entree_detail'])->name('delete_entree_detail');
 
 
-    // Vente
+    // Panier
     Route::get('/afficher_panier', [PanierController::class, 'index'])->name('afficher_panier');
     Route::get('/liste_panier', [PanierController::class, 'liste_panier'])->name('liste_panier');
     Route::get('/charger_detail_article', [PanierController::class, 'charger_detail_article'])->name('charger_detail_article');
@@ -127,6 +128,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/print_recu_consultation/{id}', [VenteController::class, 'print_recu_consultation'])->name('print.recu.consultation');
 
     Route::get('/print_recu_complet/{id}', [VenteController::class, 'print_recu_complet'])->name('print.recu.complet');
+
+
+    // VENTE
+    Route::get('/afficher_liste_vente', [ListeVenteController::class, 'index'])->name('afficher_liste_vente');
+    Route::post('/liste_vente', [ListeVenteController::class, 'liste_vente'])->name('liste_vente');
 
 
 
