@@ -95,7 +95,7 @@ class PanierController extends Controller
                     $designation = $consult->nom_service;
                     $type = "consultation";
                     $qte_edit = 1;
-                    $btn_edit_consult = " <a class='primary edit mr-1' 
+                    $btn_edit_consult = " <a class='primary edit mr-1'
                             id='pan_{$panier->id}'
                             data-action='edit_consultation_panier'
                             data-id='{$panier->id}-{$type}-{$produit_id}-{$panier->p_u_brut}-{$qte_edit}-{$panier->nom_patient}-{$panier->sex_patient}-{$panier->age_patient}-{$panier->unite_age}-{$panier->type_docteur}-{$panier->docteur}'><i class='la la-pencil-square-o'></i></a>
@@ -123,7 +123,7 @@ class PanierController extends Controller
                 $total_ecart = bcsub($total_proposee, $total_brut, 2);
                 $data_ana = (!empty($analys)) ? $analys : "";
 
-                $btn_edit = " <a class='primary edit mr-1' 
+                $btn_edit = " <a class='primary edit mr-1'
                                         id='pan_{$panier->id}'
                                         data-action='edit_panier'
                                         data-id='{$panier->id}-{$type}-{$produit_id}-{$panier->p_u_brut}-{$qte_edit}-{$type}-{$data_ana}'><i class='la la-pencil-square-o'></i></a>
@@ -134,14 +134,14 @@ class PanierController extends Controller
 
                 $th .= "<tr>
                             <td  style='width:5%'>{$_n}</td>
-                            <td  style='width:20%; text-align: left;'>{$designation}</td>
+                            <td  style='width:20%; text-align:left; word-break: break-word; white-space: normal;'>{$designation}</td>
                             <td  style='width:5%; text-align: right;' class='format-prix '>{$panier->p_u_brut}</td>
                             <td style='width:5%;' class='format-prix'>{$panier->qte}</td>
                             <td style='width:10%; text-align: right;' class='format-prix'>{$panier->montant_brut}</td> ";
                 // on a utilisé SPA pour éviter de recharger la page à chaque action, donc on a besoin de l'id passer en 'data-id' de l'article pour faire les actions d'édition et de suppression en ajax par data-action
                 $th .= "<td style='width:5%'>
                             {$btn_edit_panier}
-                           
+
                              <a class='danger delete mr-1' data-action='delete_one_or_all_panier' data-id='{$panier->id}' ><i class='la la-trash-o'></i></a>
                         </tr>";
 
@@ -155,16 +155,16 @@ class PanierController extends Controller
             $pan = "
                      <h1 class='content-header-title text-center white format-prix'
                                          style='font-weight: 800; font-size: 45px '>{$total_brut} Ar</h1>
-                                     
-                   
-                                       
 
-                                    
+
+
+
+
             ";
 
-            //  <h6  class='mx-2 row white'> 
+            //  <h6  class='mx-2 row white'>
             //                              <p class='col-6' style='text-align: left;'>Brut : <span class='format-prix'>$total_brut</span> Ar</p>
-            //                              <p class='col-6' style='text-align: right;'> Ecart : <span class ='format-prix'>$total_ecart</span> Ar</p> 
+            //                              <p class='col-6' style='text-align: right;'> Ecart : <span class ='format-prix'>$total_ecart</span> Ar</p>
             //                             </h6>
 
 
@@ -183,7 +183,7 @@ class PanierController extends Controller
 
                 </div>
 
-            
+
             ";
 
 
@@ -291,7 +291,7 @@ class PanierController extends Controller
                 // ])->exists();
 
                 // if ($exists) {
-                //     throw new \Exception("deja_ajoutee"); 
+                //     throw new \Exception("deja_ajoutee");
                 // }
 
                 panier::create($data);
@@ -399,7 +399,7 @@ class PanierController extends Controller
                     ->update($data);
             } else {
 
-                // verification 
+                // verification
                 $exist = panier::where('user_id', $userId)->whereNotNull('analyse_id')->exists();
 
                 if ($exist) {

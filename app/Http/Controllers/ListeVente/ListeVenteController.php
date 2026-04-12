@@ -61,15 +61,15 @@ class ListeVenteController extends Controller
                             <td  style='width:5%; text-align: right;' class='format-prix '>{$vente->montant_brut}</td>
                             <td  style='width:5%; text-align: right;' class='format-prix '>{$vente->montant_paye}</td>
                             <td  style='width:5%; text-align: right;' class='format-prix '>{$vente->monnaie}</td>
-                            <td style='width:10%; text-align: right;' class='format-prix'>{$vente->user->name}</td>
-                            <td style='width:10%; text-align: right;' class='format-prix'>{$vente->created_at}</td> ";
+                            <td style='width:10%; text-align: center;' class='format-prix'>{$vente->user->name}</td>
+                            <td style='width:10%; text-align: center;' class='format-prix'>{$vente->created_at}</td> ";
 
-                $th .= "<td style='width:5%'>
-                          
-                             <a class='success mr-1' data-action='afficher_modal_liste_detail_vente' 
+                $th .= "<td style='width:5%; text-align: center;'>
+
+                             <a class='success mr-1' data-action='afficher_modal_liste_detail_vente'
                              data-id='{$vente->id}|{$vente->reference_vente}|{$vente->client}|{$vente->user->name}|{$vente->created_at}|{$vente->montant_brut}|{$vente->montant_paye}|{$vente->monnaie}' ><i class='la la-list'></i></a>
                         </td>
-                        
+
                     </tr>";
             }
 
@@ -211,11 +211,11 @@ class ListeVenteController extends Controller
 
                 $th .= "<tr>
                             <td  style='width:5%'>{$n}</td>
-                            <td  style='width:20%; text-align: left;'>{$designation}</td>
+                            <td  style='width:20%; text-align:left; word-break: break-word; white-space: normal;'>{$designation}</td>
                             <td  style='width:10%; text-align: right;' class='format-prix '>{$d->prix_unitaire}</td>
                             <td  style='width:10%;' class='format-prix '>{$d->qte}</td>
                             <td  style='width:10%; text-align: right;' class='format-prix '>{$d->montant}</td>
-                            
+
                         </tr>";
 
 

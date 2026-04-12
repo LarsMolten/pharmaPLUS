@@ -164,7 +164,7 @@
                             <td class="right">
                                 {{ $ticket['consultation']->sex_patient ? 'Homme' : 'Femme' }}
                             </td>
-                        </tr> 
+                        </tr>
 
                         <tr>
                             <td>Age</td>

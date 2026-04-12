@@ -92,7 +92,7 @@ class VenteController extends Controller
                 'montant_proposee' => $total_propose,
                 'montant_ecart' => $total_ecart,
                 'montant_paye' => $request->montant_paye,
-                'monnaie' => bcsub($request->montant_paye, $total_propose, 2),
+                'monnaie' => bcsub($request->montant_paye, $total_brut, 2),
                 'mode_paiement' => 'cash'
             ]);
 
@@ -157,7 +157,8 @@ class VenteController extends Controller
 
         $details = $vente->details;
 
-        $totalVente = $details->sum('montant');
+        // $totalVente = $details->sum('montant');
+        $totalVente = $vente->montant_brut;
 
         /*** ============================================================ ARTICLES =================== ***/
         $articles = "";
@@ -171,7 +172,7 @@ class VenteController extends Controller
 
             $payeArticle = "0.00";
             if (bccomp($totalVente, "0", 2) > 0) {
-                $ratio = bcdiv($totalArticle, $totalVente, 6);
+                $ratio = bcdiv($totalArticle, $totalVente, 8);
                 $payeArticle = bcmul($ratio, $vente->montant_paye, 2);
             }
 
@@ -190,7 +191,7 @@ class VenteController extends Controller
         $nomsAnalyses = "";
 
 
-        if ($details->whereNotNull('analyse_id')) {
+        if ($details->whereNotNull('analyse_id')->count() > 0) {
             $analyses = $details->whereNotNull('analyse_id');
             $ids = collect($details)
                 ->pluck('analyse_id')
@@ -208,7 +209,7 @@ class VenteController extends Controller
 
             $payeAnalyse = "0.00";
             if (bccomp($totalVente, "0", 2) > 0) {
-                $ratio = bcdiv($totalAnalyse, $totalVente, 6);
+                $ratio = bcdiv($totalAnalyse, $totalVente, 8);
                 $payeAnalyse = bcmul($ratio, $vente->montant_paye, 2);
             }
 
@@ -230,29 +231,23 @@ class VenteController extends Controller
 
             $payeService = "0.00";
             if (bccomp($totalVente, "0", 2) > 0) {
-                $ratio = bcdiv($totalService, $totalVente, 6);
+                $ratio = bcdiv($totalService, $totalVente, 8);
                 $payeService = bcmul($ratio, $vente->montant_paye, 2);
             }
 
-            // $monnaieService = bcsub($payeService, $totalService, 2);
-            // if (bccomp($monnaieService, "0", 2) < 0) {
-            //     $ecart = bcmul($monnaieService, "-1", 2);
-            //     $payeService = bcadd($payeService, $ecart, 2);
-            //     $monnaieService = "0.00";
-            // }
-
             $restePayeS = $payeService;
 
-
+            $services = $services->values();
 
             foreach ($services as $index => $serv) {
                 $_service = service::find($serv->service_id);
-                $montantS = $serv->prix_unitaire;
+                $montantS = $serv->montant; //30
 
-                if ($restePayeS >= $montantS) {
+                if ($restePayeS >= $montantS) { //33    30
                     $payeS = $montantS;
                     $monnaieS = 0;
-                    $restePayeS -= $montantS;
+                    // $restePayeS -= $montantS;
+                    $restePayeS = bcsub($restePayeS, $montantS, 2);
                 } else {
                     $payeS = $restePayeS;
                     $monnaieS = 0;
@@ -260,8 +255,8 @@ class VenteController extends Controller
                 }
 
                 if ($index == $services->count() - 1) {
-                    $payeS += $restePayeS;
-                    $monnaieS = $payeS - $montantS;
+                    $payeS = bcadd($payeS, $restePayeS, 2);
+                    $monnaieS = bcsub($payeS, $montantS, 2);
                 }
 
                 $ticketsService[] = [
@@ -286,7 +281,7 @@ class VenteController extends Controller
 
             $payeKit = "0.00";
             if (bccomp($totalVente, "0", 2) > 0) {
-                $ratio = bcdiv($totalKit, $totalVente, 6);
+                $ratio = bcdiv($totalKit, $totalVente, 8);
                 $payeKit = bcmul($ratio, $vente->montant_paye, 2);
             }
 
@@ -315,7 +310,7 @@ class VenteController extends Controller
 
             $partPayeConsultation = "0.00";
             if (bccomp($totalVente, "0", 2) > 0) {
-                $ratio = bcdiv($totalConsultation, $totalVente, 6);
+                $ratio = bcdiv($totalConsultation, $totalVente, 8);
                 $partPayeConsultation = bcmul($ratio, $vente->montant_paye, 2);
             }
 
@@ -324,14 +319,15 @@ class VenteController extends Controller
             $serviceConsult = service::find(1);
             $prixConsultation = $serviceConsult->prix_service;
 
-          
+
             foreach ($consultations as $index => $consult) {
                 $montant = $prixConsultation;
 
                 if ($restePaye >= $montant) {
                     $paye = $montant;
                     $monnaie = 0;
-                    $restePaye -= $montant;
+                    // $restePaye -= $montant;
+                    $restePaye = bcsub($restePaye, $montant, 2);
                 } else {
                     $paye = $restePaye;
                     $monnaie = 0;
@@ -339,8 +335,8 @@ class VenteController extends Controller
                 }
 
                 if ($index == $consultations->count() - 1) {
-                    $paye += $restePaye;
-                    $monnaie = $paye - $montant;
+                    $paye = bcadd($paye, $restePaye, 2);
+                    $monnaie = bcsub($paye, $montant, 2);
                 }
 
                 $ticketsConsultation[] = [
@@ -351,13 +347,6 @@ class VenteController extends Controller
                 ];
             }
         }
-
-
-
-
-
-
-
 
 
         /*** ============================================================== PDF =================== ***/
