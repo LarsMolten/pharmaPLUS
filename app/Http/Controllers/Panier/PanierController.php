@@ -60,7 +60,7 @@ class PanierController extends Controller
             $btn_edit_panier = "";
 
             foreach ($paniers as $panier) {
-                    // dd($panier);
+                // dd($panier);
 
                 if ($panier->article_id) {
                     $art = article::find($panier->article_id);
@@ -88,7 +88,7 @@ class PanierController extends Controller
 
                     $analys = json_encode(explode(',', $panier->analyse_id));
                 }
-              
+
                 if ($panier->consultation_id) {
                     $consult = service::find($panier->consultation_id);
                     $produit_id = $consult->id;
@@ -128,9 +128,9 @@ class PanierController extends Controller
                                         data-action='edit_panier'
                                         data-id='{$panier->id}-{$type}-{$produit_id}-{$panier->p_u_brut}-{$qte_edit}-{$type}-{$data_ana}'><i class='la la-pencil-square-o'></i></a>
                                 ";
-              
-                $btn_edit_panier = ($panier->consultation_id) ? $btn_edit_consult : $btn_edit;   
-                
+
+                $btn_edit_panier = ($panier->consultation_id) ? $btn_edit_consult : $btn_edit;
+
 
                 $th .= "<tr>
                             <td  style='width:5%'>{$_n}</td>
@@ -166,7 +166,7 @@ class PanierController extends Controller
             //                              <p class='col-6' style='text-align: left;'>Brut : <span class='format-prix'>$total_brut</span> Ar</p>
             //                              <p class='col-6' style='text-align: right;'> Ecart : <span class ='format-prix'>$total_ecart</span> Ar</p> 
             //                             </h6>
-            
+
 
             $bt = "
 
@@ -258,6 +258,7 @@ class PanierController extends Controller
             // $montant = bcmul($prix_consultatio, 1, 2);
 
             $data = [
+                'type' => 'Consultation',
                 'consultation_id' => $consultation_id,
                 'nom_patient' => $nom_patient,
                 'sex_patient' => $sex_patient,
@@ -320,6 +321,7 @@ class PanierController extends Controller
             $montant = bcmul($prix_service, $qte, 2);
 
             $data = [
+                'type' => 'Service',
                 'service_id' => $service_id,
                 'p_u_brut' => $prix_service,
                 'p_u_proposee' => $prix_service,
@@ -379,6 +381,7 @@ class PanierController extends Controller
             $montant = analyse::whereIn('id', $ids)->sum('prix');
 
             $data = [
+                'type' => 'analyse',
                 'analyse_id'       => $analyse_ids,
                 'p_u_brut'         => $montant,
                 'p_u_proposee'     => $montant,
@@ -428,6 +431,7 @@ class PanierController extends Controller
             $montant = bcmul($prix_kit, $qte, 2);
 
             $data = [
+                'type' => 'Kit',
                 'kit_id' => $kit_id,
                 'p_u_brut' => $prix_kit,
                 'p_u_proposee' => $prix_kit,
@@ -539,7 +543,9 @@ class PanierController extends Controller
                 ['isValide', 1],
                 ['etat', 1]
             ])
-                ->orderBy('date_peremption')
+                ->orderByRaw('date_peremption IS NULL')
+                ->orderBy('date_peremption', 'asc')
+                ->orderBy('created_at', 'asc') // FIFO entre lots même date
                 ->lockForUpdate()
                 ->get();
 
@@ -565,6 +571,7 @@ class PanierController extends Controller
                 }
 
                 panier::create([
+                    'type' => 'article',
                     'entree_detail_id' => $lot->id,
                     'article_id' => $article_id,
                     'p_u_brut' => $lot->prix_unitaire,

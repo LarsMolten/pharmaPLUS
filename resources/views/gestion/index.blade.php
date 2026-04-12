@@ -10,7 +10,7 @@
             <div class="col-12">
                 <div class="card" id="card_tab_gestion">
                     <div class="card-header">
-                        <h4 class="card-title">Gestion de catalogues</h4>
+                        <h4 class="card-title">Gestion des catalogues</h4>
                     </div>
                     <div class="card-content">
                         <div class="card-body">
@@ -22,7 +22,7 @@
                                 </li>
                                 <li class="nav-item">
                                     <a class="nav-link" id="link-tab1" data-toggle="tab" href="#link1"
-                                        aria-controls="link1" aria-expanded="false">Catégorie</a>
+                                        aria-controls="link1" aria-expanded="false">Type sevice</a>
                                 </li>
                                 <li class="nav-item">
                                     <a class="nav-link" id="link-tab2" data-toggle="tab" href="#link2"
@@ -30,12 +30,12 @@
                                 </li>
                                 <li class="nav-item">
                                     <a class="nav-link" id="linkOpt-tab1" data-toggle="tab" href="#linkOpt1"
-                                        aria-controls="linkOpt1">Kit médicaux</a>
+                                        aria-controls="linkOpt1">Maternité</a>
                                 </li>
-                                <li class="nav-item">
+                                {{-- <li class="nav-item">
                                     <a class="nav-link" id="linkOpt-tab2" data-toggle="tab" href="#linkOpt2" data-action="charge_options"
                                         aria-controls="linkOpt2">Details Kit</a>
-                                </li>
+                                </li> --}}
                             </ul>
 
                         </div>

@@ -12,29 +12,6 @@ window.pageInitializers.listeVente = function () {
     liste_vente();
 
     // ####################################################################################
-    // ID du conteneur du filtre
-    const filtreContainer = document.getElementById("filtre-vente-container");
-
-    // Fonction pour afficher/cacher selon la route
-    function toggleFiltreVente() {
-        // récupère la route actuelle (chemin après le domaine)
-        const currentRoute = window.location.pathname;
-
-        // n'afficher le filtre que sur la page historique vente
-        if (currentRoute === "/afficher_liste_vente") {
-            filtreContainer.style.display = "flex"; // ou 'block' selon ton style
-        } else {
-            filtreContainer.style.display = "none";
-        }
-    }
-
-    // Exécuter au chargement initial
-    document.addEventListener("DOMContentLoaded", toggleFiltreVente);
-
-    // Exécuter après chaque navigation AJAX
-    $(document).ajaxComplete(function () {
-        toggleFiltreVente();
-    });
 
     function setLabel(text) {
         $("#filtreDate").html('<i class="ft-calendar mr-1"></i> ' + text);
@@ -89,14 +66,13 @@ window.pageInitializers.listeVente = function () {
     });
 
     window.filtrer_vente = function () {
+        setLabel("- - -");
         liste_vente();
     };
 
     function liste_vente() {
         let date_debut = $("#date_debut").val();
         let date_fin = $("#date_fin").val();
-
-        console.log(date_debut);
 
         $.ajax({
             beforeSend: function () {
@@ -145,12 +121,44 @@ window.pageInitializers.listeVente = function () {
                     }
                 });
 
-                // $("#affichage_montant_panier .format-prix ").each(function () {
-                //     let val = $(this).text().trim();
-                //     if (val !== "" && !isNaN(parseFloat(val))) {
-                //         $(this).html(formatNumberDisplay(val));
-                //     }
-                // });
+                $("#nb_totalVente").text(res.nbTotalVente);
+                $("#nb_totalDetail").text(res.nbTotalDetail);
+                $("#montant_total_vente").text(
+                    res.totalMontant.toLocaleString() + " Ar",
+                );
+
+                $("#nb_consultation").text(res.consultation.count);
+                $("#montant_consultation").text(
+                    res.consultation.montant.toLocaleString() + " Ar",
+                );
+                $("#bar_consultation").css(
+                    "width",
+                    res.consultation.percent + "%",
+                );
+
+                $("#nb_service").text(res.service.count);
+                $("#montant_service").text(
+                    res.service.montant.toLocaleString() + " Ar",
+                );
+                $("#bar_service").css("width", res.service.percent + "%");
+
+                $("#nb_article").text(res.article.count);
+                $("#montant_article").text(
+                    res.article.montant.toLocaleString() + " Ar",
+                );
+                $("#bar_article").css("width", res.article.percent + "%");
+
+                $("#nb_analyse").text(res.analyse.count);
+                $("#montant_analyse").text(
+                    res.analyse.montant.toLocaleString() + " Ar",
+                );
+                $("#bar_analyse").css("width", res.analyse.percent + "%");
+
+                $("#nb_kit").text(res.kit.count);
+                $("#montant_kit").text(
+                    res.kit.montant.toLocaleString() + " Ar",
+                );
+                $("#bar_kit").css("width", res.kit.percent + "%");
 
                 $("#card_listeVente").DataTable({
                     destroy: true,
@@ -160,7 +168,7 @@ window.pageInitializers.listeVente = function () {
                     info: false,
                     paging: true,
                     deferRender: true,
-                    pageLength: 10,
+                    pageLength: 8,
                     initComplete: function (settings, json) {
                         $("div.dataTables_wrapper div.dataTables_filter input")
                             .attr("placeholder", "Recherche")
@@ -185,4 +193,126 @@ window.pageInitializers.listeVente = function () {
             },
         });
     }
+
+    window.afficher_modal_liste_detail_vente = function (id) {
+        const parts = String(id).split("|");
+
+        let Id = parts[0];
+        let ref = parts[1];
+        let client = parts[2];
+        let caissier = parts[3];
+        let date = parts[4];
+        let total = parts[5];
+        let paye = parts[6];
+        let monnaie = parts[7];
+
+        $("#listeVenteDetailModal").modal(
+            { backdrop: "static", keyboard: false },
+            "show",
+        );
+
+        $.ajax({
+            beforeSend: function () {
+                $("#card_liste_venteDetail").block({
+                    message:
+                        '<div class="ft-refresh-cw icon-spin font-medium-2" style="margin:auto , font-size : 80px !important"></div>',
+                    overlayCSS: {
+                        backgroundColor: "black",
+                        opacity: 0.1,
+                        cursor: "wait",
+                    },
+                    css: {
+                        border: 0,
+                        padding: 0,
+                        backgroundColor: "transparent",
+                    },
+                });
+            },
+            url: base + "liste_vente_detail",
+            type: "POST", // on utilise GET pour récupérer les données sans csrf
+            dataType: "json",
+            headers: {
+                "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+            },
+            data: { vente_id: Id },
+
+            success: function (res) {
+                if ($.fn.DataTable.isDataTable("#table_venteDetail")) {
+                    $("#table_venteDetail").DataTable().destroy();
+                }
+
+                $("#table_venteDetail").empty();
+                $("#table_venteDetail").append(res.data);
+
+                $("#ref_vente_to_detail").text(ref);
+                $("#client_vente_to_detail").text(client);
+                $("#caissier_vente_to_detail").text(caissier);
+                $("#date_vente_to_detail").text(date.toLocaleString());
+                $("#total_vente_to_detail").text(
+                    total.toLocaleString(),
+                );
+                $("#paye_vente_to_detail").text(paye.toLocaleString());
+                $("#monnaie_vente_to_detail").text(
+                    monnaie.toLocaleString(),
+                );
+
+                // formatage des nombres
+                $("#table_venteDetail td.format-prix").each(function () {
+                    let val = $(this).text().trim();
+                    if (val !== "" && !isNaN(parseFloat(val))) {
+                        $(this).html(formatNumberDisplay(val));
+                    }
+                });
+
+                $("#somme_m .format-prix").each(function () {
+                    let val = $(this).text().trim();
+                    if (val !== "" && !isNaN(parseFloat(val))) {
+                        $(this).html(formatNumberDisplay(val) + " Ar");
+                    }
+                });
+
+                $("#table_venteDetail").DataTable({
+                    destroy: true,
+                    ordering: true,
+                    order: [[0, "asc"]],
+                    responsive: true,
+                    info: false,
+                    paging: false,
+                    deferRender: true,
+                    pageLength: 10,
+                    initComplete: function (settings, json) {
+                        $("div.dataTables_wrapper div.dataTables_filter input")
+                            .attr("placeholder", "Recherche")
+                            .css("font-size", "11px");
+                    },
+                    language: {
+                        search: "",
+                        zeroRecords: "Aucune vente",
+                    },
+                    dom: "Bfrtip",
+                    buttons: [
+                        {
+                            className:
+                                "btn btn-sm mr-1 btn-info btn-min-width ",
+                            text: '<i class="la la-print">Imprimer</i>',
+                            action: function () {
+                                let urlPrintPdf =
+                                    BASE_URL + "/print_recu_consultation/" + Id;
+
+                                setTimeout(function () {
+                                    window.open(urlPrintPdf, "_blank");
+                                }, 500);
+                            },
+                        },
+                    ],
+                });
+
+                $("#card_liste_venteDetail").unblock();
+            },
+            error: function (xhr) {
+                console.error("Erreur:", xhr);
+                $("#card_liste_venteDetail").unblock();
+            },
+        });
+    };
 };

@@ -78,8 +78,9 @@ class ArticleController extends Controller
                     $bg_color .= "background-color: rgb(241, 163, 122);";
                 }
 
+                 $ref_article = str_pad($article->id, 4, '0', STR_PAD_LEFT);
                 $th .= "<tr>
-                            <td  style='width:5%'>REF-{$article->id}</td>
+                            <td  style='width:5%'>REF-{$ref_article}</td>
                             <td  style='width:20%; text-align: left;'>{$article->designation}</td>
                             <td  style='width:10%'>{$Medic_presentatio}</td>
                             <td style='width:5%'>{$article->presentation}</td>
@@ -187,7 +188,7 @@ class ArticleController extends Controller
                 }
 
                 $bg1 = ($detail->stock_restant_lot > $article->seuil) ? "background-color: rgba(53, 244, 101, 0.91)" : "background-color: rgba(233, 244, 236, 0.99)";
-                $bg2 = (now() >= $detail->date_peremption) ? "background-color: rgba(243, 133, 122, 0.91)" : "";
+                $bg2 = ($detail->date_peremption && now() >= $detail->date_peremption) ? "background-color: rgba(243, 133, 122, 0.91)" : "";
 
 
 

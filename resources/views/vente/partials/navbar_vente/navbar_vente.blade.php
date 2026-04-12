@@ -9,7 +9,7 @@
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" id="active-tab11" data-toggle="tab" data-action="get_tab_service" data-id="service" href="#active11" aria-controls="active1"
-                        aria-expanded="false">Services Médicaux</a>
+                        aria-expanded="false">Imagerie</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" id="link-tab11" data-toggle="tab" data-action="get_tab_article" data-id="article" href="#link11" aria-controls="link1"
@@ -20,8 +20,7 @@
                         aria-expanded="false">Analyse</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" id="link-tab33" data-toggle="tab" data-action="get_tab_kit" data-id="kit" href="#link33" aria-controls="link3">Kit
-                        médicaux</a>
+                    <a class="nav-link" id="link-tab33" data-toggle="tab" data-action="get_tab_kit" data-id="kit" href="#link33" aria-controls="link3">Maternité</a>
                 </li>
 
             </ul>

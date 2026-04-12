@@ -61,8 +61,8 @@ class VenteController extends Controller
             $paniers = panier::where('user_id', $user)->get();
             $totals = $paniers->sum('montant_brut');
 
-            if($request->montant_paye < $totals){
-                 return response()->json([
+            if ($request->montant_paye < $totals) {
+                return response()->json([
                     'status' => 'insuffisant'
                 ]);
             }
@@ -146,143 +146,6 @@ class VenteController extends Controller
         }
     }
 
-    // impression reçu pdf pour les articles
-    // public function print_recu_article($id)
-    // {
-    //     $vente = Vente::with('details.article', 'user')->findOrFail($id);
-
-    //     $details = $vente->details;
-
-    //     $totalArticle = $details
-    //         ->whereNotNull('article_id')
-    //         ->sum('montant');
-
-    //     $totalVente = $details->sum('montant');
-
-    //     $payeArticle = "0.00";
-
-    //     if (bccomp($totalVente, "0", 2) > 0) {
-
-    //         $ratio = bcdiv($totalArticle, $totalVente, 6);
-
-    //         $payeArticle = bcmul($ratio, $vente->montant_paye, 2);
-    //     }
-
-    //     // Calcul monnaie
-    //     $monnaieArticle = bcsub($payeArticle, $totalArticle, 2);
-
-    //     // Correction si monnaie négative (problème d'arrondi)
-    //     if (bccomp($monnaieArticle, "0", 2) < 0) {
-
-    //         $ecart = bcmul($monnaieArticle, "-1", 2);
-
-    //         $payeArticle = bcadd($payeArticle, $ecart, 2);
-
-    //         $monnaieArticle = "0.00";
-    //     }
-
-    //     // créer une instance
-    //     $generator = new DNS1D();
-    //     $generator->setStorPath(public_path('images/barcodes/')); // chemin temporaire (optionnel)
-
-    //     // générer le code-barres en base64
-    //     $barcodeBase64 = 'data:image/png;base64,' . $generator->getBarcodePNG($vente->reference_vente, 'C128', 1, 30);
-
-    //     $pdf = Pdf::loadView(
-    //         'Vente.partials.pdf.recu_vente',
-    //         [
-    //             'vente' => $vente,
-    //             'sous_total' => $totalArticle,
-    //             'paye' => $payeArticle,
-    //             'monnaie' => $monnaieArticle,
-    //             'net_payer' => $totalArticle,
-    //             'codeBarre' => $barcodeBase64,
-    //         ]
-    //     );
-
-    //     $pdf->setPaper([0, 0, 226.77, 1000], 'portrait');
-
-    //     return $pdf->stream('recu_vente.pdf');
-    // }
-
-
-    // public function print_recu_consultation($id)
-    // {
-
-
-    //     $vente = Vente::findOrFail($id);
-    //     $consultations = Consultation::with('docteurInfo')
-    //         ->where('vente_id', $id)
-    //         ->get();
-
-    //     $details = VenteDetail::where('vente_id', $id)->get();
-
-    //     $totalConsultation = $details
-    //         ->whereNotNull('consultation_id')
-    //         ->sum('montant');
-
-    //     $totalVente = $details->sum('montant');
-
-    //     $partPayeConsultation = 0;
-    //     if (bccomp($totalVente, "0", 2) > 0) {
-
-    //         $ratio = bcdiv($totalConsultation, $totalVente, 6);
-    //         $partPayeConsultation = bcmul($ratio, $vente->montant_paye, 2);
-    //     }
-
-    //     $restePaye = $partPayeConsultation;
-
-    //     $cons = service::find(1);
-    //     $prixConsultation = $cons->prix_service;
-
-
-    //     $tickets = [];
-
-    //     foreach ($consultations as $index => $consultation) {
-
-    //         $montant = $prixConsultation;
-
-    //         if ($restePaye >= $montant) {
-
-    //             $paye = $montant;
-    //             $monnaie = 0;
-
-    //             $restePaye -= $montant;
-    //         } else {
-
-    //             $paye = $restePaye;
-    //             $monnaie = 0;
-
-    //             $restePaye = 0;
-    //         }
-
-    //         // si dernier ticket → ajouter monnaie restante
-    //         if ($index == $consultations->count() - 1) {
-
-    //             $paye += $restePaye;
-    //             $monnaie = $paye - $montant;
-    //         }
-
-    //         $tickets[] = [
-    //             'consultation' => $consultation,
-    //             'montant' => $montant,
-    //             'paye' => $paye,
-    //             'monnaie' => $monnaie
-    //         ];
-    //     }
-
-    //     $pdf = PDF::loadView(
-    //         'Vente.partials.pdf.recu_consultation',
-    //         compact('vente', 'tickets')
-    //     );
-
-    //     $pdf->setPaper([0, 0, 226.77, 800]);
-
-    //     return $pdf->stream('recu_consultation.pdf');
-    // }
-
-
-
 
 
     // ================================================================================================================================================================
@@ -359,10 +222,7 @@ class VenteController extends Controller
 
         /*** ============================================================= SERVICES =================== ***/
         $services = "";
-        $totalService = "";
-        $payeService = "";
-        $monnaieService = "";
-
+        $ticketsService = [];
         if ($details->whereNotNull('service_id')->count() > 0) {
 
             $services = $details->whereNotNull('service_id');
@@ -374,14 +234,46 @@ class VenteController extends Controller
                 $payeService = bcmul($ratio, $vente->montant_paye, 2);
             }
 
-            $monnaieService = bcsub($payeService, $totalService, 2);
-            if (bccomp($monnaieService, "0", 2) < 0) {
-                $ecart = bcmul($monnaieService, "-1", 2);
-                $payeService = bcadd($payeService, $ecart, 2);
-                $monnaieService = "0.00";
+            // $monnaieService = bcsub($payeService, $totalService, 2);
+            // if (bccomp($monnaieService, "0", 2) < 0) {
+            //     $ecart = bcmul($monnaieService, "-1", 2);
+            //     $payeService = bcadd($payeService, $ecart, 2);
+            //     $monnaieService = "0.00";
+            // }
+
+            $restePayeS = $payeService;
+
+
+
+            foreach ($services as $index => $serv) {
+                $_service = service::find($serv->service_id);
+                $montantS = $serv->prix_unitaire;
+
+                if ($restePayeS >= $montantS) {
+                    $payeS = $montantS;
+                    $monnaieS = 0;
+                    $restePayeS -= $montantS;
+                } else {
+                    $payeS = $restePayeS;
+                    $monnaieS = 0;
+                    $restePayeS = 0;
+                }
+
+                if ($index == $services->count() - 1) {
+                    $payeS += $restePayeS;
+                    $monnaieS = $payeS - $montantS;
+                }
+
+                $ticketsService[] = [
+                    'service' => $serv,
+                    'serviceInfo' => $_service,
+                    'montant' => $montantS,
+                    'paye' => $payeS,
+                    'monnaie' => $monnaieS
+                ];
             }
         }
-        /*** ============================================================= SERVICES =================== ***/
+        /*** ============================================================= KITS =================== ***/
         $kits = "";
         $totalKit = "";
         $payeKit = "";
@@ -408,7 +300,7 @@ class VenteController extends Controller
 
         /*** ============================================================= CONSULTATIONS =================== ***/
         $consultations = "";
-        $ticketsConsultation[] = [];
+          $ticketsConsultation = [];
         if ($details->whereNotNull('consultation_id')->count() > 0) {
 
             $consultations = Consultation::with('docteurInfo')
@@ -432,7 +324,7 @@ class VenteController extends Controller
             $serviceConsult = service::find(1);
             $prixConsultation = $serviceConsult->prix_service;
 
-            $ticketsConsultation = [];
+          
             foreach ($consultations as $index => $consult) {
                 $montant = $prixConsultation;
 
@@ -485,16 +377,13 @@ class VenteController extends Controller
             'monnaieAnalyse' => $monnaieAnalyse,
             'nomsAnalyses' => $nomsAnalyses,
 
-            'services' => $services,
-            'totalService' =>  $totalService,
-            'payeService' => $payeService,
-            'monnaieService' => $monnaieService,
+            'Service' => $ticketsService,
 
             'kits' => $kits,
             'totalKit' =>  $totalKit,
             'payeKit' => $payeKit,
             'monnaieKit' => $monnaieKit,
-          
+
 
 
         ]);

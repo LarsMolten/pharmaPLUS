@@ -133,6 +133,7 @@ Route::middleware('auth')->group(function () {
     // VENTE
     Route::get('/afficher_liste_vente', [ListeVenteController::class, 'index'])->name('afficher_liste_vente');
     Route::post('/liste_vente', [ListeVenteController::class, 'liste_vente'])->name('liste_vente');
+    Route::post('/liste_vente_detail', [ListeVenteController::class, 'liste_vente_detail'])->name('liste_vente_detail');
 
 
 

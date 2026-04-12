@@ -74,7 +74,7 @@ window.pageInitializers.gestion = function () {
                     info: false,
                     paging: true,
                     deferRender: true,
-                    pageLength: 10,
+                    pageLength: 7,
                     initComplete: function (settings, json) {
                         $("div.dataTables_wrapper div.dataTables_filter input")
                             .attr("placeholder", "Recherche")
@@ -195,7 +195,7 @@ window.pageInitializers.gestion = function () {
         $("#nom_analyse").val(nom);
 
         // Formater le prix pour l'affichage dans le champ input
-        $("#pu_analyse").val(formatNumberDisplay(prix));
+        $("#pu_analyse").val(formatNumberEdit(prix));
     };
 
     window.annuler_form_analyse = function () {
@@ -585,7 +585,7 @@ window.pageInitializers.gestion = function () {
                     info: false,
                     paging: true,
                     deferRender: true,
-                    pageLength: 10,
+                    pageLength: 7,
                     initComplete: function (settings, json) {
                         $("div.dataTables_wrapper div.dataTables_filter input")
                             .attr("placeholder", "Recherche")
@@ -762,7 +762,7 @@ window.pageInitializers.gestion = function () {
 
         $("#categorie_id").val(id_categorie).selectpicker("refresh");
         $('input[name="nom_service"]').val(service);
-        $('input[name="prix_service"]').val(prix_serv);
+        $('#prix_service').val(formatNumberEdit(prix_serv));
 
         // // Formater le prix pour l'affichage dans le champ input
         // $('#prix_service').val(formatNumberDisplay(prix_serv));
@@ -913,7 +913,7 @@ window.pageInitializers.gestion = function () {
                     info: false,
                     paging: true,
                     deferRender: true,
-                    pageLength: 10,
+                    pageLength: 7,
                     initComplete: function (settings, json) {
                         $("div.dataTables_wrapper div.dataTables_filter input")
                             .attr("placeholder", "Recherche")
@@ -1032,7 +1032,7 @@ window.pageInitializers.gestion = function () {
         $("#nom_kit").val(nom);
 
         // Formater le prix pour l'affichage dans le champ input
-        $("#prix_kit").val(formatNumberDisplay(prix));
+        $("#prix_kit").val(formatNumberEdit(prix));
     };
 
     window.annuler_form_kit = function () {

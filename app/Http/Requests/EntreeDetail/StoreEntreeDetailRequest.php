@@ -36,7 +36,7 @@ class StoreEntreeDetailRequest extends FormRequest
             'montant_gain_brut' => 'numeric|min:0',
             'montant_gain_proposee' => 'numeric|min:0',
             'nb_lot_dispo' => 'integer|max:1',
-            'date_peremption' => 'required|date|date_format:mm-yyyy',
+            'date_peremption' => 'date|date_format:mm-yyyy',
             'isValide' => 'boolean|max:1',
             'isVendus' => 'boolean|max:1',
             'etat' => 'boolean|max:1',

@@ -9,7 +9,7 @@
             <div class="row">
                 <div class="col-md-12">
                     <div class="form-group">
-                        <label for="userinput2" class="">Service</label>
+                        <label for="userinput2" class="">Imagerie</label>
                         <select class="selectpicker  form-control btn-sm" name="service_id" required id="id_service"
                             data-live-search='true' data-size='5' title='Service'>
 

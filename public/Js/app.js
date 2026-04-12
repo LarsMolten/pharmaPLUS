@@ -1,51 +1,54 @@
 var enCoursparent = false;
 var enCours = false;
 
-
-$(document).ready(function () {
-
+const date_aujourdhuit = $(document).ready(function () {
     $.ajaxSetup({
         headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        }
+            "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+        },
+    });
+
+    // Exécuter au chargement initial
+    document.addEventListener("DOMContentLoaded", toggleFiltreVente);
+
+    // Exécuter après chaque navigation AJAX
+    $(document).ajaxComplete(function () {
+        toggleFiltreVente();
     });
 
     // Gestionnaire global pour toutes les actions dynamiques
-    $(document).on('click', '[data-action]', function (e) {
-
+    $(document).on("click", "[data-action]", function (e) {
         e.preventDefault();
 
-        var action = $(this).data('action');
-        var id = $(this).data('id');
+        var action = $(this).data("action");
+        var id = $(this).data("id");
 
-        if (action && typeof window[action] === 'function') {
+        if (action && typeof window[action] === "function") {
             window[action](id, $(this));
         } else {
-            console.warn('Fonction non trouvée:', action);
+            console.warn("Fonction non trouvée:", action);
         }
     });
 
-
-    $(window).on('popstate', function (event) {
+    $(window).on("popstate", function (event) {
         if (event.originalEvent && !ignorePopstate) {
             var currentPath = window.location.pathname;
             window.location.href = currentPath;
-
         }
         activerMenuEnFonctionDeRoute();
     });
 
-
-
     // Appeler la fonction au chargement initial de la page
     activerMenuEnFonctionDeRoute();
 
-
     function initCurrentPage() {
+        var pageName = $("#main-content").find("[data-page]").data("page");
 
-        var pageName = $('#main-content').find('[data-page]').data('page');
-
-        if (pageName && window.pageInitializers && window.pageInitializers[pageName]) {
+        if (
+            pageName &&
+            window.pageInitializers &&
+            window.pageInitializers[pageName]
+        ) {
             window.pageInitializers[pageName]();
         }
     }
@@ -56,16 +59,13 @@ $(document).ready(function () {
     // Après AJAX injection
     window.initCurrentPage = initCurrentPage;
 
-
-
-    $('.menu-item').on('click', function (e) {
-
+    $(".menu-item").on("click", function (e) {
         // console.log("Menu item clicked: " + $(this).attr('href'));
 
-        var url = $(this).attr('href');
+        var url = $(this).attr("href");
 
         // Ignore liens #
-        if (!url || url === '#') return;
+        if (!url || url === "#") return;
 
         e.preventDefault();
 
@@ -73,27 +73,26 @@ $(document).ready(function () {
         enCoursparent = true;
 
         // Loader
-        $('#main-content').html('<div style="padding:20px;text-align:center;">Chargement...</div>');
+        $("#main-content").html(
+            '<div style="padding:20px;text-align:center;">Chargement...</div>',
+        );
 
         $.ajax({
             url: url,
             type: "GET",
             success: function (response) {
-
                 // console.log("Contenu chargé avec succès depuis : " + url);
 
-                var newContent = $(response).find('#main-content');
+                var newContent = $(response).find("#main-content");
 
                 if (newContent.length) {
-
-                    $('#main-content').html(newContent.html());
+                    $("#main-content").html(newContent.html());
 
                     // Détection automatique de la page
                     initCurrentPage();
 
-                    history.pushState(null, '', url);
+                    history.pushState(null, "", url);
                     activerMenuEnFonctionDeRoute();
-
                 } else {
                     window.location.href = url;
                 }
@@ -102,52 +101,65 @@ $(document).ready(function () {
             },
             error: function () {
                 window.location.href = url;
-            }
+            },
         });
-
     });
 
+    // ID du conteneur du filtre
+    const filtreContainer = document.getElementById("filtre-vente-container");
 
+    // Fonction pour afficher/cacher selon la route
+    function toggleFiltreVente() {
+        // récupère la route actuelle (chemin après le domaine)
+        const currentRoute = window.location.pathname;
 
+        // n'afficher le filtre que sur la page historique vente
+        if (currentRoute === "/afficher_liste_vente") {
+            filtreContainer.style.display = "flex"; // ou 'block' selon ton style
+        } else {
+            filtreContainer.style.display = "none";
+        }
+    }
+
+    
 });
 
 function activerMenuEnFonctionDeRoute() {
-
-    var currentPath = window.location.pathname.replace(/\/$/, '');
+    var currentPath = window.location.pathname.replace(/\/$/, "");
 
     // Nettoyage COMPLET
-    $('#main-menu-navigation li').removeClass('active open');
+    $("#main-menu-navigation li").removeClass("active open");
 
-    $('#main-menu-navigation a.menu-item').each(function () {
-
-        var href = $(this).attr('href');
+    $("#main-menu-navigation a.menu-item").each(function () {
+        var href = $(this).attr("href");
 
         // Ignorer les #
-        if (!href || href === '#') return;
+        if (!href || href === "#") return;
 
-        var linkPath = $('<a>', { href: href })[0].pathname.replace(/\/$/, '');
+        var linkPath = $("<a>", { href: href })[0].pathname.replace(/\/$/, "");
 
         if (currentPath === linkPath) {
-
-            var currentLi = $(this).closest('li.nav-item');
+            var currentLi = $(this).closest("li.nav-item");
 
             // Activer le lien courant
-            currentLi.addClass('active');
+            currentLi.addClass("active");
 
             // Activer le parent (Pharmacie)
-            currentLi.parents('li.nav-item').addClass('active open');
+            currentLi.parents("li.nav-item").addClass("active open");
         }
-
     });
 }
 
-
-function show_delete_dialog_modal(id, warning, id_table, data_action_delete, data_action_close) {
-
-
+function show_delete_dialog_modal(
+    id,
+    warning,
+    id_table,
+    data_action_delete,
+    data_action_close,
+) {
     $(id_table).block({
-
-        message: `
+        message:
+            `
 
 
             <div class="card" style="max-width:400px ; ">
@@ -156,10 +168,18 @@ function show_delete_dialog_modal(id, warning, id_table, data_action_delete, dat
             </div>
             <div class="card-content">
                 <div class="card-body">
-                    <p>`+ warning + `</p>
+                    <p>` +
+            warning +
+            `</p>
 
-                        <button type="button" data-id="`+ id + `"  data-action="` + data_action_delete + `" class="mr-1 mb-1 btn btn-sm btn-warning btn-min-width"><i class="ft-check"></i> Oui</button>
-                        <button type="button" data-action="`+ data_action_close + `" class="mr-1 mb-1 btn btn-sm btn-outline-light btn-min-width"><i class="ft-x"></i> Annuler</button>
+                        <button type="button" data-id="` +
+            id +
+            `"  data-action="` +
+            data_action_delete +
+            `" class="mr-1 mb-1 btn btn-sm btn-warning btn-min-width"><i class="ft-check"></i> Oui</button>
+                        <button type="button" data-action="` +
+            data_action_close +
+            `" class="mr-1 mb-1 btn btn-sm btn-outline-light btn-min-width"><i class="ft-x"></i> Annuler</button>
 
 
                 </div>
@@ -171,19 +191,16 @@ function show_delete_dialog_modal(id, warning, id_table, data_action_delete, dat
             `,
 
         overlayCSS: {
-            backgroundColor: 'black',
+            backgroundColor: "black",
             opacity: 0.1,
             cursor: "wait",
-
         },
         css: {
             border: 0,
             padding: 0,
-            backgroundColor: "transparent"
-        }
+            backgroundColor: "transparent",
+        },
     });
-
-
 }
 
 function alertCustom(type_message, ft_icon, message) {
@@ -205,7 +222,6 @@ function alertCustom(type_message, ft_icon, message) {
                     </div>
                 `;
 
-
     var $alertElement = $(alert);
 
     $alertElement.find(".close").on("click", function () {
@@ -220,7 +236,6 @@ function alertCustom(type_message, ft_icon, message) {
         $alertElement.hide();
     }, 6000); // 2000 ms = 2 secondes
 }
-
 
 // function formatPrixImput() {
 //     // Appliquer la validation à chaque champ de saisie spécifié
@@ -248,7 +263,6 @@ function alertCustom(type_message, ft_icon, message) {
 
 // function formatPrix(data) {
 
-
 //     var nombre = data.replace(/[^\d.-]/g, '');
 
 //     // Divise la partie entière et la partie décimale
@@ -264,13 +278,11 @@ function alertCustom(type_message, ft_icon, message) {
 //     // Recrée le nombre en concaténant la partie entière et la partie décimale
 //     var formattedValue = partieEntiere + partieDecimale;
 
-
 //     // Ajoute le symbole de la devise, par exemple
 //     return formattedValue;
 // }
 
 // function formatPrixChart(data) {
-
 
 //     var nombre = data.toString().replace(/[^\d.-]/g, '');
 
@@ -287,17 +299,12 @@ function alertCustom(type_message, ft_icon, message) {
 //     // Recrée le nombre en concaténant la partie entière et la partie décimale
 //     var formattedValue = partieEntiere + partieDecimale;
 
-
 //     // Ajoute le symbole de la devise, par exemple
 //     return formattedValue;
 // }
 
-
-
-
 // formatage automatique des prix dans les inputs
 $(document).on("input", ".format-number", function () {
-
     let value = $(this).val();
 
     // Autoriser chiffres + un point
@@ -319,13 +326,13 @@ $(document).on("input", ".format-number", function () {
 
 // Nettoyer les espaces avant la soumission du formulaire
 $(document).on("submit", "form", function () {
+    $(this)
+        .find(".format-number")
+        .each(function () {
+            let cleanValue = $(this).val().replace(/\s/g, "");
 
-    $(this).find(".format-number").each(function () {
-
-        let cleanValue = $(this).val().replace(/\s/g, "");
-
-        $(this).val(cleanValue);
-    });
+            $(this).val(cleanValue);
+        });
 });
 
 // Formate un nombre avec espaces comme séparateurs de milliers dans l'affichage
@@ -341,18 +348,29 @@ function formatNumberDisplay(value) {
 
     let formated = parts.join(",");
 
-    return "<strong>"+ formated + "</strong>";
+    return "<strong>" + formated + "</strong>";
+}
+function formatNumberEdit(value) {
+    if (value == null) return "";
+
+    // Convertit en string si nécessaire
+    value = value.toString();
+
+    // Sépare partie entière et décimale
+    let parts = value.split(".");
+    parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+
+    let formated = parts.join(",");
+
+    return  formated;
 }
 
-
-
 (function (window, document, $) {
-    'use strict';
-    var $html = $('html');
-    var $body = $('body');
+    "use strict";
+    var $html = $("html");
+    var $body = $("body");
 
-
-    $(window).on('load', function () {
+    $(window).on("load", function () {
         var rtl;
         var compactMenu = false; // Set it to true, if you want default menu to be compact
 
@@ -360,253 +378,277 @@ function formatNumberDisplay(value) {
             compactMenu = true;
         }
 
-        if ($('html').data('textdirection') == 'rtl') {
+        if ($("html").data("textdirection") == "rtl") {
             rtl = true;
         }
 
         setTimeout(function () {
-            $html.removeClass('loading').addClass('loaded');
+            $html.removeClass("loading").addClass("loaded");
         }, 1200);
 
         $.app.menu.init(compactMenu);
 
         // Navigation configurations
         var config = {
-            speed: 200 // set speed to expand / collpase menu
+            speed: 200, // set speed to expand / collpase menu
         };
         if ($.app.nav.initialized === false) {
             $.app.nav.init(config);
         }
 
-        Unison.on('change', function (bp) {
+        Unison.on("change", function (bp) {
             $.app.menu.change();
         });
 
         // Tooltip Initialization
         $('[data-toggle="tooltip"]').tooltip({
-            container: 'body'
+            container: "body",
         });
 
         // Top Navbars - Hide on Scroll
         if ($(".navbar-hide-on-scroll").length > 0) {
             $(".navbar-hide-on-scroll.fixed-top").headroom({
-                "offset": 205,
-                "tolerance": 5,
-                "classes": {
+                offset: 205,
+                tolerance: 5,
+                classes: {
                     // when element is initialised
                     initial: "headroom",
                     // when scrolling up
                     pinned: "headroom--pinned-top",
                     // when scrolling down
                     unpinned: "headroom--unpinned-top",
-                }
+                },
             });
             // Bottom Navbars - Hide on Scroll
             $(".navbar-hide-on-scroll.fixed-bottom").headroom({
-                "offset": 205,
-                "tolerance": 5,
-                "classes": {
+                offset: 205,
+                tolerance: 5,
+                classes: {
                     // when element is initialised
                     initial: "headroom",
                     // when scrolling up
                     pinned: "headroom--pinned-bottom",
                     // when scrolling down
                     unpinned: "headroom--unpinned-bottom",
-                }
+                },
             });
         }
 
         //Match content & menu height for content menu
         setTimeout(function () {
-            if ($('body').hasClass('vertical-content-menu')) {
+            if ($("body").hasClass("vertical-content-menu")) {
                 setContentMenuHeight();
             }
         }, 500);
 
         function setContentMenuHeight() {
-            var menuHeight = $('.main-menu').height();
-            var bodyHeight = $('.content-body').height();
+            var menuHeight = $(".main-menu").height();
+            var bodyHeight = $(".content-body").height();
             if (bodyHeight < menuHeight) {
-                $('.content-body').css('height', menuHeight);
+                $(".content-body").css("height", menuHeight);
             }
         }
 
         // Collapsible Card
-        $('a[data-action="collapse"]').on('click', function (e) {
+        $('a[data-action="collapse"]').on("click", function (e) {
             e.preventDefault();
-            $(this).closest('.card').children('.card-content').collapse('toggle');
-            $(this).closest('.card').find('[data-action="collapse"] i').toggleClass('ft-plus ft-minus');
-
+            $(this)
+                .closest(".card")
+                .children(".card-content")
+                .collapse("toggle");
+            $(this)
+                .closest(".card")
+                .find('[data-action="collapse"] i')
+                .toggleClass("ft-plus ft-minus");
         });
 
         // Toggle fullscreen
-        $('a[data-action="expand"]').on('click', function (e) {
+        $('a[data-action="expand"]').on("click", function (e) {
             e.preventDefault();
-            $(this).closest('.card').find('[data-action="expand"] i').toggleClass('ft-maximize ft-minimize');
-            $(this).closest('.card').toggleClass('card-fullscreen');
+            $(this)
+                .closest(".card")
+                .find('[data-action="expand"] i')
+                .toggleClass("ft-maximize ft-minimize");
+            $(this).closest(".card").toggleClass("card-fullscreen");
         });
 
         //  Notifications & messages scrollable
-        if ($('.scrollable-container').length > 0) {
-            $('.scrollable-container').each(function () {
+        if ($(".scrollable-container").length > 0) {
+            $(".scrollable-container").each(function () {
                 var scrollable_container = new PerfectScrollbar($(this)[0], {
-                    wheelPropagation: false
+                    wheelPropagation: false,
                 });
-
             });
         }
 
         // Reload Card
-        $('a[data-action="reload"]').on('click', function () {
-            var block_ele = $(this).closest('.card');
+        $('a[data-action="reload"]').on("click", function () {
+            var block_ele = $(this).closest(".card");
 
             // Block Element
             block_ele.block({
-                message: '<div class="ft-refresh-cw icon-spin font-medium-2"></div>',
+                message:
+                    '<div class="ft-refresh-cw icon-spin font-medium-2"></div>',
                 timeout: 2000, //unblock after 2 seconds
                 overlayCSS: {
-                    backgroundColor: '#FFF',
-                    cursor: 'wait',
+                    backgroundColor: "#FFF",
+                    cursor: "wait",
                 },
                 css: {
                     border: 0,
                     padding: 0,
-                    backgroundColor: 'none'
-                }
+                    backgroundColor: "none",
+                },
             });
         });
 
         // Close Card
-        $('a[data-action="close"]').on('click', function () {
-            $(this).closest('.card').removeClass().slideUp('fast');
+        $('a[data-action="close"]').on("click", function () {
+            $(this).closest(".card").removeClass().slideUp("fast");
         });
 
         // Match the height of each card in a row
         setTimeout(function () {
-            $('.row.match-height').each(function () {
-                $(this).find('.card').not('.card .card').matchHeight(); // Not .card .card prevents collapsible cards from taking height
+            $(".row.match-height").each(function () {
+                $(this).find(".card").not(".card .card").matchHeight(); // Not .card .card prevents collapsible cards from taking height
             });
         }, 500);
 
+        $('.card .heading-elements a[data-action="collapse"]').on(
+            "click",
+            function () {
+                var $this = $(this),
+                    card = $this.closest(".card");
+                var cardHeight;
 
-        $('.card .heading-elements a[data-action="collapse"]').on('click', function () {
-            var $this = $(this),
-                card = $this.closest('.card');
-            var cardHeight;
-
-            if (parseInt(card[0].style.height, 10) > 0) {
-                cardHeight = card.css('height');
-                card.css('height', '').attr('data-height', cardHeight);
-            } else {
-                if (card.data('height')) {
-                    cardHeight = card.data('height');
-                    card.css('height', cardHeight).attr('data-height', '');
+                if (parseInt(card[0].style.height, 10) > 0) {
+                    cardHeight = card.css("height");
+                    card.css("height", "").attr("data-height", cardHeight);
+                } else {
+                    if (card.data("height")) {
+                        cardHeight = card.data("height");
+                        card.css("height", cardHeight).attr("data-height", "");
+                    }
                 }
-            }
-        });
+            },
+        );
 
         // Add Menu Collapsed Open class to the parents of active menu item
         $(".main-menu-content")
             .find("li.active")
             .parents("li")
-            .addClass("menu-collapsed-open")
+            .addClass("menu-collapsed-open");
 
         // Add open class to parent list item if subitem is active except compact menu
-        var menuType = $body.data('menu');
-        if (menuType != 'vertical-compact-menu' && menuType != 'horizontal-menu' && compactMenu === false) {
-            $(".main-menu-content").find('li.active').parents('li').addClass('open');
+        var menuType = $body.data("menu");
+        if (
+            menuType != "vertical-compact-menu" &&
+            menuType != "horizontal-menu" &&
+            compactMenu === false
+        ) {
+            $(".main-menu-content")
+                .find("li.active")
+                .parents("li")
+                .addClass("open");
         }
-        if (menuType == 'vertical-compact-menu' || menuType == 'horizontal-menu') {
-            $(".main-menu-content").find('li.active').parents('li:not(.nav-item)').addClass('open');
-            $(".main-menu-content").find('li.active').parents('li').addClass('active');
+        if (
+            menuType == "vertical-compact-menu" ||
+            menuType == "horizontal-menu"
+        ) {
+            $(".main-menu-content")
+                .find("li.active")
+                .parents("li:not(.nav-item)")
+                .addClass("open");
+            $(".main-menu-content")
+                .find("li.active")
+                .parents("li")
+                .addClass("active");
         }
 
         //card heading actions buttons small screen support
         $(".heading-elements-toggle").on("click", function () {
-            $(this).parent().children(".heading-elements").toggleClass("visible");
+            $(this)
+                .parent()
+                .children(".heading-elements")
+                .toggleClass("visible");
         });
 
         //  Dynamic height for the chartjs div for the chart animations to work
-        var chartjsDiv = $('.chartjs'),
-            canvasHeight = chartjsDiv.children('canvas').attr('height');
-        chartjsDiv.css('height', canvasHeight);
-
+        var chartjsDiv = $(".chartjs"),
+            canvasHeight = chartjsDiv.children("canvas").attr("height");
+        chartjsDiv.css("height", canvasHeight);
 
         /************** search *******************/
-        var $filename = $(".search-input input").data("search")
+        var $filename = $(".search-input input").data("search");
         // Navigation Search area Open
         $(".nav-link-search").on("click", function () {
-            var $this = $(this)
+            var $this = $(this);
             var searchInput = $(this)
                 .parent(".nav-search")
-                .find(".search-input")
+                .find(".search-input");
             searchInput.addClass("open");
             setTimeout(function () {
-                $(".search-input.open .input").focus()
-            }, 50)
-            $(".search-input .search-list li").remove()
-            $(".search-input .search-list").addClass("show")
-        })
+                $(".search-input.open .input").focus();
+            }, 50);
+            $(".search-input .search-list li").remove();
+            $(".search-input .search-list").addClass("show");
+        });
 
         // Navigation Search area Close
         $(".search-input-close i").on("click", function () {
             var $this = $(this),
-                searchInput = $(this).closest(".search-input")
+                searchInput = $(this).closest(".search-input");
             if (searchInput.hasClass("open")) {
-                searchInput.removeClass("open")
-                $(".search-input input").val("")
-                $(".search-input input").blur()
-                $(".search-input .search-list").removeClass("show")
+                searchInput.removeClass("open");
+                $(".search-input input").val("");
+                $(".search-input input").blur();
+                $(".search-input .search-list").removeClass("show");
                 if ($(".app-content").hasClass("show-overlay")) {
-                    $(".app-content").removeClass("show-overlay")
+                    $(".app-content").removeClass("show-overlay");
                 }
             }
-        })
+        });
 
         // Navigation Search area Close on click of app-content
         $(".app-content").on("click", function () {
             var $this = $(".search-input-close"),
                 searchInput = $($this).parent(".search-input"),
-                searchList = $(".search-list")
+                searchList = $(".search-list");
             if (searchInput.hasClass("open")) {
-                searchInput.removeClass("open")
+                searchInput.removeClass("open");
             }
             if (searchList.hasClass("show")) {
-                searchList.removeClass("show")
+                searchList.removeClass("show");
             }
             if ($(".app-content").hasClass("show-overlay")) {
-                $(".app-content").removeClass("show-overlay")
+                $(".app-content").removeClass("show-overlay");
             }
-        })
+        });
 
         // Filter
         $(".search-input .input").on("keyup", function (e) {
-
             if (e.keyCode !== 38 && e.keyCode !== 40 && e.keyCode !== 13) {
                 if (e.keyCode == 27) {
                     // $(".app-content").removeClass("show-overlay")
 
-                    $(".search-input input").val("")
-                    $(".search-input input").blur()
-                    $(".search-input").removeClass("open")
+                    $(".search-input input").val("");
+                    $(".search-input input").blur();
+                    $(".search-input").removeClass("open");
                     if ($(".search-list").hasClass("show")) {
-                        $(this).removeClass("show")
-                        $(".search-input").removeClass("show")
+                        $(this).removeClass("show");
+                        $(".search-input").removeClass("show");
                     }
                 }
 
                 // Define variables
-                var value = $(this)
-                    .val()
-                    .toLowerCase(), //get values of inout on keyup
+                var value = $(this).val().toLowerCase(), //get values of inout on keyup
                     activeClass = "",
-                    liList = $("ul.search-list li") // get all the list items of the search
-                liList.remove()
+                    liList = $("ul.search-list li"); // get all the list items of the search
+                liList.remove();
 
                 // If input value is blank
                 // if (value != "") {
                 //   $(".app-content").addClass("show-overlay")
-
 
                 //   var $startList = "",
                 //     $otherList = "",
@@ -672,72 +714,72 @@ function formatNumberDisplay(value) {
                 //   }
                 // }
             }
-        })
+        });
 
         // If we use up key(38) Down key (40) or Enter key(13)
         $(window).on("keydown", function (e) {
             var $current = $(".search-list li.current_item"),
                 $next,
-                $prev
+                $prev;
             if (e.keyCode === 40) {
-                $next = $current.next()
-                $current.removeClass("current_item")
-                $current = $next.addClass("current_item")
+                $next = $current.next();
+                $current.removeClass("current_item");
+                $current = $next.addClass("current_item");
             } else if (e.keyCode === 38) {
-                $prev = $current.prev()
-                $current.removeClass("current_item")
-                $current = $prev.addClass("current_item")
+                $prev = $current.prev();
+                $current.removeClass("current_item");
+                $current = $prev.addClass("current_item");
             }
 
-            if (e.keyCode === 13 && $(".search-list li.current_item").length > 0) {
-                var selected_item = $(".search-list li.current_item a")
-                window.location = selected_item.attr("href")
-                $(selected_item).trigger("click")
+            if (
+                e.keyCode === 13 &&
+                $(".search-list li.current_item").length > 0
+            ) {
+                var selected_item = $(".search-list li.current_item a");
+                window.location = selected_item.attr("href");
+                $(selected_item).trigger("click");
             }
-        })
+        });
 
         // Add class on hover of the list
         $(document).on("mouseenter", ".search-list li", function (e) {
-            $(this)
-                .siblings()
-                .removeClass("current_item")
-            $(this).addClass("current_item")
-        })
+            $(this).siblings().removeClass("current_item");
+            $(this).addClass("current_item");
+        });
         $(document).on("click", ".search-list li", function (e) {
-            e.stopPropagation()
-        })
+            e.stopPropagation();
+        });
     });
 
     // Hide overlay menu on content overlay click on small screens
-    $(document).on('click', '.sidenav-overlay', function (e) {
+    $(document).on("click", ".sidenav-overlay", function (e) {
         // Hide menu
         $.app.menu.hide();
         return false;
     });
 
     // Execute below code only if we find hammer js for touch swipe feature on small screen
-    if (typeof Hammer !== 'undefined') {
-
+    if (typeof Hammer !== "undefined") {
         var rtl;
-        if ($('html').data('textdirection') == 'rtl') {
+        if ($("html").data("textdirection") == "rtl") {
             rtl = true;
         }
 
         // Swipe menu gesture
-        var swipeInElement = document.querySelector('.drag-target'),
-            swipeInAction = 'panright',
-            swipeOutAction = 'panleft';
+        var swipeInElement = document.querySelector(".drag-target"),
+            swipeInAction = "panright",
+            swipeOutAction = "panleft";
 
         if (rtl === true) {
-            swipeInAction = 'panleft';
-            swipeOutAction = 'panright';
+            swipeInAction = "panleft";
+            swipeOutAction = "panright";
         }
 
         if ($(swipeInElement).length > 0) {
             var swipeInMenu = new Hammer(swipeInElement);
 
             swipeInMenu.on(swipeInAction, function (ev) {
-                if ($body.hasClass('vertical-overlay-menu')) {
+                if ($body.hasClass("vertical-overlay-menu")) {
                     $.app.menu.open();
                     return false;
                 }
@@ -746,19 +788,19 @@ function formatNumberDisplay(value) {
 
         // menu swipe out gesture
         setTimeout(function () {
-            var swipeOutElement = document.querySelector('.main-menu');
+            var swipeOutElement = document.querySelector(".main-menu");
             var swipeOutMenu;
 
             if ($(swipeOutElement).length > 0) {
                 swipeOutMenu = new Hammer(swipeOutElement);
 
-                swipeOutMenu.get('pan').set({
+                swipeOutMenu.get("pan").set({
                     direction: Hammer.DIRECTION_ALL,
-                    threshold: 100
+                    threshold: 100,
                 });
 
                 swipeOutMenu.on(swipeOutAction, function (ev) {
-                    if ($body.hasClass('vertical-overlay-menu')) {
+                    if ($body.hasClass("vertical-overlay-menu")) {
                         $.app.menu.hide();
                         return false;
                     }
@@ -767,14 +809,13 @@ function formatNumberDisplay(value) {
         }, 300);
 
         // menu overlay swipe out gestrue
-        var swipeOutOverlayElement = document.querySelector('.sidenav-overlay');
+        var swipeOutOverlayElement = document.querySelector(".sidenav-overlay");
 
         if ($(swipeOutOverlayElement).length > 0) {
-
             var swipeOutOverlayMenu = new Hammer(swipeOutOverlayElement);
 
             swipeOutOverlayMenu.on(swipeOutAction, function (ev) {
-                if ($body.hasClass('vertical-overlay-menu')) {
+                if ($body.hasClass("vertical-overlay-menu")) {
                     $.app.menu.hide();
                     return false;
                 }
@@ -782,13 +823,15 @@ function formatNumberDisplay(value) {
         }
     }
 
-    $(document).on('click', '.menu-toggle, .modern-nav-toggle', function (e) {
+    $(document).on("click", ".menu-toggle, .modern-nav-toggle", function (e) {
         e.preventDefault();
 
         // Hide dropdown of user profile section for material templates
-        if ($('.user-profile .user-info .dropdown').hasClass('show')) {
-            $('.user-profile .user-info .dropdown').removeClass('show');
-            $('.user-profile .user-info .dropdown .dropdown-menu').removeClass('show');
+        if ($(".user-profile .user-info .dropdown").hasClass("show")) {
+            $(".user-profile .user-info .dropdown").removeClass("show");
+            $(".user-profile .user-info .dropdown .dropdown-menu").removeClass(
+                "show",
+            );
         }
 
         // Toggle menu
@@ -798,12 +841,15 @@ function formatNumberDisplay(value) {
             $(window).trigger("resize");
         }, 200);
 
-        if ($('#collapsed-sidebar').length > 0) {
+        if ($("#collapsed-sidebar").length > 0) {
             setTimeout(function () {
-                if ($body.hasClass('menu-expanded') || $body.hasClass('menu-open')) {
-                    $('#collapsed-sidebar').prop('checked', false);
+                if (
+                    $body.hasClass("menu-expanded") ||
+                    $body.hasClass("menu-open")
+                ) {
+                    $("#collapsed-sidebar").prop("checked", false);
                 } else {
-                    $('#collapsed-sidebar').prop('checked', true);
+                    $("#collapsed-sidebar").prop("checked", true);
                 }
             }, 1000);
         }
@@ -812,28 +858,32 @@ function formatNumberDisplay(value) {
         // $('[data-toggle="dropdown"]').dropdown('hide');
 
         // Hides collapse dropdown on click of menu toggle
-        if ($('.vertical-overlay-menu .navbar-with-menu .navbar-container .navbar-collapse').hasClass('show')) {
-            $('.vertical-overlay-menu .navbar-with-menu .navbar-container .navbar-collapse').removeClass('show');
+        if (
+            $(
+                ".vertical-overlay-menu .navbar-with-menu .navbar-container .navbar-collapse",
+            ).hasClass("show")
+        ) {
+            $(
+                ".vertical-overlay-menu .navbar-with-menu .navbar-container .navbar-collapse",
+            ).removeClass("show");
         }
 
         return false;
     });
 
-    $(document).on('click', '.open-navbar-container', function (e) {
-
+    $(document).on("click", ".open-navbar-container", function (e) {
         var currentBreakpoint = Unison.fetch.now();
     });
 
     // Add Children Class
-    $('.navigation').find('li').has('ul').addClass('has-sub');
+    $(".navigation").find("li").has("ul").addClass("has-sub");
 
-    $('.carousel').carousel({
-        interval: 2000
+    $(".carousel").carousel({
+        interval: 2000,
     });
 
     // Page full screen
-    $('.nav-link-expand').on('click', function (e) {
-
+    $(".nav-link-expand").on("click", function (e) {
         ignorePopstate = true;
 
         // Ajouter le code ici pour effectuer l'action spécifique
@@ -843,38 +893,41 @@ function formatNumberDisplay(value) {
             ignorePopstate = false;
         }, 1000);
 
-        if (typeof screenfull != 'undefined') {
+        if (typeof screenfull != "undefined") {
             if (screenfull.isEnabled) {
                 screenfull.toggle();
             }
         }
     });
-    if (typeof screenfull != 'undefined') {
+    if (typeof screenfull != "undefined") {
         if (screenfull.isEnabled) {
             $(document).on(screenfull.raw.fullscreenchange, function () {
                 if (screenfull.isFullscreen) {
-                    $('.nav-link-expand').find('i').toggleClass('ft-minimize ft-maximize');
+                    $(".nav-link-expand")
+                        .find("i")
+                        .toggleClass("ft-minimize ft-maximize");
                 } else {
-                    $('.nav-link-expand').find('i').toggleClass('ft-maximize ft-minimize');
+                    $(".nav-link-expand")
+                        .find("i")
+                        .toggleClass("ft-maximize ft-minimize");
                 }
             });
         }
     }
 
-    $(document).on('click', '.mega-dropdown-menu', function (e) {
+    $(document).on("click", ".mega-dropdown-menu", function (e) {
         e.stopPropagation();
     });
 
     $(document).ready(function () {
-
         /**********************************
          *   Form Wizard Step Icon
          **********************************/
-        $('.step-icon').each(function () {
+        $(".step-icon").each(function () {
             var $this = $(this);
-            if ($this.siblings('span.step').length > 0) {
-                $this.siblings('span.step').empty();
-                $(this).appendTo($(this).siblings('span.step'));
+            if ($this.siblings("span.step").length > 0) {
+                $this.siblings("span.step").empty();
+                $(this).appendTo($(this).siblings("span.step"));
             }
         });
     });
@@ -884,29 +937,38 @@ function formatNumberDisplay(value) {
         $.app.menu.manualScroller.updateHeight();
         // clear search if width is greater than 768
         if ($(window).width() > 768) {
-            $(".search-input input").val("")
-            $(".search-input input").blur()
-            $(".search-input").removeClass("open")
+            $(".search-input input").val("");
+            $(".search-input input").blur();
+            $(".search-input").removeClass("open");
             if ($(".header-navbar").find(".search-list.show")) {
-                $(".header-navbar").find(".search-list.show").removeClass("show")
+                $(".header-navbar")
+                    .find(".search-list.show")
+                    .removeClass("show");
             }
-            $(".app-content").removeClass("show-overlay")
+            $(".app-content").removeClass("show-overlay");
         }
     });
 
-    $('#sidebar-page-navigation').on('click', 'a.nav-link', function (e) {
+    $("#sidebar-page-navigation").on("click", "a.nav-link", function (e) {
         e.preventDefault();
         e.stopPropagation();
         var $this = $(this),
-            href = $this.attr('href');
+            href = $this.attr("href");
         var offset = $(href).offset();
         var scrollto = offset.top - 80; // minus fixed header height
-        $('html, body').animate({
-            scrollTop: scrollto
-        }, 0);
+        $("html, body").animate(
+            {
+                scrollTop: scrollto,
+            },
+            0,
+        );
         setTimeout(function () {
-            $this.parent('.nav-item').siblings('.nav-item').children('.nav-link').removeClass('active');
-            $this.addClass('active');
+            $this
+                .parent(".nav-item")
+                .siblings(".nav-item")
+                .children(".nav-link")
+                .removeClass("active");
+            $this.addClass("active");
         }, 100);
     });
     // main menu internationalization
@@ -930,9 +992,9 @@ function formatNumberDisplay(value) {
     // change language according to data-language of dropdown item
     $(".dropdown-language .dropdown-item").on("click", function () {
         var $this = $(this);
-        $this.siblings(".selected").removeClass("selected")
+        $this.siblings(".selected").removeClass("selected");
         $this.addClass("selected");
-        var selectedLang = $this.text()
+        var selectedLang = $this.text();
         var selectedFlag = $this.find(".flag-icon").attr("class");
         $("#dropdown-flag .selected-language").text(selectedLang);
         $("#dropdown-flag .flag-icon").removeClass().addClass(selectedFlag);
@@ -940,5 +1002,5 @@ function formatNumberDisplay(value) {
         i18next.changeLanguage(currentLanguage, function (err, t) {
             $(".main-menu , .navbar-horizontal").localize();
         });
-    })
+    });
 })(window, document, jQuery);

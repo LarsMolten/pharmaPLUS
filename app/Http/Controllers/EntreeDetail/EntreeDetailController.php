@@ -103,7 +103,7 @@ class EntreeDetailController extends Controller
                 $i_class = ($entree->isValide == 0) ? "la la-check-square la-2x" : "la la-minus-square la-2x";
                 $action_validation = ($entree->isValide == 0) ? "valider_entree_detail" : "annuler_entree_detail_validee";
 
-                $btn_validation = (($entree->isVendus == 0) && ($entree->date_peremption > now())) ? "<a class='{$btn_class}  mr-1' id='en_{$entree->id}' data-action='{$action_validation}' data-qte='{$quantite_entree}' data-id='{$entree->id}-{$quantite_entree}'><i class='{$i_class}'></i></a> " : "";
+                $btn_validation = ($entree->isVendus == 0) ? "<a class='{$btn_class}  mr-1' id='en_{$entree->id}' data-action='{$action_validation}' data-qte='{$quantite_entree}' data-id='{$entree->id}-{$quantite_entree}'><i class='{$i_class}'></i></a> " : "";
 
 
                 $btn_delete = ($entree->isValide == 0) ? "<a class='danger delete mr-1' data-action='delete_entree_detail' data-id='{$entree->id}'  ><i class='la la-trash-o'></i></a>" : "";
@@ -121,11 +121,17 @@ class EntreeDetailController extends Controller
 
                 $bg1 = ($stock_rest > $article->seuil) ? "background-color: rgba(158, 236, 177, 0.91);" : "background-color: rgba(233, 244, 236, 0.99);";
                 $bg2 = ($stock_d_g > $article->seuil) ? "background-color: rgb(46, 214, 20);" : "background-color: rgb(198, 218, 195);";
-                $bg3 = ($entree->date_peremption <= now()) ? "background-color: rgb(252, 111, 72);" : "";
+                if($entree->date_peremption){
+                    $bg3 = ($entree->date_peremption <= now()) ? "background-color: rgb(252, 111, 72);" : "";
 
+                }else{
+                    $bg3 = "background-color: rgb(236, 237, 238);";
+                }
+
+                $ref_article = str_pad($entree->article_id, 4, '0', STR_PAD_LEFT);
                 $th .= "<tr>
                             <td  style='width:5%; $bg3'>{$id_detail}</td>
-                            <td  style='width:5%; $bg3 '>REF-{$entree->article_id}</td>
+                            <td  style='width:5%; $bg3 '>REF-{$ref_article}</td>
                             <td  style='width:20%; text-align: left; $bg3'>{$article->designation}</td>
                             <td  style='width:5%'>{$presentation}</td>
                             <td style='width:15%'>{$entree->lot}</td>
@@ -178,17 +184,20 @@ class EntreeDetailController extends Controller
             $article = article::find($request->article_id);
 
             //géneration Lot
-            $lot = $this->generateLot($request->article_id, $request->date_peremption);
+            $lot = $this->generateLot($request->article_id);
 
             $pourcentage = pourcentage::first();
             $p_u = $request->prix_achat_boite / $article->presentation;
 
             $prix_unitaire_vente = $p_u + ($p_u * $pourcentage->pourcentage / 100); //+20%
 
-
+            $dateperemption = null;
             if ($request->id_entree_detail != "") {
 
-                $date_perem = $this->parseDateModified($request->date_peremption);
+
+                if ($request->date_peremption) {
+                    $dateperemption = $this->parseDateModified($request->date_peremption);
+                }
 
                 $entree = entree_detail::where('id', $request->id_entree_detail)->update([
                     'article_id' => $request->article_id,
@@ -203,11 +212,13 @@ class EntreeDetailController extends Controller
                     'montant_gain_brut' => $prix_unitaire_vente * $request->qte_entree,
                     'montant_gain_proposee' => $request->pu_proposee * $request->qte_entree,
 
-                    'date_peremption' => $date_perem,
+                    'date_peremption' => $dateperemption,
                 ]);
             } else {
 
-                $dateperemption = $this->parseDate($request->date_peremption);
+                if ($request->date_peremption) {
+                    $dateperemption = $this->parseDateModified($request->date_peremption);
+                }
 
 
                 $entree = entree_detail::create([
@@ -290,13 +301,14 @@ class EntreeDetailController extends Controller
         try {
 
             DB::beginTransaction();
-            $status = "";
+       
             $detail = entree_detail::lockForUpdate()
                 ->findOrFail($request->id_entree_detail);
 
-            if ($detail->date_peremption <= now()) {
-                $status = "perime";
-                throw new \Exception("perime");
+            if ($detail->date_peremption && $detail->date_peremption <= now()) {
+                return response()->json([
+                'status' => "perime"
+            ]);
             }
 
             $article = article::lockForUpdate()
@@ -318,9 +330,9 @@ class EntreeDetailController extends Controller
             $article->increment('stock', $qteEntree);
 
             DB::commit();
-            $status = "success";
+          
             return response()->json([
-                'status' => $status
+                'status' => "success"
             ]);
         } catch (\Throwable $e) {
 
@@ -335,51 +347,50 @@ class EntreeDetailController extends Controller
 
 
     public function annuler_validation_entree_detail(Request $request)
-{
-    try {
+    {
+        try {
 
-        DB::beginTransaction();
+            DB::beginTransaction();
 
-        $detail = entree_detail::lockForUpdate()
-                    ->findOrFail($request->id_entree_detail);
+            $detail = entree_detail::lockForUpdate()
+                ->findOrFail($request->id_entree_detail);
 
-        $article = article::lockForUpdate()
-                    ->findOrFail($detail->article_id);
+            $article = article::lockForUpdate()
+                ->findOrFail($detail->article_id);
 
-        $qteEntree = $detail->qte_entree;
-        $stockFinal = $article->stock - $qteEntree;
+            $qteEntree = $detail->qte_entree;
+            $stockFinal = $article->stock - $qteEntree;
 
-        if ($stockFinal < 0) {
-            throw new \Exception("stock_invalide");
+            if ($stockFinal < 0) {
+                throw new \Exception("stock_invalide");
+            }
+
+            // Mise à jour article
+            $article->decrement('stock', $qteEntree);
+
+            // Mise à jour détail
+            $detail->update([
+                'qte_initial'       => $stockFinal,
+                'stock_restant_lot' => 0,
+                'stock_dispo'       => $stockFinal,
+                'isValide'          => 0
+            ]);
+
+            DB::commit();
+
+            return response()->json([
+                'status' => 'success'
+            ]);
+        } catch (\Throwable $e) {
+
+            DB::rollBack();
+
+            return response()->json([
+                'status' => 'error',
+                'message' => $e->getMessage()
+            ], 500);
         }
-
-        // Mise à jour article
-        $article->decrement('stock', $qteEntree);
-
-        // Mise à jour détail
-        $detail->update([
-            'qte_initial'       => $stockFinal,
-            'stock_restant_lot' => 0,
-            'stock_dispo'       => $stockFinal,
-            'isValide'          => 0
-        ]);
-
-        DB::commit();
-
-        return response()->json([
-            'status' => 'success'
-        ]);
-
-    } catch (\Throwable $e) {
-
-        DB::rollBack();
-
-        return response()->json([
-            'status' => 'error',
-            'message' => $e->getMessage()
-        ], 500);
     }
-}
 
 
     public function charge_article()
@@ -450,9 +461,22 @@ class EntreeDetailController extends Controller
 
 
     // generation automatique le numéro Lot
-    private function generateLot($article, $date)
+    private function generateLot($article_id)
     {
-        return 'LOT-' . $article . '-' . date('ymd') . '-' . date('ym', strtotime($date));
+        // nombre d'entrées pour cet article
+        $count = entree_detail::where('article_id', $article_id)->count();
+
+        // convertir en lettre (0=A, 1=B, 2=C...)
+        $letter = chr(65 + $count); // 65 = A
+
+        // 👉 format 4 chiffres (ex: 0002, 0032, 0342)
+        $articleCode = str_pad($article_id, 4, '0', STR_PAD_LEFT);
+
+
+        // date
+        $date = date('d/m/y');
+
+        return "LOT-{$letter}-{$articleCode}-{$date}";
     }
 
     // Traiteur et formateur de date de péremption

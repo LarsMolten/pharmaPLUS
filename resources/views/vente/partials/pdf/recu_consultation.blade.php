@@ -92,74 +92,74 @@
 
 </head>
 
-    <body>
+<body>
 
-        @php
-            $has_consultation = $vente->details->whereNotNull('consultation_id')->count();
-            $has_article = $vente->details->whereNotNull('article_id')->count();
-            $has_analyse = $vente->details->whereNotNull('analyse_id')->count();
-            $has_service = $vente->details->whereNotNull('service_id')->count();
-            $has_kit = $vente->details->whereNotNull('kit_id')->count();
-        @endphp
+    @php
+        $has_consultation = $vente->details->whereNotNull('consultation_id')->count();
+        $has_article = $vente->details->whereNotNull('article_id')->count();
+        $has_analyse = $vente->details->whereNotNull('analyse_id')->count();
+        $has_service = $vente->details->whereNotNull('service_id')->count();
+        $has_kit = $vente->details->whereNotNull('kit_id')->count();
+    @endphp
 
 
-        {{-- ############################################################# RECU CONSULTATION ###################################### --}}
-        @if ($has_consultation > 0)
-            @foreach ($Consultation as $ticket)
-                <div>
-                    <!-- ================= HEADER ================= -->
-                    <table style="width:100%; margin-bottom:5px;">
-                        <tr>
-                            <td style="width:60px;">
-                                <img src="{{ public_path('logo/logo.png') }}" style="width:55px;" alt="logo">
-                            </td>
-                            <td style="text-align:left; font-size:11px;">
-                                <h2 style="margin:0; font-size:16px;">OMIT</h2>
-                                TOLIARA Betela BP-187 <br>
-                                Tel : +261 34 18 250 90<br>
-                                E-Mail : omit@moov.mg
-                            </td>
-                        </tr>
-                    </table>
+    {{-- ############################################################# RECU CONSULTATION ###################################### --}}
+    @if ($has_consultation > 0)
+        @foreach ($Consultation as $ticket)
+            <div>
+                <!-- ================= HEADER ================= -->
+                <table style="width:100%; margin-bottom:5px;">
+                    <tr>
+                        <td style="width:60px;">
+                            <img src="{{ public_path('logo/logo.png') }}" style="width:55px;" alt="logo">
+                        </td>
+                        <td style="text-align:left; font-size:11px;">
+                            <h2 style="margin:0; font-size:16px;">OMIT</h2>
+                            TOLIARA Betela BP-187 <br>
+                            Tel : +261 34 18 250 90<br>
+                            E-Mail : omit@moov.mg
+                        </td>
+                    </tr>
+                </table>
 
-                    <hr>
+                <hr>
 
-                    <!-- ================= INFORMATIONS VENTE ================= -->
-                    <table>
-                        <tr>
-                            <td>RECU N° :</td>
-                            <td class="right">{{ $vente->reference_vente }}</td>
-                        </tr>
-                        <tr>
-                            <td>Date :</td>
-                            <td class="right">{{ date('d-m-Y') }} {{ date('H:i') }}</td>
-                        </tr>
-                        <tr>
-                            <td>Client :</td>
-                            <td class="right">{{ $vente->client ?? '' }}</td>
-                        </tr>
-                        <tr>
-                            <td>Caissier :</td>
-                            <td class="right">{{ $vente->user->name ?? '' }}</td>
-                        </tr>
-                    </table>
-                    <hr>
+                <!-- ================= INFORMATIONS VENTE ================= -->
+                <table>
+                    <tr>
+                        <td>RECU N° :</td>
+                        <td class="right">{{ $vente->reference_vente }}</td>
+                    </tr>
+                    <tr>
+                        <td>Date :</td>
+                        <td class="right">{{ date('d-m-Y') }} {{ date('H:i') }}</td>
+                    </tr>
+                    <tr>
+                        <td>Client :</td>
+                        <td class="right">{{ $vente->client ?? '' }}</td>
+                    </tr>
+                    <tr>
+                        <td>Caissier :</td>
+                        <td class="right">{{ $vente->user->name ?? '' }}</td>
+                    </tr>
+                </table>
+                <hr>
 
-                    <!-- ================= CONSULTATIONS ================= -->
+                <!-- ================= CONSULTATIONS ================= -->
 
-                    <div class="bold center">
-                        CONSULTATION
-                    </div>
-                    <hr>
+                <div class="bold center">
+                    CONSULTATION
+                </div>
+                <hr>
 
-                    <table>
+                <table>
 
-                        <tr>
-                            <td>Patient</td>
-                            <td class="right">{{ $ticket['consultation']->nom_patient }}</td>
-                        </tr>
+                    <tr>
+                        <td>Patient</td>
+                        <td class="right">{{ $ticket['consultation']->nom_patient }}</td>
+                    </tr>
 
-                        {{-- <tr>
+                    {{-- <tr>
                             <td>Genre</td>
                             <td class="right">
                                 {{ $ticket['consultation']->sex_patient ? 'Homme' : 'Femme' }}
@@ -174,71 +174,70 @@
                             </td>
                         </tr>  --}}
 
-                        <tr>
-                            <td>Docteur</td>
-                            <td class="right">{{ $ticket['consultation']->docteurInfo->nom ?? '' }}</td>
-                        </tr>
+                    <tr>
+                        <td>Docteur</td>
+                        <td class="right">{{ $ticket['consultation']->docteurInfo->nom ?? '' }}</td>
+                    </tr>
 
-                        <tr>
-                            <td>Specialité</td>
-                            <td class="right">{{ ucfirst($ticket['consultation']->type_docteur) }}</td>
-                        </tr>
+                    <tr>
+                        <td>Specialité</td>
+                        <td class="right">{{ ucfirst($ticket['consultation']->type_docteur) }}</td>
+                    </tr>
 
-                    </table>
+                </table>
 
-                    <hr>
+                <hr>
 
+                <table>
+
+                    <tr class="bold big">
+                        <td>TOTAL A PAYER</td>
+                        <td class="right">{{ number_format($ticket['montant'], 2, '.', ' ') }}</td>
+                    </tr>
+                    <tr>
+                        <td>Montant reçu</td>
+                        <td class="right">{{ number_format($ticket['paye'], 2, '.', ' ') }}</td>
+                    </tr>
+
+                    <tr>
+                        <td>Monnaie rendue</td>
+                        <td class="right">{{ number_format($ticket['monnaie'], 2, '.', ' ') }}</td>
+                    </tr>
+
+
+                </table>
+
+                <hr>
+
+                <!-- ================= CODE BARRES ================= -->
+                <div class="center">
                     <table>
-
-                        <tr class="bold big">
-                            <td>TOTAL A PAYER</td>
-                            <td class="right">{{ number_format($ticket['montant'], 2, '.', ' ') }}</td>
-                        </tr>
                         <tr>
-                            <td>Montant reçu</td>
-                            <td class="right">{{ number_format($ticket['paye'], 2, '.', ' ') }}</td>
+                            <td style="color: white;">________</td>
+                            <td>{!! DNS1D::getBarcodeHTML($vente->reference_vente, 'C128', 1.4, 40) !!}</td>
+                            <td style="color: white;">__</td>
                         </tr>
-
-                        <tr>
-                            <td>Monnaie rendue</td>
-                            <td class="right">{{ number_format($ticket['monnaie'], 2, '.', ' ') }}</td>
-                        </tr>
-
-
                     </table>
-
-                    <hr>
-
-                    <!-- ================= CODE BARRES ================= -->
-                    <div class="center">
-                        <table>
-                            <tr>
-                                <td style="color: white;">________</td>
-                                <td>{!! DNS1D::getBarcodeHTML($vente->reference_vente, 'C128', 1.4, 40) !!}</td>
-                                <td style="color: white;">__</td>
-                            </tr>
-                        </table>
-                        Merci pour votre visite.
-                    </div>
+                    Merci pour votre visite.
                 </div>
+            </div>
 
-                @if (!$loop->last)
-                    {{-- <div class="page-break-before"></div> --}}
-                    <div class="page-break-after"></div>
-                @endif
-            @endforeach
+            @if (!$loop->last)
+                <div class="page-break-after"></div>
+            @endif
+        @endforeach
 
+    @endif
+
+
+    {{-- ################################################################ RECU SERVICE ###################################### --}}
+    @if ($has_service > 0)
+
+        @if ($has_consultation > 0)
+            <div class="page-break-before"></div>
         @endif
 
-
-        {{-- ################################################################ RECU SERVICE ###################################### --}}
-        @if ($has_service > 0)
-
-            @if ($has_consultation > 0)
-                <div class="page-break-before"></div>
-            @endif
-
-
+        @foreach ($Service as $ticket)
             <!-- ================= HEADER ================= -->
             <table style="width:100%; margin-bottom:5px;">
                 <tr>
@@ -288,14 +287,13 @@
                     <th class="right">Total</th>
                 </tr>
 
-                @foreach ($vente->details->whereNotNull('service_id') as $s)
-                    <tr>
-                        <td>{{ Str::limit($s->service->nom_service ?? '', 28) ?? '' }}</td>
-                        <td class="center">{{ $s->qte }}</td>
-                        {{-- <td class="right">{{ number_format($d->prix_unitaire, 2, '.', ' ') }}</td> --}}
-                        <td class="right">{{ number_format($s->montant, 2, '.', ' ') }}</td>
-                    </tr>
-                @endforeach
+
+                <tr>
+                    <td>{{ Str::limit($ticket['serviceInfo']->nom_service ?? '', 28) ?? '' }}</td>
+                    <td class="center">{{ $ticket['service']->qte }}</td>
+                    {{-- <td class="right">{{ number_format($d->prix_unitaire, 2, '.', ' ') }}</td> --}}
+                    <td class="right">{{ number_format($ticket['montant'], 2, '.', ' ') }}</td>
+                </tr>
 
             </table>
 
@@ -307,19 +305,19 @@
             <table>
                 <tr>
                     <td>Sous-total</td>
-                    <td class="right">{{ number_format($totalService, 2, '.', ' ') }}</td>
+                    <td class="right">{{ number_format($ticket['montant'], 2, '.', ' ') }}</td>
                 </tr>
                 <tr class="bold big">
                     <td>TOTAL A PAYER</td>
-                    <td class="right">{{ number_format($totalService, 2, '.', ' ') }}</td>
+                    <td class="right">{{ number_format($ticket['montant'], 2, '.', ' ') }}</td>
                 </tr>
                 <tr>
                     <td>Montant reçu</td>
-                    <td class="right">{{ number_format($payeService, 2, '.', ' ') }}</td>
+                    <td class="right">{{ number_format($ticket['paye'], 2, '.', ' ') }}</td>
                 </tr>
                 <tr>
                     <td>Monnaie rendue</td>
-                    <td class="right">{{ number_format($monnaieService, 2, '.', ' ') }}</td>
+                    <td class="right">{{ number_format($ticket['monnaie'], 2, '.', ' ') }}</td>
                 </tr>
             </table>
 
@@ -336,18 +334,22 @@
                 </table>
                 Merci pour votre visite.
             </div>
+            @if (!$loop->last)
+                {{-- <div class="page-break-before"></div> --}}
+                <div class="page-break-after"></div>
+            @endif
+        @endforeach
+    @endif
 
+
+    {{-- ################################################################ RECU ARTICLE ###################################### --}}
+    @if ($has_article > 0)
+
+        @if ($has_consultation > 0 || $has_service > 0)
+            <div class="page-break-before"></div>
         @endif
 
-
-        {{-- ################################################################ RECU ARTICLE ###################################### --}}
-        @if ($has_article > 0)
-
-            @if ($has_consultation > 0 || $has_service > 0)
-                <div class="page-break-before"></div>
-            @endif
-
-
+        @foreach (range(1, 2) as $i)
             <!-- ================= HEADER ================= -->
             <table style="width:100%; margin-bottom:5px;">
                 <tr>
@@ -446,233 +448,236 @@
                 Merci pour votre visite.
             </div>
 
+            @if (!$loop->last)
+                <div class="page-break-after"></div>
+            @endif
+        @endforeach
 
+
+    @endif
+
+
+    {{-- ################################################################ RECU ANALYSE ###################################### --}}
+    @if ($has_analyse > 0)
+
+        @if ($has_consultation > 0 || $has_service > 0 || $has_article > 0)
+            <div class="page-break-before"></div>
+        @endif
+        <!-- ================= HEADER ================= -->
+        <table style="width:100%; margin-bottom:5px;">
+            <tr>
+                <td style="width:60px;">
+                    <img src="{{ public_path('logo/logo.png') }}" style="width:55px;" alt="logo">
+                </td>
+                <td style="text-align:left; font-size:11px;">
+                    <h2 style="margin:0; font-size:16px;">OMIT</h2>
+                    BETELA BP-187 Toliara<br>
+                    Tel : +261 34 18 250 90<br>
+                    E-Mail : omit@moov.mg
+                </td>
+            </tr>
+        </table>
+
+        <hr>
+
+        <!-- ================= INFORMATIONS VENTE ================= -->
+        <table>
+            <tr>
+                <td>RECU N° :</td>
+                <td class="right">{{ $vente->reference_vente }}</td>
+            </tr>
+            <tr>
+                <td>Date :</td>
+                <td class="right">{{ date('d-m-Y') }} {{ date('H:i') }}</td>
+            </tr>
+            <tr>
+                <td>Client :</td>
+                <td class="right">{{ $vente->client ?? '' }}</td>
+            </tr>
+            <tr>
+                <td>Caissier :</td>
+                <td class="right">{{ $vente->user->name ?? '' }}</td>
+            </tr>
+        </table>
+        <hr>
+
+        <!-- ================= ANALYSE ================= -->
+
+        <table>
+
+            <tr class="bold">
+                <th>Designation</th>
+                <th class="center">Qté</th>
+                {{-- <th class="right">Prix</th> --}}
+                <th class="right">Total</th>
+            </tr>
+
+
+            <tr>
+                {{-- <td>{{ $nomsAnalyses }}</td> --}}
+                {{-- <td>{!! wordwrap($nomsAnalyses ?? '', 16, "<br>", true) !!}</td> --}}
+                <td>
+                    @foreach (explode(',', $nomsAnalyses) as $analyse)
+                        {{ trim($analyse) }}<br>
+                    @endforeach
+                </td>
+                <td class="center">{{ 1 }}</td>
+                {{-- <td class="right">{{ number_format($d->prix_unitaire, 2, '.', ' ') }}</td> --}}
+                <td class="right">{{ number_format($totalAnalyse, 2, '.', ' ') }}</td>
+            </tr>
+
+
+        </table>
+
+        <hr>
+
+        <!-- ================= TOTALS ================= -->
+
+        <table>
+            <tr>
+                <td>Sous-total</td>
+                <td class="right">{{ number_format($totalAnalyse, 2, '.', ' ') }}</td>
+            </tr>
+            <tr class="bold big">
+                <td>TOTAL A PAYER</td>
+                <td class="right">{{ number_format($totalAnalyse, 2, '.', ' ') }}</td>
+            </tr>
+            <tr>
+                <td>Montant reçu</td>
+                <td class="right">{{ number_format($payeAnalyse, 2, '.', ' ') }}</td>
+            </tr>
+            <tr>
+                <td>Monnaie rendue</td>
+                <td class="right">{{ number_format($monnaieAnalyse, 2, '.', ' ') }}</td>
+            </tr>
+        </table>
+
+        <hr>
+
+        <!-- ================= CODE BARRES ================= -->
+        <div class="center">
+            <table>
+                <tr>
+                    <td style="color: white;">________</td>
+                    <td>{!! DNS1D::getBarcodeHTML($vente->reference_vente, 'C128', 1.4, 40) !!}</td>
+                    <td style="color: white;">__</td>
+                </tr>
+            </table>
+            Merci pour votre visite.
+        </div>
+        {{-- <div class="page-break-after"></div> --}}
+    @endif
+
+
+    {{-- ################################################################### RECU KIT ###################################### --}}
+    @if ($has_kit > 0)
+
+        @if ($has_consultation > 0 || $has_service > 0 || $has_article > 0 || $has_analyse > 0)
+            <div class="page-break-before"></div>
         @endif
 
 
-        {{-- ################################################################ RECU ANALYSE ###################################### --}}
-        @if ($has_analyse > 0)
+        <!-- ================= HEADER ================= -->
+        <table style="width:100%; margin-bottom:5px;">
+            <tr>
+                <td style="width:60px;">
+                    <img src="{{ public_path('logo/logo.png') }}" style="width:55px;" alt="logo">
+                </td>
+                <td style="text-align:left; font-size:11px;">
+                    <h2 style="margin:0; font-size:16px;">OMIT</h2>
+                    BETELA BP-187 Toliara<br>
+                    Tel : +261 34 18 250 90<br>
+                    E-Mail : omit@moov.mg
+                </td>
+            </tr>
+        </table>
 
-            @if ($has_consultation > 0 || $has_service > 0 || $has_article > 0)
-                <div class="page-break-before"></div>
-            @endif
-            <!-- ================= HEADER ================= -->
-            <table style="width:100%; margin-bottom:5px;">
+        <hr>
+
+        <!-- ================= INFORMATIONS VENTE ================= -->
+        <table>
+            <tr>
+                <td>RECU N° :</td>
+                <td class="right">{{ $vente->reference_vente }}</td>
+            </tr>
+            <tr>
+                <td>Date :</td>
+                <td class="right">{{ date('d-m-Y') }} {{ date('H:i') }}</td>
+            </tr>
+            <tr>
+                <td>Client :</td>
+                <td class="right">{{ $vente->client ?? '' }}</td>
+            </tr>
+            <tr>
+                <td>Caissier :</td>
+                <td class="right">{{ $vente->user->name ?? '' }}</td>
+            </tr>
+        </table>
+        <hr>
+
+        <!-- ================= SERVICES ================= -->
+
+        <table>
+
+            <tr class="bold">
+                <th>Designation</th>
+                <th class="center">Qté</th>
+                {{-- <th class="right">Prix</th> --}}
+                <th class="right">Total</th>
+            </tr>
+
+            @foreach ($vente->details->whereNotNull('kit_id') as $k)
                 <tr>
-                    <td style="width:60px;">
-                        <img src="{{ public_path('logo/logo.png') }}" style="width:55px;" alt="logo">
-                    </td>
-                    <td style="text-align:left; font-size:11px;">
-                        <h2 style="margin:0; font-size:16px;">OMIT</h2>
-                        BETELA BP-187 Toliara<br>
-                        Tel : +261 34 18 250 90<br>
-                        E-Mail : omit@moov.mg
-                    </td>
-                </tr>
-            </table>
-
-            <hr>
-
-            <!-- ================= INFORMATIONS VENTE ================= -->
-            <table>
-                <tr>
-                    <td>RECU N° :</td>
-                    <td class="right">{{ $vente->reference_vente }}</td>
-                </tr>
-                <tr>
-                    <td>Date :</td>
-                    <td class="right">{{ date('d-m-Y') }} {{ date('H:i') }}</td>
-                </tr>
-                <tr>
-                    <td>Client :</td>
-                    <td class="right">{{ $vente->client ?? '' }}</td>
-                </tr>
-                <tr>
-                    <td>Caissier :</td>
-                    <td class="right">{{ $vente->user->name ?? '' }}</td>
-                </tr>
-            </table>
-            <hr>
-
-            <!-- ================= ANALYSE ================= -->
-
-            <table>
-
-                <tr class="bold">
-                    <th>Designation</th>
-                    <th class="center">Qté</th>
-                    {{-- <th class="right">Prix</th> --}}
-                    <th class="right">Total</th>
-                </tr>
-
-
-                <tr>
-                    {{-- <td>{{ $nomsAnalyses }}</td> --}}
-                    {{-- <td>{!! wordwrap($nomsAnalyses ?? '', 16, "<br>", true) !!}</td> --}}
-                    <td>
-                        @foreach (explode(',', $nomsAnalyses) as $analyse)
-                            {{ trim($analyse) }}<br>
-                        @endforeach
-                    </td>
-                    <td class="center">{{ 1 }}</td>
+                    <td>{{ Str::limit($k->kit->nom_kit ?? '', 26) ?? '' }}</td>
+                    <td class="center">{{ $k->qte }}</td>
                     {{-- <td class="right">{{ number_format($d->prix_unitaire, 2, '.', ' ') }}</td> --}}
-                    <td class="right">{{ number_format($totalAnalyse, 2, '.', ' ') }}</td>
+                    <td class="right">{{ number_format($k->montant, 2, '.', ' ') }}</td>
                 </tr>
+            @endforeach
+
+        </table>
+
+        <hr>
 
 
-            </table>
+        <!-- ================= TOTALS ================= -->
 
-            <hr>
+        <table>
+            <tr>
+                <td>Sous-total</td>
+                <td class="right">{{ number_format($totalKit, 2, '.', ' ') }}</td>
+            </tr>
+            <tr class="bold big">
+                <td>TOTAL A PAYER</td>
+                <td class="right">{{ number_format($totalKit, 2, '.', ' ') }}</td>
+            </tr>
+            <tr>
+                <td>Montant reçu</td>
+                <td class="right">{{ number_format($payeKit, 2, '.', ' ') }}</td>
+            </tr>
+            <tr>
+                <td>Monnaie rendue</td>
+                <td class="right">{{ number_format($monnaieKit, 2, '.', ' ') }}</td>
+            </tr>
+        </table>
 
-            <!-- ================= TOTALS ================= -->
+        <hr>
 
+        <!-- ================= CODE BARRES ================= -->
+        <div class="center">
             <table>
                 <tr>
-                    <td>Sous-total</td>
-                    <td class="right">{{ number_format($totalAnalyse, 2, '.', ' ') }}</td>
-                </tr>
-                <tr class="bold big">
-                    <td>TOTAL A PAYER</td>
-                    <td class="right">{{ number_format($totalAnalyse, 2, '.', ' ') }}</td>
-                </tr>
-                <tr>
-                    <td>Montant reçu</td>
-                    <td class="right">{{ number_format($payeAnalyse, 2, '.', ' ') }}</td>
-                </tr>
-                <tr>
-                    <td>Monnaie rendue</td>
-                    <td class="right">{{ number_format($monnaieAnalyse, 2, '.', ' ') }}</td>
+                    <td style="color: white;">________</td>
+                    <td>{!! DNS1D::getBarcodeHTML($vente->reference_vente, 'C128', 1.4, 40) !!}</td>
+                    <td style="color: white;">__</td>
                 </tr>
             </table>
+            Merci pour votre visite.
+        </div>
 
-            <hr>
-
-            <!-- ================= CODE BARRES ================= -->
-            <div class="center">
-                <table>
-                    <tr>
-                        <td style="color: white;">________</td>
-                        <td>{!! DNS1D::getBarcodeHTML($vente->reference_vente, 'C128', 1.4, 40) !!}</td>
-                        <td style="color: white;">__</td>
-                    </tr>
-                </table>
-                Merci pour votre visite.
-            </div>
-            {{-- <div class="page-break-after"></div> --}}
-        @endif
+    @endif
 
 
-        {{-- ################################################################### RECU KIT ###################################### --}}
-        @if ($has_kit > 0)
-
-            @if ($has_consultation > 0 || $has_service > 0 || $has_article > 0 || $has_analyse > 0)
-                <div class="page-break-before"></div>
-            @endif
-
-
-            <!-- ================= HEADER ================= -->
-            <table style="width:100%; margin-bottom:5px;">
-                <tr>
-                    <td style="width:60px;">
-                        <img src="{{ public_path('logo/logo.png') }}" style="width:55px;" alt="logo">
-                    </td>
-                    <td style="text-align:left; font-size:11px;">
-                        <h2 style="margin:0; font-size:16px;">OMIT</h2>
-                        BETELA BP-187 Toliara<br>
-                        Tel : +261 34 18 250 90<br>
-                        E-Mail : omit@moov.mg
-                    </td>
-                </tr>
-            </table>
-
-            <hr>
-
-            <!-- ================= INFORMATIONS VENTE ================= -->
-            <table>
-                <tr>
-                    <td>RECU N° :</td>
-                    <td class="right">{{ $vente->reference_vente }}</td>
-                </tr>
-                <tr>
-                    <td>Date :</td>
-                    <td class="right">{{ date('d-m-Y') }} {{ date('H:i') }}</td>
-                </tr>
-                <tr>
-                    <td>Client :</td>
-                    <td class="right">{{ $vente->client ?? '' }}</td>
-                </tr>
-                <tr>
-                    <td>Caissier :</td>
-                    <td class="right">{{ $vente->user->name ?? '' }}</td>
-                </tr>
-            </table>
-            <hr>
-
-            <!-- ================= SERVICES ================= -->
-
-            <table>
-
-                <tr class="bold">
-                    <th>Designation</th>
-                    <th class="center">Qté</th>
-                    {{-- <th class="right">Prix</th> --}}
-                    <th class="right">Total</th>
-                </tr>
-
-                @foreach ($vente->details->whereNotNull('kit_id') as $k)
-                    <tr>
-                        <td>{{ Str::limit($k->kit->nom_kit ?? '', 26) ?? '' }}</td>
-                        <td class="center">{{ $k->qte }}</td>
-                        {{-- <td class="right">{{ number_format($d->prix_unitaire, 2, '.', ' ') }}</td> --}}
-                        <td class="right">{{ number_format($k->montant, 2, '.', ' ') }}</td>
-                    </tr>
-                @endforeach
-
-            </table>
-
-            <hr>
-
-
-            <!-- ================= TOTALS ================= -->
-
-            <table>
-                <tr>
-                    <td>Sous-total</td>
-                    <td class="right">{{ number_format($totalKit, 2, '.', ' ') }}</td>
-                </tr>
-                <tr class="bold big">
-                    <td>TOTAL A PAYER</td>
-                    <td class="right">{{ number_format($totalKit, 2, '.', ' ') }}</td>
-                </tr>
-                <tr>
-                    <td>Montant reçu</td>
-                    <td class="right">{{ number_format($payeKit, 2, '.', ' ') }}</td>
-                </tr>
-                <tr>
-                    <td>Monnaie rendue</td>
-                    <td class="right">{{ number_format($monnaieKit, 2, '.', ' ') }}</td>
-                </tr>
-            </table>
-
-            <hr>
-
-            <!-- ================= CODE BARRES ================= -->
-            <div class="center">
-                <table>
-                    <tr>
-                        <td style="color: white;">________</td>
-                        <td>{!! DNS1D::getBarcodeHTML($vente->reference_vente, 'C128', 1.4, 40) !!}</td>
-                        <td style="color: white;">__</td>
-                    </tr>
-                </table>
-                Merci pour votre visite.
-            </div>
-
-        @endif
-
-
-    </body>
+</body>
 
 </html>
-
-

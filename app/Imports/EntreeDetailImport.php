@@ -58,7 +58,10 @@ class EntreeDetailImport implements ToCollection
             $pu_proposee = bcmul(round($prix_unitaire_vente / 100), 100, 2);
 
             // -------- Date --------
-            $date_peremption = $this->parseDate($row[11]);
+            $date_peremption = null;
+            if ($row[11]) {
+                $date_peremption = $this->parseDate($row[11]);
+            }
 
             // -------- Calculs --------
             // $stock_unite = $boite * $unite;
@@ -66,7 +69,8 @@ class EntreeDetailImport implements ToCollection
             // incrementation nombre d'article entré
 
 
-            $lot = $this->generateLot($article->id, $date_peremption);
+            // $lot = $this->generateLot($article->id, $date_peremption);
+            $lot = $this->generateLot($article->id);
 
 
             entree_detail::create([
@@ -106,9 +110,23 @@ class EntreeDetailImport implements ToCollection
 
 
     // generation automatique le numéro Lot
-    private function generateLot($article, $date)
+
+    private function generateLot($article_id)
     {
-        return 'LOT-' . $article . '-' . date('ymd') . '-' . date('ym', strtotime($date));
+        // nombre d'entrées pour cet article
+        $count = entree_detail::where('article_id', $article_id)->count();
+
+        // convertir en lettre (0=A, 1=B, 2=C...)
+        $letter = chr(65 + $count); // 65 = A
+
+        // 👉 format 4 chiffres (ex: 0002, 0032, 0342)
+        $articleCode = str_pad($article_id, 4, '0', STR_PAD_LEFT);
+
+
+        // date
+        $date = date('d/m/y');
+
+        return "LOT-{$letter}-{$articleCode}-{$date}";
     }
 
 

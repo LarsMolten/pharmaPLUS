@@ -11,6 +11,7 @@ class panier extends Model
 
     protected $fillable = [
         'entree_detail_id',
+        'type',
         'article_id',
         'analyse_id',
         'service_id',

@@ -30,7 +30,7 @@
 
                             <fieldset class="form-group">
                                 <label for="prix_service">Prix</label>
-                                <input type="number" id="prix_service" name="prix_service" class="form-control input-sm"
+                                <input type="text" id="prix_service" name="prix_service" class="form-control format-number input-sm"
                                     data-toggle="tooltip" data-trigger="hover" data-placement="top"
                                     placeholder="Prix du service" data-title="Prix du service" required>
                             </fieldset>

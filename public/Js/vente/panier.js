@@ -540,7 +540,7 @@ window.pageInitializers.panier = function () {
 
     window.edit_panier = function (id) {
         const parts = String(id).split("-");
-        console.log(parts);
+        // console.log(parts);
 
         id_panier = parts[0];
         const type = parts[1];
@@ -913,20 +913,20 @@ window.pageInitializers.panier = function () {
             });
         });
 
-    function printPDF(res) {
-        if (res.has_article) {
-            let urlArticle = BASE_URL + "/print_recu_article/" + res.vente_id;
+    // function printPDF(res) {
+    //     if (res.has_article) {
+    //         let urlArticle = BASE_URL + "/print_recu_article/" + res.vente_id;
 
-            window.open(urlArticle, "_blank");
-        }
+    //         window.open(urlArticle, "_blank");
+    //     }
 
-        if (res.has_consultation) {
-            let urlConsult =
-                BASE_URL + "/print_recu_consultation/" + res.vente_id;
+    //     if (res.has_consultation) {
+    //         let urlConsult =
+    //             BASE_URL + "/print_recu_consultation/" + res.vente_id;
 
-            setTimeout(function () {
-                window.open(urlConsult, "_blank");
-            }, 500);
-        }
-    }
+    //         setTimeout(function () {
+    //             window.open(urlConsult, "_blank");
+    //         }, 500);
+    //     }
+    // }
 };

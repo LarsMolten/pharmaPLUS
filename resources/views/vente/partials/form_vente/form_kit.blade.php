@@ -12,9 +12,9 @@
             <div class="row">
                 <div class="col-md-12">
                     <div class="form-group">
-                        <label for="userinput2" class="">Kit</label>
+                        <label for="userinput2" class="">Maternité</label>
                         <select class="selectpicker  form-control btn-sm" name="kit_id" required id="kit_id_vente"
-                            data-live-search='true' data-size='5' title='Kit médicaux'>
+                            data-live-search='true' data-size='5' title='kit & chambre'>
 
                         </select>
                     </div>

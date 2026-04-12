@@ -813,7 +813,12 @@ window.pageInitializers.entree = function () {
         if (enCours) return; // Empêche un deuxième clic si une requête est en cours
         // id_entree_detail = id;
 
-        let qte = $("#en_" + id).data("qte");
+            value = id.toString();
+        // Sépare partie entière et décimale
+        let part = value.split("-");
+        let _id = part[0];
+        let qte = part[1];
+        // let qte = $("#en_" + id).data("qte");
 
         $("#table_entreedetail").block({
             message:
@@ -834,7 +839,7 @@ window.pageInitializers.entree = function () {
                     </br>
 
                         <button type="button" data-id="` +
-                id +
+                _id +
                 `"  data-action="confirm_annulation_entree_detail_validee" class="mr-1 mb-1 btn btn-sm btn-warning btn-min-width"><i class="ft-check"></i> Oui</button>
                         <button type="button" data-action="annuler_annuler_validation_entree_detail" class="mr-1 mb-1 btn btn-sm btn-outline-light btn-min-width"><i class="ft-x"></i> Annuler</button>
 
