@@ -154,7 +154,7 @@ window.pageInitializers.utilisateur = function () {
                 $("#role").append(res.data);
                 $("#role").selectpicker('refresh');
 
-                if(role != ""){
+                if (role != "") {
                     $('#role').val(role).selectpicker('refresh');
                 }
 
@@ -173,6 +173,7 @@ window.pageInitializers.utilisateur = function () {
         enCours = true;
         let data = new FormData(this);
 
+        data.append('image', $('#image')[0].files[0]);
         data.append("id_utilisateur", id_utilisateur);
 
         $.ajax({
@@ -186,7 +187,8 @@ window.pageInitializers.utilisateur = function () {
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
-            data: data, complete: function () {
+            data: data,
+            complete: function () {
                 enCours = false; // Remet la variable à false, que la requête ait réussi ou échoué
             },
             success: function (res) {
@@ -239,7 +241,7 @@ window.pageInitializers.utilisateur = function () {
 
 
 
-    window.edit_utilisateur = function(id) {
+    window.edit_utilisateur = function (id) {
         if (enCours) return; // Empêche un deuxième clic si une requête est en cours
         enCours = true;
         id_utilisateur = id;

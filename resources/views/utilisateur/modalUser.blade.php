@@ -11,7 +11,7 @@
                         </h3>
 
                         <br>
-                        <form class="form" method="post" action="ajout_utilisateur" id="ajout_utilisateur">
+                        <form class="form" method="post" action="ajout_utilisateur" id="ajout_utilisateur" enctype="multipart/form-data">
 
                             @csrf
 
@@ -55,15 +55,15 @@
                                             <input type="password" id="password" required name="password"
                                                 class="form-control input-sm" placeholder="Mot de passe">
                                         </div>
-                                        @error('password')
-                                            <p class="text-danger">{{ $message }}</p>
-                                        @enderror
                                     </div>
+                                    @error('password')
+                                        <p class="text-danger">{{ $message }}</p>
+                                    @enderror
                                 </div>
                                 <div class="row">
                                     <div class="col-md-12">
                                         <div class="form-group">
-                                            <label for="userinput1" class="">Photo</label>
+                                            <label for="image" class="">Photo</label>
                                             <input class="form-control input-sm" name="image"  type="file"
                                                 id="image">
                                         </div>
