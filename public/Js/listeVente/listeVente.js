@@ -7,6 +7,8 @@ window.pageInitializers.listeVente = function () {
     let debut = "";
     let fin = "";
 
+
+
     // *********************************************** initialisation *********************
     setDateToday(today);
     liste_vente();
@@ -248,13 +250,9 @@ window.pageInitializers.listeVente = function () {
                 $("#client_vente_to_detail").text(client);
                 $("#caissier_vente_to_detail").text(caissier);
                 $("#date_vente_to_detail").text(date.toLocaleString());
-                $("#total_vente_to_detail").text(
-                    total.toLocaleString(),
-                );
+                $("#total_vente_to_detail").text(total.toLocaleString());
                 $("#paye_vente_to_detail").text(paye.toLocaleString());
-                $("#monnaie_vente_to_detail").text(
-                    monnaie.toLocaleString(),
-                );
+                $("#monnaie_vente_to_detail").text(monnaie.toLocaleString());
 
                 // formatage des nombres
                 $("#table_venteDetail td.format-prix").each(function () {
@@ -297,7 +295,9 @@ window.pageInitializers.listeVente = function () {
                             text: '<i class="la la-print">Imprimer</i>',
                             action: function () {
                                 let urlPrintPdf =
-                                    BASE_URL + "/print_recu_consultation/" + Id;
+                                    BASE_URL +
+                                    "/print_recu_consultation/" +
+                                    Id;
 
                                 setTimeout(function () {
                                     window.open(urlPrintPdf, "_blank");

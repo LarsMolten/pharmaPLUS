@@ -1,3 +1,4 @@
+
 window.pageInitializers = window.pageInitializers || {};
 
 window.pageInitializers.utilisateur = function () {
@@ -84,6 +85,9 @@ window.pageInitializers.utilisateur = function () {
                             text: '<i class="ft-plus"> Ajouter</i>',
                             action: function () {
                                 // id_utilisateur = "";
+                                $('#form_password').show();
+                                $('#password').prop('required', true);
+
                                 $('.entete_modal').text("Ajout");
                                 $('#btn_add_utilisateur').text("Ajouter");
                                 $("#AjoutUtilisateurModal").modal(
@@ -169,11 +173,9 @@ window.pageInitializers.utilisateur = function () {
 
     $(document).off("submit", "#ajout_utilisateur").on("submit", "#ajout_utilisateur", function (e) {
         e.preventDefault();
-        if (enCours) return; // Empêche un deuxième clic si une requête est en cours
-        enCours = true;
+      
         let data = new FormData(this);
 
-        data.append('image', $('#image')[0].files[0]);
         data.append("id_utilisateur", id_utilisateur);
 
         $.ajax({
@@ -188,9 +190,7 @@ window.pageInitializers.utilisateur = function () {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
             data: data,
-            complete: function () {
-                enCours = false; // Remet la variable à false, que la requête ait réussi ou échoué
-            },
+        
             success: function (res) {
                 if (id_utilisateur != "") {
                     if (res.status == "success") {
@@ -259,21 +259,92 @@ window.pageInitializers.utilisateur = function () {
         var username = $('#user_' + id).data('username');
         role = $('#user_' + id).data('role');
 
-        console.log(id);
-        console.log(role);
-        console.log(name);
-        console.log(username);
-
         charge_role();
 
 
         $('input[name="name"]').val(name);
         $('input[name="username"]').val(username);
         $('#role').val(role).selectpicker('refresh');
+        $('#form_password').hide();
+        $('#password').prop('required', false);
 
 
     }
 
+
+    
+    window.delete_utilisateur = function (id) {
+        id_utilisateur = id;
+        show_delete_dialog_modal(
+            id_utilisateur,
+            "Êtes-vous sûr de vouloir supprimer cet utilisateur ?",
+            "#card_utilisateur",
+            "confirmer_delete_utilisateur",
+            "annuler_delete_utilisateur",
+        );
+    };
+
+    window.confirmer_delete_utilisateur = function (id) {
+        if (enCours) return; // Empêche un deuxième clic si une requête est en cours
+        enCours = true;
+
+        // $("#card_utilisateur").unblock();
+
+        $.ajax({
+            beforeSend: function () {
+                $("#card_utilisateur").block({
+                    message:
+                        '<div class="ft-refresh-cw icon-spin font-medium-2" style="margin:auto"></div>',
+
+                    overlayCSS: {
+                        backgroundColor: "black",
+                        opacity: 0.1,
+                        cursor: "wait",
+                    },
+                    css: {
+                        border: 0,
+                        padding: 0,
+                        backgroundColor: "transparent",
+                    },
+                });
+            },
+            url: base + "delete_utilisateur",
+            type: "POST",
+            headers: {
+                "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+            },
+            complete: function () {
+                enCours = false; // Remet la variable à false, que la requête ait réussi ou échoué
+            },
+            data: { id_utilisateur: id },
+            success: function (res) {
+                $("#card_utilisateur").unblock();
+
+                id_utilisateur = "";
+
+                if (res.data > 0) {
+                    alertCustom(
+                        "success",
+                        "ft-check",
+                        "Suppression effectué avec succée",
+                    );
+                }else if(res.status == "connecté"){
+                    alertCustom("warning", "ft-x", "Utilisateur connecté !");
+                }
+                 else {
+                    alertCustom("danger", "ft-x", "Suppression non effectué");
+                }
+
+                liste_utilisateur();
+            },
+        });
+    };
+
+     window.annuler_delete_utilisateur = function () {
+            $("#card_utilisateur").unblock();
+            id_utilisateur = "";
+        };
+    
 
 }
 

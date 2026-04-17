@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Utilisateur;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 use App\Http\Requests\StoreUserRequest;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
@@ -29,7 +30,7 @@ class UtilisateurController extends Controller
 
             // Récupérer tous les utilisateurs
 
-            $utilisateurs = User::with('roles')->get();
+            $utilisateurs = User::where('etat', 1)->with('roles')->get();
 
             $th = "
             <thead>
@@ -48,12 +49,12 @@ class UtilisateurController extends Controller
 
                 $role = $utilisateur->getRoleNames()->first();
 
-                $imagePath = $utilisateur->image ? asset('storage/'.$utilisateur->image) : asset('images/avatar-s-14.png');
+                $imagePath = $utilisateur->image ? asset('storage/' . $utilisateur->image) : asset('images/default-user.png');
 
                 $image = "<img src='{$imagePath}'
-            width='40'
-            height='40'
-            style='border-radius:50%; object-fit:cover; border:1px solid #ddd;'>";
+                        width='40'
+                        height='40'
+                        style='border-radius:50%; object-fit:cover; border:1px solid #ddd;'>";
 
                 $th .= "<tr>
                         <td style='width:5%'>{$image}</td>
@@ -73,6 +74,8 @@ class UtilisateurController extends Controller
                             data-id='{$utilisateur->id}'>
                             <i class='la la-pencil-square-o'></i>
                         </a>
+
+                        <a class='danger delete mr-1' data-action='delete_utilisateur' data-id='{$utilisateur->id}' ><i class='la la-trash-o'></i></a>
 
 
                     </td>
@@ -116,76 +119,13 @@ class UtilisateurController extends Controller
         }
     }
 
-    // public function ajout_utilisateur(StoreUserRequest $request)
-    // {
-    //     try {
-
-    //         if ($request->role === 'superAdmin' && !auth()->user()->hasRole('superAdmin')) {
-    //             abort(403);
-    //         }
-
-    //         // Upload image
-    //         $imagePath = null;
-
-    //         if ($request->hasFile('image')) {
-    //             $imagePath = $request->file('image')
-    //                 ->store('users', 'public');
-    //         }
-
-    //         if($request->id_utilisateur !== ""){
-
-    //             $user = User::findOrFail($request->id_utilisateur);
-
-    //             // Supprimer l'ancienne image si une nouvelle est téléchargée
-    //             if ($imagePath && $user->image) {
-    //                 Storage::disk('public')->delete($user->image);
-    //             }
-
-    //             // Mise à jour utilisateur
-    //             $user->update([
-    //                 'name' => $request->name,
-    //                 'username' => $request->username,
-    //                 'image' => $imagePath ?? $user->image,
-    //             ]);
-
-    //              if ($request->filled('password')) {
-    //                 $user->password = Hash::make($request->password);
-    //                 $user->save();
-    //             }
-
-    //             // Synchronisation rôle
-    //             $user->syncRoles($request->role);
-
-    //         }else{
-
-    //             // Création utilisateur
-    //             $user = User::create([
-    //                 'name' => $request->name,
-    //                 'username' => $request->username,
-    //                 'password' => Hash::make($request->password),
-    //                 'image' => $imagePath,
-    //             ]);
-
-    //             // Attribution rôle
-    //             $user->assignRole($request->role);
-    //         }
-
-    //         return response()->json([
-    //             'status' => 'success' ,
-    //         ]);
-
-    //     } catch (\Exception $e) {
-
-    //         return response()->json([
-    //             'status' => 'error',
-    //             'message' => $e->getMessage()
-    //         ], 500);
-    //     }
-    // }
-
     public function ajout_utilisateur(StoreUserRequest $request)
     {
         try {
+            // dd([
+            //     'hasFile' => $request->hasFile('image'),
+            //     'file' => $request->file('image'),
+            // ]);
 
             // 🔐 sécurité rôle
             if ($request->role === 'superAdmin' && ! auth()->user()->hasRole('superAdmin')) {
@@ -196,17 +136,13 @@ class UtilisateurController extends Controller
 
             $user = null;
             $imagePath = null;
-            dd([
-                'hasFile' => $request->hasFile('image'),
-                'file' => $request->file('image'),
-            ]);
             // 📸 upload image (si existe)
             if ($request->hasFile('image')) {
                 $imagePath = $request->file('image')->store('users', 'public');
             }
 
             // ================== UPDATE ==================
-            if (! empty($request->id_utilisateur)) {
+            if ($request->id_utilisateur != "") {
 
                 $user = User::findOrFail($request->id_utilisateur);
 
@@ -229,7 +165,6 @@ class UtilisateurController extends Controller
                 $user->update($data);
 
                 $user->syncRoles([$request->role]);
-
             }
             // ================== CREATE ==================
             else {
@@ -249,7 +184,6 @@ class UtilisateurController extends Controller
             return response()->json([
                 'status' => 'success',
             ]);
-
         } catch (\Exception $e) {
 
             DB::rollBack();
@@ -257,6 +191,32 @@ class UtilisateurController extends Controller
             return response()->json([
                 'status' => 'error',
                 'message' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+
+
+
+    public function delete_utilisateur(Request $request)
+    {
+        try {
+
+            if ($request->id_utilisateur ==  auth()->id()) {
+                return response()->json([
+                'status' => "connecté"
+            ]);
+            }
+            $user = User::where('id', $request->id_utilisateur)->update(['etat' => 0]);
+
+            return response()->json([
+                'status' => "success",
+                'data' => $user
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => "error",
+                'message' => $e->getMessage()
             ], 500);
         }
     }

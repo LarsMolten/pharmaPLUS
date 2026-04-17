@@ -48,7 +48,7 @@
                                     </div>
 
                                 </div>
-                                <div class="row">
+                                <div class="row" id="form_password">
                                     <div class="col-md-12">
                                         <div class="form-group">
                                             <label for="userinput3" class="">Mot de passe</label>

@@ -16,10 +16,11 @@ class RoleSeeder extends Seeder
     public function run(): void
     {
         // Créer les rôles
-        $roles = ['superAdmin', 'pharmacien', 'caissier', 'manager'];
+        $roles = ['superAdmin', 'admin', 'pharmacien', 'caissier'];
 
         foreach ($roles as $role) {
-            Role::firstOrCreate(['name' => $role]);
+            // Role::firstOrCreate(['name' => $role]);
+            Role::updateOrCreate(['name' => $role]);
         }
 
         // Créer le superAdmin s’il n’existe pas

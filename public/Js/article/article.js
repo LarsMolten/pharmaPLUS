@@ -386,8 +386,8 @@ window.pageInitializers.article = function () {
 
     window.afficher_stock_detail = function (id) {
         let articleId = id
-        console.log(articleId);
-;        let designation = $("#ar_" + id).data("design");
+        // console.log(articleId);
+        let designation = $("#ar_" + id).data("design");
 
         $("#designation_article_detail").text(designation);
 

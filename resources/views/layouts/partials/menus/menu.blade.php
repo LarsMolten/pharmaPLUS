@@ -74,72 +74,84 @@
             </li>
 
             <!-- Caisse -->
-            <li class="nav-item">
-                <a href="{{ route('afficher_panier') }}" class="menu-item">
-                    <i class="la la-shopping-cart"></i>
-                    <span class="menu-title">Vente & Caisse</span>
-                </a>
-            </li>
+            @hasanyrole('superAdmin|admin|pharmacien|caissier')
+                <li class="nav-item">
+                    <a href="{{ route('afficher_panier') }}" class="menu-item">
+                        <i class="la la-shopping-cart"></i>
+                        <span class="menu-title">Vente & Caisse</span>
+                    </a>
+                </li>
+            @endhasanyrole
 
             {{-- Liste Vente --}}
-            <li class="nav-item">
-                <a href="{{ route('afficher_liste_vente') }}" class="menu-item">
-                    <i class="la la-shopping-cart"></i>
-                    <span class="menu-title">Historique Vente</span>
-                </a>
-            </li>
+            @hasanyrole('superAdmin|admin|caissier')
+                <li class="nav-item">
+                    <a href="{{ route('afficher_liste_vente') }}" class="menu-item">
+                        <i class="la la-shopping-cart"></i>
+                        <span class="menu-title">Historique Vente</span>
+                    </a>
+                </li>
+            @endhasanyrole
 
             <!-- Pharmacie -->
-            <li class="nav-item">
-                <a href="#" class="menu-item">
-                    <i class="la la-medkit"></i>
-                    <span class="menu-title">Gestion Stock</span>
-                </a>
+            @hasanyrole('superAdmin|admin|pharmacien')
+                <li class="nav-item">
+                    <a href="#" class="menu-item">
+                        <i class="la la-medkit"></i>
+                        <span class="menu-title">Gestion Stock</span>
+                    </a>
 
-                <ul class="menu-content">
+                    <ul class="menu-content">
 
-                    <!-- Articles -->
-                    <li class="nav-item">
-                        <a href="{{ route('article.index') }}" class="menu-item">
-                            <i class="la la-archive"></i>
-                            <span class="menu-title">Articles</span>
-                        </a>
-                    </li>
+                        <!-- Articles -->
+                        <li class="nav-item">
+                            <a href="{{ route('article.index') }}" class="menu-item">
+                                <i class="la la-archive"></i>
+                                <span class="menu-title">Articles</span>
+                            </a>
+                        </li>
 
-                    <!-- Entrées -->
-                    <li class="nav-item">
-                        <a href="{{ route('entreeIndex') }}" class="menu-item">
-                            <i class="la la-arrow-circle-down"></i>
-                            <span class="menu-title">Entrées</span>
-                        </a>
-                    </li>
+                        <!-- Entrées -->
+                        @hasanyrole('superAdmin|pharmacien')
+                            <li class="nav-item">
+                                <a href="{{ route('entreeIndex') }}" class="menu-item">
+                                    <i class="la la-arrow-circle-down"></i>
+                                    <span class="menu-title">Entrées</span>
+                                </a>
+                            </li>
 
-                    <!-- Sorties -->
-                    <li class="nav-item">
-                        <a href="#" class="menu-item">
-                            <i class="la la-arrow-circle-up"></i>
-                            <span class="menu-title">Sorties</span>
-                        </a>
-                    </li>
+                            <!-- Sorties -->
+                            <li class="nav-item">
+                                <a href="#" class="menu-item">
+                                    <i class="la la-arrow-circle-up"></i>
+                                    <span class="menu-title">Sorties</span>
+                                </a>
+                            </li>
+                        @endhasanyrole
 
-                </ul>
-            </li>
+                    </ul>
+                </li>
+            @endhasanyrole
 
             <!-- Gestion -->
-            <li class="nav-item">
-                <a href="{{ route('gestion.index') }}" class="menu-item">
-                    <i class="la la-cogs"></i>
-                    <span class="menu-title">Paramètre</span>
-                </a>
-            </li>
+            @hasanyrole('superAdmin|admin')
+                <li class="nav-item">
+                    <a href="{{ route('gestion.index') }}" class="menu-item">
+                        <i class="la la-cogs"></i>
+                        <span class="menu-title">Paramètre</span>
+                    </a>
+                </li>
+            @endhasanyrole
 
             <!-- Utilisateurs -->
-            <li class="nav-item">
-                <a href="{{ route('utilisateur.index') }}" class="menu-item">
-                    <i class="la la-users"></i>
-                    <span class="menu-title">Utilisateurs</span>
-                </a>
-            </li>
+            @hasanyrole('superAdmin')
+                <li class="nav-item">
+                    <a href="{{ route('utilisateur.index') }}" class="menu-item">
+                        <i class="la la-users"></i>
+                        <span class="menu-title">Utilisateurs</span>
+                    </a>
+                </li>
+            @endhasanyrole
 
         </ul>
     </div>

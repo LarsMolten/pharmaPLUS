@@ -1,12 +1,17 @@
 var enCoursparent = false;
 var enCours = false;
 
-const date_aujourdhuit = $(document).ready(function () {
+$(document).ready(function () {
+    
+   
     $.ajaxSetup({
         headers: {
             "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
         },
     });
+
+    
+
 
     // Exécuter au chargement initial
     document.addEventListener("DOMContentLoaded", toggleFiltreVente);
@@ -120,8 +125,6 @@ const date_aujourdhuit = $(document).ready(function () {
             filtreContainer.style.display = "none";
         }
     }
-
-    
 });
 
 function activerMenuEnFonctionDeRoute() {
@@ -362,7 +365,7 @@ function formatNumberEdit(value) {
 
     let formated = parts.join(",");
 
-    return  formated;
+    return formated;
 }
 
 (function (window, document, $) {

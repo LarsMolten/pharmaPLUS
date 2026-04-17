@@ -22,7 +22,7 @@ class StoreUserRequest extends FormRequest
      */
     public function rules(): array
     {
-       $userId = $this->input('id'); // récupéré depuis le formulaire
+       $userId = $this->input('id_utilisateur'); // récupéré depuis le formulaire
 
         return [
             'name' => ['required', 'string', 'max:255'],
@@ -43,6 +43,7 @@ class StoreUserRequest extends FormRequest
             'role' => ['required', 'string', 'exists:roles,name'],
 
             'image' => ['nullable', 'image', 'mimes:jpg,jpeg,png', 'max:2048'],
+            'etat' => ['max:1']
         ];
     }
 }

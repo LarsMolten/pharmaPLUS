@@ -100,8 +100,8 @@
              @include('vente.partials.form_vente.form_valider')
 
      </section>
-
+     
      <script>
-         const BASE_URL = "{{ url('/') }}";
+         var BASE_URL = "{{ url('/') }}";
      </script>
  @endsection

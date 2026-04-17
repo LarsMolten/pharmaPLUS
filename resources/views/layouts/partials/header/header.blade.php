@@ -113,69 +113,69 @@
                 </ul>
 
 
-                <ul  class="nav navbar-nav float-left align-items-center mr-4" id="filtre-vente-container">
+                <ul class="nav navbar-nav float-left align-items-center mr-4" id="filtre-vente-container">
 
-        
-                   
-                        <li class="nav-item mr-2">
 
-                            <div class="dropdown">
 
-                                <button class="btn btn-sm btn-outline-info dropdown-toggle" type="button"
-                                    id="filtreDate" data-toggle="dropdown">
+                    <li class="nav-item mr-2">
 
-                                    <i class="ft-calendar mr-1"></i>
+                        <div class="dropdown">
+
+                            <button class="btn btn-sm btn-outline-info dropdown-toggle" type="button"
+                                id="filtreDate" data-toggle="dropdown">
+
+                                <i class="ft-calendar mr-1"></i>
+                                Aujourd'hui
+
+                            </button>
+
+                            <div class="dropdown-menu">
+
+                                <a class="dropdown-item filtre-date" href="#" data-type="today"
+                                    data-action="filtre_vente">
                                     Aujourd'hui
+                                </a>
 
-                                </button>
+                                <a class="dropdown-item filtre-date" href="#" data-type="yesterday"
+                                    data-action="filtre_vente">
+                                    Hier
+                                </a>
 
-                                <div class="dropdown-menu">
-
-                                    <a class="dropdown-item filtre-date" href="#" data-type="today"
-                                        data-action="filtre_vente">
-                                        Aujourd'hui
-                                    </a>
-
-                                    <a class="dropdown-item filtre-date" href="#" data-type="yesterday"
-                                        data-action="filtre_vente">
-                                        Hier
-                                    </a>
-
-                                    <a class="dropdown-item filtre-date" href="#" data-type="month"
-                                        data-action="filtre_vente">
-                                        Ce mois
-                                    </a>
-
-                                </div>
+                                <a class="dropdown-item filtre-date" href="#" data-type="month"
+                                    data-action="filtre_vente">
+                                    Ce mois
+                                </a>
 
                             </div>
 
-                        </li>
+                        </div>
+
+                    </li>
 
 
-                        <!-- Filtre date personnalisé -->
-                        <li class="nav-item">
+                    <!-- Filtre date personnalisé -->
+                    <li class="nav-item">
 
-                            <form action="#" id="filtre_date_vente" method="POST" class="form-inline">
+                        <form action="#" id="filtre_date_vente" method="POST" class="form-inline">
 
-                                <input type="date" name="date_debut" id="date_debut"
-                                    class="form-control form-control-sm mr-1">
+                            <input type="date" name="date_debut" id="date_debut"
+                                class="form-control form-control-sm mr-1">
 
-                                <span class="mx-1 text-muted">—</span>
+                            <span class="mx-1 text-muted">—</span>
 
-                                <input type="date" name="date_fin" id="date_fin"
-                                    class="form-control form-control-sm mr-2">
+                            <input type="date" name="date_fin" id="date_fin"
+                                class="form-control form-control-sm mr-2">
 
-                                <button type="button" data-action="filtrer_vente" class="btn btn-sm btn-info">
+                            <button type="button" data-action="filtrer_vente" class="btn btn-sm btn-info">
 
-                                    <i class="ft-search"></i>
+                                <i class="ft-search"></i>
 
-                                </button>
+                            </button>
 
-                            </form>
+                        </form>
 
-                        </li>
-               
+                    </li>
+
 
                 </ul>
 
@@ -253,7 +253,7 @@
                                     href="javascript:void(0)">Read all notifications</a></li>
                         </ul>
                     </li>
-                    <li class="dropdown dropdown-notification nav-item"><a class="nav-link nav-link-label"
+                    {{-- <li class="dropdown dropdown-notification nav-item"><a class="nav-link nav-link-label"
                             href="#" data-toggle="dropdown"><i class="ficon ft-mail"></i></a>
                         <ul class="dropdown-menu dropdown-menu-media dropdown-menu-right">
                             <li class="dropdown-menu-header">
@@ -320,16 +320,17 @@
                             <li class="dropdown-menu-footer"><a class="dropdown-item text-muted text-center"
                                     href="javascript:void(0)">Read all messages</a></li>
                         </ul>
-                    </li>
+                    </li> --}}
                     <li class="dropdown dropdown-user nav-item"><a class="dropdown-toggle nav-link dropdown-user-link"
-                            href="#" data-toggle="dropdown"><span class="mr-1 user-name text-bold-700">John
-                                Doe</span><span class="avatar avatar-online"><img
-                                    src="../../../app-assets/images/portrait/small/avatar-s-19.png"
+                            href="#" data-toggle="dropdown"><span
+                                class="mr-1 user-name text-bold-700">{{ auth()->user()->name ?? '' }}</span><span
+                                class="avatar avatar-online"><img
+                                    src="{{ Auth::user()->image ? asset('storage/' . Auth::user()->image) : asset('images/default-user.png') }}"
                                     alt="avatar"><i></i></span></a>
-                        <div class="dropdown-menu dropdown-menu-right"><a class="dropdown-item"
-                                href="user-profile.html"><i class="ft-user"></i> Edit Profile</a><a
-                                class="dropdown-item" href="app-kanban.html"><i class="ft-clipboard"></i> Todo</a><a
-                                class="dropdown-item" href="user-cards.html"><i class="ft-check-square"></i> Task</a>
+                        <div class="dropdown-menu dropdown-menu-right">
+                            {{-- <a class="dropdown-item" href="user-profile.html"><i class="ft-user"></i> EditProfile</a>
+                            <a class="dropdown-item" href="app-kanban.html"><i class="ft-clipboard"></i> Todo</a>
+                            <a class="dropdown-item" href="user-cards.html"><i class="ft-check-square"></i> Task</a> --}}
                             <div class="dropdown-divider"></div>
                             <form method="POST" action="{{ route('logout') }}">
                                 @csrf

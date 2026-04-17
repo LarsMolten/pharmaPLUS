@@ -89,6 +89,12 @@ class ArticleController extends Controller
                             <td style='width:5%'>{$article->seuil}</td>
                             <td style='width:5%'>{$statut_medic}</td> ";
                 // on a utilisé SPA pour éviter de recharger la page à chaque action, donc on a besoin de l'id passer en 'data-id' de l'article pour faire les actions d'édition et de suppression en ajax par data-action
+               
+                $btn_delete = "";
+                if (auth()->user()->hasAnyRole(['superAdmin', 'pharmacien'])) {
+                         $btn_delete = "<a class='danger delete mr-1' data-action='delete_article' data-id='{$article->id}' onclick='delete_article({$article->id})' ><i class='la la-trash-o'></i></a>";
+                }
+               
                 $th .= "<td style='width:10%'>
 
                             <a class='success mr-1' data-action='afficher_stock_detail' id='ar_{$article->id}' data-design='{$article->designation}' data-id='{$article->id}'  ><i class='la la-list'></i></a>
@@ -96,8 +102,11 @@ class ArticleController extends Controller
                             <a class='primary edit mr-1' data-designation='{$article->designation}'
                              data-presentation='{$article->presentation}'  data-unite='{$article->unite}' data-seuil='{$article->seuil}'
                              id='art_{$article->id}' data-action='edit_article' data-id='{$article->id}'><i class='la la-pencil-square-o'></i></a>
-
-                             <a class='danger delete mr-1' data-action='delete_article' data-id='{$article->id}' onclick='delete_article({$article->id})' ><i class='la la-trash-o'></i></a>
+                    
+                             $btn_delete 
+                           
+                            
+                            
                         </tr>";
             }
             $th .= "</tbody>";

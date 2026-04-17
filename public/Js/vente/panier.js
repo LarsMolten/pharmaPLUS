@@ -13,6 +13,10 @@ window.pageInitializers.panier = function () {
     let type_doc_selected = "";
     let doc_selected = "";
 
+    // if (typeof BASE_URL === "undefined") {
+    //     var BASE_URL = "{{ url('/') }}";
+    // }
+
     // ************************************************** declaration *******************************************
 
     liste_panier();
@@ -913,20 +917,5 @@ window.pageInitializers.panier = function () {
             });
         });
 
-    // function printPDF(res) {
-    //     if (res.has_article) {
-    //         let urlArticle = BASE_URL + "/print_recu_article/" + res.vente_id;
 
-    //         window.open(urlArticle, "_blank");
-    //     }
-
-    //     if (res.has_consultation) {
-    //         let urlConsult =
-    //             BASE_URL + "/print_recu_consultation/" + res.vente_id;
-
-    //         setTimeout(function () {
-    //             window.open(urlConsult, "_blank");
-    //         }, 500);
-    //     }
-    // }
 };
