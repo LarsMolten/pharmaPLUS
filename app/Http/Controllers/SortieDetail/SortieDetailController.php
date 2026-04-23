@@ -12,8 +12,8 @@ class SortieDetailController extends Controller
     {
         try {
 
-            $details = sortie_detail::with('entrees', 'entrees.article')->where([['etat'=> 1], ['sortie_indices_id'=> $request->id_index_sortie]])->orderBy('created_at', 'desc')->get();
-            dd($details->entrees);
+            $details = sortie_detail::with('entrees', 'entrees.article')->where([['etat', 1], ['sortie_indices_id', $request->id_index_sortie]])->orderBy('created_at', 'desc')->get();
+            // dd($details);
 
 
             $th = "
@@ -27,7 +27,7 @@ class SortieDetailController extends Controller
                         <th style='text-align: center;'>Stock Initial</th>
                         <th style='text-align: center;'>Qté sortie</th>
                         <th style='text-align: center; background-color: rgba(240, 240, 241, 0.75)'>Stock restant (Lot)</th>
-                        <th style='text-align: center; background-color: rgb(132, 132, 133)'>Stock dispo global</th>
+                        <th style='text-align: center; background-color: rgb(200, 200, 215)'>Stock dispo global</th>
                         <th style='text-align: center;'>Prix en Boite</th>
                         <th style='text-align: center;'>Prix Unitaire</th>
                         <th style='text-align: center; color: red;'>Montant Perte</th>
@@ -37,44 +37,50 @@ class SortieDetailController extends Controller
                 </thead>";
 
             $th .= "<tbody>";
+            $a = 1;
             foreach ($details as $d) {
 
 
-                $btn_supp = ($d->nb_article <= 0) ? "<a class='danger delete mr-1' data-action='delete_sortie_index' data-id='{$sortie->id}'  ><i class='la la-trash-o'></i></a>" : "";
+                $btn_supp = ($d->isValide == 0) ? "<a class='danger delete mr-1' data-action='delete_sortie_detail' data-id='{$d->id}'  ><i class='la la-trash-o'></i></a>" : "";
                 // $montant_total = ($stats->montant_total)?? 0;
 
                 $th .= "<tr>
-                            <td  style='width:10%'>{$sortie->ref_sortie}</td>
-                            <td style='width:20%'>{$sortie->motif}</td>
-                            <td  style='width:10%'>{$sortie->nb_article}</td>
-                            <td  style='width:10%' class='format-prix'>{$sortie->montant_total} Ar</td>
-                            <td  style='width:10%'>{$sortie->created_at}</td>";
+                            <td  style='width:10%'>{$a}</td>
+                            <td  style='width:10%'>REF-{$d->entree->article->id}</td>
+                            <td  style='width:10%'>{$d->entree->article->designation}</td>
+                            <td  style='width:10%'>{$d->entree->article->presentation}</td>
+                            <td  style='width:10%'>{$d->entree->lot}</td>
+                            <td  style='width:10%'>{$d->stock_initial}</td> 
+                            <td  style='width:10%'>{$d->qte_sortie}</td> 
+                            <td style='width:10%'>{$d->stock_restant_lot}</td>
+                            <td style='width:10%'>{$d->stock_dispo}</td>
+                            <td  style='width:10%'class='format-prix'>{$d->entree->prix_achat_boite} A</td>
+                            <td  style='width:10%'class='format-prix'>{$d->entree->prix_unitaire} Ar</td>
+                            <td  style='width:10%' class='format-prix'>{$d->montant_perte} Ar</td>
+                            <td  style='width:10%'class='format-prix'>{$d->entree->date_peremption}</td>
+                            <td  style='width:10%'>{$d->created_at}</td>";
                 // on a utilisé SPA pour éviter de recharger la page à chaque action, donc on a besoin de l'id passer en 'data-id' de l'article pour faire les actions d'édition et de suppression en ajax par data-action
                 $th .= "<td style='width:10%'>
 
-                             <a class='success mr-1' data-action='afficher_sortie_detail' data-id='{$sortie->id}'  ><i class='la la-list'></i></a>
 
-
-                            <a class='primary edit mr-1' data-ref_sortie='{$sortie->ref_sortie}'
-                             data-motif='{$sortie->motif}' 
-                             id='sr_{$sortie->id}' data-action='edit_sortie_index' data-id='{$sortie->id}'><i class='la la-pencil-square-o'></i></a>
+                            <a class='primary edit mr-1' 
+                             data-motif='{$d->id}' 
+                             id='srd_{$d->id}' data-action='edit_sortie_detail' data-id='{$d->id}'><i class='la la-pencil-square-o'></i></a>
 
                             $btn_supp
                              
                         </tr>";
+                        $a++;
             }
             $th .= "</tbody>";
 
-            $opt = "
-                    <option value='ajustement'>Ajustement</option>
-                    <option value='perte'>Perte</option>";
-
+         
 
 
             return response()->json([
                 'success' => true,
                 'data' => $th,
-                'option' => $opt
+            
             ]);
         } catch (\Exception $th) {
             return response()->json($th, 500);

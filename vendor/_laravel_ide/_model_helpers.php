@@ -3416,6 +3416,7 @@ namespace App\Models\SortieDetail {
      * @property int $sortie_indices_id
      * @property int $id_entree_detail
      * @property int $id
+     * @property-read \App\Models\EntreeDetail\entree_detail $entrees
      * @method static \Illuminate\Database\Eloquent\Builder<sortie_detail>|sortie_detail whereId($value)
      * @method static \Illuminate\Database\Eloquent\Builder<sortie_detail>|sortie_detail whereIdEntreeDetail($value)
      * @method static \Illuminate\Database\Eloquent\Builder<sortie_detail>|sortie_detail whereSortieIndicesId($value)

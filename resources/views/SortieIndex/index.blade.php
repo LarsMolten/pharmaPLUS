@@ -33,7 +33,7 @@
 
         {{-- les modale article --}}
         @include('SortieIndex.modalSortieIndex')
-        @include('SortieIndex.modalSortieDetail')
+        @include('SortieDetail.modalSortieDetail')
 
     </section>
 
