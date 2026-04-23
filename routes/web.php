@@ -12,10 +12,12 @@ use App\Http\Controllers\Dashboard\Dashboard;
 use App\Http\Controllers\DetailKit\DetailKitController;
 use App\Http\Controllers\Kit\KitController;
 use App\Http\Controllers\Entree\EntreeIndexController;
+use App\Http\Controllers\SortieIndex\SortieIndicesController;
 use App\Http\Controllers\EntreeDetail\EntreeDetailController;
 use App\Http\Controllers\Panier\PanierController;
 use App\Http\Controllers\Vente\VenteController;
 use App\Http\Controllers\ListeVente\ListeVenteController;
+use App\Http\Controllers\SortieDetail\SortieDetailController;
 use App\Models\Analyse\analyse;
 use App\Models\Kit\kit;
 use App\Models\Vente\vente;
@@ -118,7 +120,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/charge_article', [DetailKitController::class, 'charge_article'])->name('charge_article');
     Route::post('/ajout_detailkit', [DetailKitController::class, 'ajout_detailkit'])->name('ajout_detailkit');
 
-   
 
     // Panier
     Route::middleware(['auth', 'role:superAdmin|admin|pharmacien|caissier'])->group(function () {
@@ -149,6 +150,15 @@ Route::middleware('auth')->group(function () {
     });
     Route::post('/liste_vente', [ListeVenteController::class, 'liste_vente'])->name('liste_vente');
     Route::post('/liste_vente_detail', [ListeVenteController::class, 'liste_vente_detail'])->name('liste_vente_detail');
+
+    // SORTIE 
+    Route::middleware(['auth', 'role:superAdmin|pharmacien'])->group(function () {
+        Route::get('/sortieIndex', [SortieIndicesController::class, 'index'])->name('sortieIndex');
+    });
+    Route::get('/liste_sortieIndex', [SortieIndicesController::class, 'liste_sortieIndex'])->name('liste_sortieIndex');
+    Route::post('/ajout_sortie_index', [SortieIndicesController::class, 'ajout_sortie_index'])->name('ajout_sortie_index');
+    Route::post('/delete_sortie_index', [SortieIndicesController::class, 'delete_sortie_index'])->name('delete_sortie_index');
+    Route::post('/liste_sortieDetail', [SortieDetailController::class, 'liste_sortieDetail'])->name('liste_sortieDetail');
 });
 
 require __DIR__ . '/auth.php';

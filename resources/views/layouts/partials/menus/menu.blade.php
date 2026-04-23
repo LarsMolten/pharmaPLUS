@@ -122,7 +122,7 @@
 
                             <!-- Sorties -->
                             <li class="nav-item">
-                                <a href="#" class="menu-item">
+                                <a href="{{ route('sortieIndex') }}" class="menu-item">
                                     <i class="la la-arrow-circle-up"></i>
                                     <span class="menu-title">Sorties</span>
                                 </a>
