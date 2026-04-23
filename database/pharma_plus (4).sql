@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1
--- Généré le : dim. 12 avr. 2026 à 08:25
+-- Généré le : jeu. 23 avr. 2026 à 07:19
 -- Version du serveur : 10.4.32-MariaDB
 -- Version de PHP : 8.2.12
 
@@ -944,7 +944,19 @@ INSERT INTO `consultations` (`id`, `vente_id`, `nom_patient`, `sex_patient`, `ag
 (137, 199, 'babakoto', 1, 22, 1, 'dentiste', '9', '2026-04-09 14:31:33', '2026-04-09 14:31:33'),
 (138, 202, 'dada', 1, 34, 1, 'generaliste', '6', '2026-04-10 13:14:09', '2026-04-10 13:14:09'),
 (139, 203, 'dada', 1, 34, 1, 'dentiste', '9', '2026-04-10 13:15:27', '2026-04-10 13:15:27'),
-(140, 208, 'dada', 1, 34, 1, 'generaliste', '3', '2026-04-10 19:29:16', '2026-04-10 19:29:16');
+(140, 208, 'dada', 1, 34, 1, 'generaliste', '3', '2026-04-10 19:29:16', '2026-04-10 19:29:16'),
+(141, 209, 'dada', 1, 34, 1, 'generaliste', '5', '2026-04-15 13:04:04', '2026-04-15 13:04:04'),
+(142, 210, 'dada', 1, 34, 1, 'generaliste', '3', '2026-04-15 13:04:42', '2026-04-15 13:04:42'),
+(143, 211, 'dada', 1, 34, 1, 'dentiste', '9', '2026-04-15 13:05:22', '2026-04-15 13:05:22'),
+(144, 212, 'dada', 1, 34, 1, 'generaliste', '5', '2026-04-15 13:31:31', '2026-04-15 13:31:31'),
+(145, 213, 'dada', 1, 34, 1, 'generaliste', '5', '2026-04-15 13:42:57', '2026-04-15 13:42:57'),
+(146, 214, 'dada', 1, 34, 1, 'generaliste', '6', '2026-04-15 13:43:29', '2026-04-15 13:43:29'),
+(147, 215, 'dada', 1, 34, 1, 'generaliste', '5', '2026-04-15 13:44:13', '2026-04-15 13:44:13'),
+(148, 216, 'dada', 1, 34, 1, 'generaliste', '5', '2026-04-15 13:45:05', '2026-04-15 13:45:05'),
+(149, 217, 'rakotovao', 1, 34, 1, 'generaliste', '5', '2026-04-15 13:57:08', '2026-04-15 13:57:08'),
+(150, 218, 'rakotovao', 1, 34, 1, 'generaliste', '6', '2026-04-15 14:00:17', '2026-04-15 14:00:17'),
+(151, 219, 'dada', 1, 34, 1, 'generaliste', '6', '2026-04-15 14:02:26', '2026-04-15 14:02:26'),
+(152, 220, 'dada', 1, 34, 1, 'generaliste', '5', '2026-04-15 14:03:12', '2026-04-15 14:03:12');
 
 -- --------------------------------------------------------
 
@@ -1856,7 +1868,10 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (40, '2026_03_30_150529_add_colonne_client_vente', 25),
 (41, '2026_04_08_104815_add_colonne_type_at_paniers', 26),
 (42, '2026_04_08_110748_add_colonne_type_at_ventes', 27),
-(43, '2026_04_10_102931_update_date_peremption_nullable_on_entree_details_table', 28);
+(43, '2026_04_10_102931_update_date_peremption_nullable_on_entree_details_table', 28),
+(44, '2026_04_15_091210_add_colonne_etat_user', 29),
+(45, '2026_04_17_103819_create_sortie_indices_table', 30),
+(46, '2026_04_20_165309_create_sortie_details_table', 31);
 
 -- --------------------------------------------------------
 
@@ -1887,7 +1902,13 @@ CREATE TABLE `model_has_roles` (
 --
 
 INSERT INTO `model_has_roles` (`role_id`, `model_type`, `model_id`) VALUES
-(1, 'App\\Models\\User', 1);
+(1, 'App\\Models\\User', 1),
+(2, 'App\\Models\\User', 2),
+(2, 'App\\Models\\User', 5),
+(3, 'App\\Models\\User', 3),
+(3, 'App\\Models\\User', 4),
+(3, 'App\\Models\\User', 6),
+(4, 'App\\Models\\User', 7);
 
 -- --------------------------------------------------------
 
@@ -2035,9 +2056,9 @@ CREATE TABLE `roles` (
 
 INSERT INTO `roles` (`id`, `name`, `guard_name`, `created_at`, `updated_at`) VALUES
 (1, 'superAdmin', 'web', '2026-03-06 04:03:26', '2026-03-06 04:03:26'),
-(2, 'pharmacien', 'web', '2026-03-06 04:03:26', '2026-03-06 04:03:26'),
-(3, 'caissier', 'web', '2026-03-06 04:03:26', '2026-03-06 04:03:26'),
-(4, 'manager', 'web', '2026-03-06 04:03:26', '2026-03-06 04:03:26');
+(2, 'admin', 'web', '2026-03-06 04:03:26', '2026-03-06 04:03:26'),
+(3, 'pharmacien', 'web', '2026-03-06 04:03:26', '2026-03-06 04:03:26'),
+(4, 'caissier', 'web', '2026-03-06 04:03:26', '2026-03-06 04:03:26');
 
 -- --------------------------------------------------------
 
@@ -2079,6 +2100,52 @@ INSERT INTO `services` (`id`, `categorie_id`, `nom_service`, `prix_service`, `is
 -- --------------------------------------------------------
 
 --
+-- Structure de la table `sortie_details`
+--
+
+CREATE TABLE `sortie_details` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `id_entree_detail` bigint(20) UNSIGNED NOT NULL,
+  `sortie_indices_id` bigint(20) UNSIGNED NOT NULL,
+  `qte_initial` int(11) NOT NULL DEFAULT 0,
+  `qte_sortie` int(11) NOT NULL DEFAULT 0,
+  `stock_restant_lot` int(11) NOT NULL DEFAULT 0,
+  `stock_dispo` int(11) NOT NULL DEFAULT 0,
+  `montant_perte` decimal(12,2) NOT NULL DEFAULT 0.00,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `sortie_indices`
+--
+
+CREATE TABLE `sortie_indices` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `ref_sortie` varchar(255) NOT NULL,
+  `motif` varchar(255) NOT NULL,
+  `nb_article` int(11) NOT NULL DEFAULT 0,
+  `montant_total` decimal(12,2) NOT NULL DEFAULT 0.00,
+  `etat` tinyint(1) NOT NULL DEFAULT 1,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Déchargement des données de la table `sortie_indices`
+--
+
+INSERT INTO `sortie_indices` (`id`, `ref_sortie`, `motif`, `nb_article`, `montant_total`, `etat`, `created_at`, `updated_at`) VALUES
+(1, 'sortie', 'ajustement', 0, 0.00, 0, '2026-04-20 07:29:50', '2026-04-20 07:49:13'),
+(2, 'sortiescv', 'ajustement', 0, 0.00, 0, '2026-04-20 07:31:15', '2026-04-20 07:49:17'),
+(3, 'fffff', 'perte', 0, 0.00, 0, '2026-04-20 07:34:43', '2026-04-20 07:49:47'),
+(4, 'sortie12qqqqqqqq', 'ajustement', 0, 0.00, 1, '2026-04-20 07:50:10', '2026-04-22 07:15:16');
+
+-- --------------------------------------------------------
+
+--
 -- Structure de la table `unites`
 --
 
@@ -2114,6 +2181,7 @@ CREATE TABLE `users` (
   `name` varchar(255) NOT NULL,
   `password` varchar(255) NOT NULL,
   `image` varchar(255) DEFAULT NULL,
+  `etat` tinyint(1) NOT NULL DEFAULT 1,
   `remember_token` varchar(100) DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
@@ -2123,8 +2191,14 @@ CREATE TABLE `users` (
 -- Déchargement des données de la table `users`
 --
 
-INSERT INTO `users` (`id`, `username`, `name`, `password`, `image`, `remember_token`, `created_at`, `updated_at`) VALUES
-(1, 'superadmin', 'Lars Molten', '$2y$10$wa.F3Iq6ND3AZ0dvVge20u05kn5wMAKF32TJqukndQiGUdKRFKp2G', NULL, NULL, '2026-03-06 04:03:26', '2026-03-06 04:03:26');
+INSERT INTO `users` (`id`, `username`, `name`, `password`, `image`, `etat`, `remember_token`, `created_at`, `updated_at`) VALUES
+(1, 'superadmin', 'Lars Molten', '$2y$10$wa.F3Iq6ND3AZ0dvVge20u05kn5wMAKF32TJqukndQiGUdKRFKp2G', NULL, 1, NULL, '2026-03-06 04:03:26', '2026-03-06 04:03:26'),
+(2, 'zaza', 'LARS', '$2y$10$3LIKm2D4iXUSgclw2ozqseREXOk/FqlnRWJYDNK5faq8BnBs4y/Ha', 'images/pBGMTsJ2qGE5cHktdhzcGaQhK4yPFMXoKHRhvdBD.jpg', 0, NULL, '2026-04-14 06:33:32', '2026-04-16 12:43:50'),
+(3, 'mario', 'MARIO', '$2y$10$9t/2jg378rEUgILE/ZgBtOu4pTlA14Y2vj/4toNUTO95cwpY9V7de', NULL, 0, NULL, '2026-04-14 06:57:29', '2026-04-16 12:43:53'),
+(4, 'vazaha', 'Vazaha 1234', '$2y$10$VBj7ADRCDBKvh9BHukspmuzVuMniB2khv3kY/SxUpo/XE9gVDWwYm', 'users/WCbY4Sd7eqt1RKgpPUBHx9bpJhDS2k6KCUjmKoFG.jpg', 0, NULL, '2026-04-14 07:06:13', '2026-04-15 06:21:17'),
+(5, 'admin', 'Admin', '$2y$10$6N5Pan9OCCSzXnPQDVhlkuaLVV/LRU2qXUPwRvUE8NIU/LYtTPpEu', NULL, 1, NULL, '2026-04-16 12:35:23', '2026-04-16 12:35:23'),
+(6, 'pharmacie', 'Pharmacie', '$2y$10$W5JqNRtKkVE4.P7Dj9hQROjzqbZIrYW2g5jE.LakxUhSuSR5Bukeq', NULL, 1, NULL, '2026-04-16 12:36:09', '2026-04-16 12:36:09'),
+(7, 'caisse', 'Caisse', '$2y$10$LvSpSu/WTkvto/LsN06Erep81cAJ4lDFqXGDCn0D2MbpP4OXU/FQa', NULL, 1, NULL, '2026-04-16 12:36:46', '2026-04-16 12:36:46');
 
 -- --------------------------------------------------------
 
@@ -2358,7 +2432,19 @@ INSERT INTO `ventes` (`id`, `reference_vente`, `type`, `user_id`, `client`, `mon
 (205, 'V20260410165051', NULL, 1, 'dada', 30000.00, 30000.00, 0.00, 40000.00, 10000.00, 'cash', '2026-04-10 13:50:51', '2026-04-10 13:50:51'),
 (206, 'V20260410165151', NULL, 1, 'GAGA', 80000.00, 80000.00, 0.00, 85000.00, 5000.00, 'cash', '2026-04-10 13:51:51', '2026-04-10 13:51:51'),
 (207, 'V20260410165256', NULL, 1, 'GAGA', 24000.00, 20000.00, 0.00, 30000.00, 10000.00, 'cash', '2026-04-10 13:52:56', '2026-04-10 13:52:56'),
-(208, 'V20260410222916', NULL, 1, 'dada', 34000.00, 30000.00, 0.00, 35000.00, 5000.00, 'cash', '2026-04-10 19:29:16', '2026-04-10 19:29:16');
+(208, 'V20260410222916', NULL, 1, 'dada', 34000.00, 30000.00, 0.00, 35000.00, 5000.00, 'cash', '2026-04-10 19:29:16', '2026-04-10 19:29:16'),
+(209, 'V20260415160404', NULL, 1, 'dada', 10000.00, 10000.00, 0.00, 10000.00, 0.00, 'cash', '2026-04-15 13:04:04', '2026-04-15 13:04:04'),
+(210, 'V20260415160442', NULL, 1, 'dada', 10000.00, 10000.00, 0.00, 10000.00, 0.00, 'cash', '2026-04-15 13:04:42', '2026-04-15 13:04:42'),
+(211, 'V20260415160522', NULL, 1, 'dada', 10000.00, 10000.00, 0.00, 10000.00, 0.00, 'cash', '2026-04-15 13:05:22', '2026-04-15 13:05:22'),
+(212, 'V20260415163131', NULL, 1, 'dada', 10000.00, 10000.00, 0.00, 10000.00, 0.00, 'cash', '2026-04-15 13:31:31', '2026-04-15 13:31:31'),
+(213, 'V20260415164257', NULL, 1, 'dada', 10000.00, 10000.00, 0.00, 10000.00, 0.00, 'cash', '2026-04-15 13:42:57', '2026-04-15 13:42:57'),
+(214, 'V20260415164329', NULL, 1, 'dada', 10000.00, 10000.00, 0.00, 10000.00, 0.00, 'cash', '2026-04-15 13:43:29', '2026-04-15 13:43:29'),
+(215, 'V20260415164413', NULL, 1, 'dada', 10000.00, 10000.00, 0.00, 10000.00, 0.00, 'cash', '2026-04-15 13:44:13', '2026-04-15 13:44:13'),
+(216, 'V20260415164505', NULL, 1, 'dada', 10000.00, 10000.00, 0.00, 10000.00, 0.00, 'cash', '2026-04-15 13:45:05', '2026-04-15 13:45:05'),
+(217, 'V20260415165708', NULL, 1, 'rakotovao', 10000.00, 10000.00, 0.00, 10000.00, 0.00, 'cash', '2026-04-15 13:57:08', '2026-04-15 13:57:08'),
+(218, 'V20260415170017', NULL, 1, 'rakotovao', 10000.00, 10000.00, 0.00, 10000.00, 0.00, 'cash', '2026-04-15 14:00:17', '2026-04-15 14:00:17'),
+(219, 'V20260415170226', NULL, 1, 'dada', 10000.00, 10000.00, 0.00, 10000.00, 0.00, 'cash', '2026-04-15 14:02:26', '2026-04-15 14:02:26'),
+(220, 'V20260415170312', NULL, 1, 'dada', 10000.00, 10000.00, 0.00, 10000.00, 0.00, 'cash', '2026-04-15 14:03:12', '2026-04-15 14:03:12');
 
 -- --------------------------------------------------------
 
@@ -2709,7 +2795,19 @@ INSERT INTO `vente_details` (`id`, `vente_id`, `article_id`, `entree_detail_id`,
 (324, 206, NULL, NULL, NULL, 3, NULL, NULL, 50000.00, 1, 50000.00, '2026-04-10 13:51:51', '2026-04-10 13:51:51'),
 (325, 207, 4, 695, NULL, NULL, NULL, NULL, 24000.00, 1, 24000.00, '2026-04-10 13:52:56', '2026-04-10 13:52:56'),
 (326, 208, NULL, NULL, 1, NULL, NULL, NULL, 10000.00, 1, 10000.00, '2026-04-10 19:29:16', '2026-04-10 19:29:16'),
-(327, 208, 4, 695, NULL, NULL, NULL, NULL, 24000.00, 1, 24000.00, '2026-04-10 19:29:16', '2026-04-10 19:29:16');
+(327, 208, 4, 695, NULL, NULL, NULL, NULL, 24000.00, 1, 24000.00, '2026-04-10 19:29:16', '2026-04-10 19:29:16'),
+(328, 209, NULL, NULL, 1, NULL, NULL, NULL, 10000.00, 1, 10000.00, '2026-04-15 13:04:04', '2026-04-15 13:04:04'),
+(329, 210, NULL, NULL, 1, NULL, NULL, NULL, 10000.00, 1, 10000.00, '2026-04-15 13:04:42', '2026-04-15 13:04:42'),
+(330, 211, NULL, NULL, 1, NULL, NULL, NULL, 10000.00, 1, 10000.00, '2026-04-15 13:05:22', '2026-04-15 13:05:22'),
+(331, 212, NULL, NULL, 1, NULL, NULL, NULL, 10000.00, 1, 10000.00, '2026-04-15 13:31:31', '2026-04-15 13:31:31'),
+(332, 213, NULL, NULL, 1, NULL, NULL, NULL, 10000.00, 1, 10000.00, '2026-04-15 13:42:57', '2026-04-15 13:42:57'),
+(333, 214, NULL, NULL, 1, NULL, NULL, NULL, 10000.00, 1, 10000.00, '2026-04-15 13:43:29', '2026-04-15 13:43:29'),
+(334, 215, NULL, NULL, 1, NULL, NULL, NULL, 10000.00, 1, 10000.00, '2026-04-15 13:44:13', '2026-04-15 13:44:13'),
+(335, 216, NULL, NULL, 1, NULL, NULL, NULL, 10000.00, 1, 10000.00, '2026-04-15 13:45:05', '2026-04-15 13:45:05'),
+(336, 217, NULL, NULL, 1, NULL, NULL, NULL, 10000.00, 1, 10000.00, '2026-04-15 13:57:08', '2026-04-15 13:57:08'),
+(337, 218, NULL, NULL, 1, NULL, NULL, NULL, 10000.00, 1, 10000.00, '2026-04-15 14:00:17', '2026-04-15 14:00:17'),
+(338, 219, NULL, NULL, 1, NULL, NULL, NULL, 10000.00, 1, 10000.00, '2026-04-15 14:02:26', '2026-04-15 14:02:26'),
+(339, 220, NULL, NULL, 1, NULL, NULL, NULL, 10000.00, 1, 10000.00, '2026-04-15 14:03:12', '2026-04-15 14:03:12');
 
 --
 -- Index pour les tables déchargées
@@ -2882,6 +2980,21 @@ ALTER TABLE `services`
   ADD KEY `services_categorie_id_foreign` (`categorie_id`);
 
 --
+-- Index pour la table `sortie_details`
+--
+ALTER TABLE `sortie_details`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `sortie_details_id_entree_detail_foreign` (`id_entree_detail`),
+  ADD KEY `sortie_details_sortie_indices_id_foreign` (`sortie_indices_id`);
+
+--
+-- Index pour la table `sortie_indices`
+--
+ALTER TABLE `sortie_indices`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `sortie_indices_ref_sortie_unique` (`ref_sortie`);
+
+--
 -- Index pour la table `unites`
 --
 ALTER TABLE `unites`
@@ -2935,7 +3048,7 @@ ALTER TABLE `categories`
 -- AUTO_INCREMENT pour la table `consultations`
 --
 ALTER TABLE `consultations`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=141;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=153;
 
 --
 -- AUTO_INCREMENT pour la table `detail_kits`
@@ -2983,13 +3096,13 @@ ALTER TABLE `kits`
 -- AUTO_INCREMENT pour la table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=44;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=47;
 
 --
 -- AUTO_INCREMENT pour la table `paniers`
 --
 ALTER TABLE `paniers`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=459;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=471;
 
 --
 -- AUTO_INCREMENT pour la table `permissions`
@@ -3028,6 +3141,18 @@ ALTER TABLE `services`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
+-- AUTO_INCREMENT pour la table `sortie_details`
+--
+ALTER TABLE `sortie_details`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT pour la table `sortie_indices`
+--
+ALTER TABLE `sortie_indices`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
 -- AUTO_INCREMENT pour la table `unites`
 --
 ALTER TABLE `unites`
@@ -3037,19 +3162,19 @@ ALTER TABLE `unites`
 -- AUTO_INCREMENT pour la table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT pour la table `ventes`
 --
 ALTER TABLE `ventes`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=209;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=221;
 
 --
 -- AUTO_INCREMENT pour la table `vente_details`
 --
 ALTER TABLE `vente_details`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=328;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=340;
 
 --
 -- Contraintes pour les tables déchargées
@@ -3113,6 +3238,13 @@ ALTER TABLE `role_has_permissions`
 --
 ALTER TABLE `services`
   ADD CONSTRAINT `services_categorie_id_foreign` FOREIGN KEY (`categorie_id`) REFERENCES `categories` (`id`);
+
+--
+-- Contraintes pour la table `sortie_details`
+--
+ALTER TABLE `sortie_details`
+  ADD CONSTRAINT `sortie_details_id_entree_detail_foreign` FOREIGN KEY (`id_entree_detail`) REFERENCES `entree_details` (`id`),
+  ADD CONSTRAINT `sortie_details_sortie_indices_id_foreign` FOREIGN KEY (`sortie_indices_id`) REFERENCES `sortie_indices` (`id`);
 
 --
 -- Contraintes pour la table `vente_details`
