@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1
--- Généré le : jeu. 23 avr. 2026 à 07:19
+-- Généré le : mar. 12 mai 2026 à 09:03
 -- Version du serveur : 10.4.32-MariaDB
 -- Version de PHP : 8.2.12
 
@@ -1871,7 +1871,8 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (43, '2026_04_10_102931_update_date_peremption_nullable_on_entree_details_table', 28),
 (44, '2026_04_15_091210_add_colonne_etat_user', 29),
 (45, '2026_04_17_103819_create_sortie_indices_table', 30),
-(46, '2026_04_20_165309_create_sortie_details_table', 31);
+(46, '2026_04_20_165309_create_sortie_details_table', 31),
+(47, '2026_04_23_100001_add_colonne_etat_sortie_detail', 32);
 
 -- --------------------------------------------------------
 
@@ -2112,6 +2113,7 @@ CREATE TABLE `sortie_details` (
   `stock_restant_lot` int(11) NOT NULL DEFAULT 0,
   `stock_dispo` int(11) NOT NULL DEFAULT 0,
   `montant_perte` decimal(12,2) NOT NULL DEFAULT 0.00,
+  `etat` tinyint(1) NOT NULL DEFAULT 1,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -2141,7 +2143,9 @@ INSERT INTO `sortie_indices` (`id`, `ref_sortie`, `motif`, `nb_article`, `montan
 (1, 'sortie', 'ajustement', 0, 0.00, 0, '2026-04-20 07:29:50', '2026-04-20 07:49:13'),
 (2, 'sortiescv', 'ajustement', 0, 0.00, 0, '2026-04-20 07:31:15', '2026-04-20 07:49:17'),
 (3, 'fffff', 'perte', 0, 0.00, 0, '2026-04-20 07:34:43', '2026-04-20 07:49:47'),
-(4, 'sortie12qqqqqqqq', 'ajustement', 0, 0.00, 1, '2026-04-20 07:50:10', '2026-04-22 07:15:16');
+(4, 'sortie12qqqqqqqq', 'ajustement', 0, 0.00, 0, '2026-04-20 07:50:10', '2026-05-07 13:03:08'),
+(5, 'sortie12y', 'ajustement', 0, 0.00, 1, '2026-05-07 12:58:07', '2026-05-07 13:02:58'),
+(6, 'sortie12yd', 'ajustement', 0, 0.00, 1, '2026-05-07 13:04:48', '2026-05-07 13:04:48');
 
 -- --------------------------------------------------------
 
@@ -3096,7 +3100,7 @@ ALTER TABLE `kits`
 -- AUTO_INCREMENT pour la table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=47;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=48;
 
 --
 -- AUTO_INCREMENT pour la table `paniers`
@@ -3150,7 +3154,7 @@ ALTER TABLE `sortie_details`
 -- AUTO_INCREMENT pour la table `sortie_indices`
 --
 ALTER TABLE `sortie_indices`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT pour la table `unites`

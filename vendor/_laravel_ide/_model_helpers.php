@@ -3408,6 +3408,7 @@ namespace App\Models\SortieDetail {
      *
      * @property \Illuminate\Support\Carbon|null $updated_at
      * @property \Illuminate\Support\Carbon|null $created_at
+     * @property bool $etat
      * @property float $montant_perte
      * @property int $stock_dispo
      * @property int $stock_restant_lot
@@ -3425,6 +3426,7 @@ namespace App\Models\SortieDetail {
      * @method static \Illuminate\Database\Eloquent\Builder<sortie_detail>|sortie_detail whereStockRestantLot($value)
      * @method static \Illuminate\Database\Eloquent\Builder<sortie_detail>|sortie_detail whereStockDispo($value)
      * @method static \Illuminate\Database\Eloquent\Builder<sortie_detail>|sortie_detail whereMontantPerte($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<sortie_detail>|sortie_detail whereEtat($value)
      * @method static \Illuminate\Database\Eloquent\Builder<sortie_detail>|sortie_detail whereCreatedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder<sortie_detail>|sortie_detail whereUpdatedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder<sortie_detail>|sortie_detail newModelQuery()

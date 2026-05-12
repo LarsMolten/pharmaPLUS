@@ -93,9 +93,9 @@ window.pageInitializers.sortie = function () {
                                     "show",
                                 );
 
-                                $("#motif").empty();
-                                $("#motif").append(res.option);
-                                $("#motif").selectpicker("refresh");
+                                $("#motif_sortie").empty();
+                                $("#motif_sortie").append(res.option);
+                                $("#motif_sortie").selectpicker("refresh");
                                 // $("#ajout_entreeIndex")
                                 //     .find(
                                 //         ':input:not([type="submit"], [type="hidden"]):not([type="radio"])',
@@ -165,6 +165,8 @@ window.pageInitializers.sortie = function () {
                                 : "Ajout effectué avec succès",
                         );
                         $("#AjoutSortieIndexModal").modal("hide");
+                        $('[data-dismiss="modal"]').focus();
+
 
                         // if (id_article_entree) {
                         //     $('[data-dismiss="modal"]').focus();
